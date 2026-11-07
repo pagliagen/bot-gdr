@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Valle di Acquaverde</title>
+  <link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+  <header>
+    <h1>La Valle di Acquaverde</h1>
+    <div id="orologio" hidden>
+      <span id="orologio-testo"></span>
+      <div class="barra"><div id="barra-giorni"></div></div>
+    </div>
+    <div class="comandi">
+      <label class="debug" title="Mostra i tool chiamati dal narratore (contiene spoiler: segreti dei PNG e retroscena)">
+        <input type="checkbox" id="debug"> debug
+      </label>
+      <button id="btn-nuova" type="button" hidden>Nuova partita</button>
+    </div>
+  </header>
+
+  <!-- Creazione del personaggio -->
+  <main id="creazione" hidden>
+    <form id="form-creazione">
+      <h2>Crea il tuo eroe</h2>
+      <label>Nome
+        <input id="nome" maxlength="30" required autocomplete="off" placeholder="Come ti chiami, avventuriero?">
+      </label>
+      <fieldset>
+        <legend>Classe</legend>
+        <div id="classi"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Statistiche <small>(assegna 15, 13 e 10, ognuno una volta)</small></legend>
+        <div id="statistiche"></div>
+      </fieldset>
+      <p id="errore-creazione" class="errore" role="alert"></p>
+      <button type="submit" id="btn-crea">Inizia l'avventura</button>
+    </form>
+  </main>
+
+  <!-- Partita -->
+  <main id="gioco" hidden>
+    <section id="colonna-sx">
+      <figure id="scena">
+        <img id="img-luogo" alt="" hidden>
+        <div id="segnaposto-luogo" class="segnaposto"></div>
+        <div id="badge-img" class="badge" hidden>🎨 Illustrazione in preparazione…</div>
+        <figcaption id="nome-luogo"></figcaption>
+      </figure>
+      <p id="nota-immagini" class="piccolo errore" hidden></p>
+      <div id="png-qui" class="png-lista"></div>
+      <p id="collegamenti" class="piccolo"></p>
+      <div id="mappa-box">
+        <img id="img-mappa" alt="Mappa della valle" hidden>
+        <div id="pins"></div>
+      </div>
+    </section>
+
+    <section id="colonna-dx">
+      <div id="scheda">
+        <div class="riga-nome"><strong id="s-nome"></strong> <span id="s-classe"></span></div>
+        <div class="pf"><div id="pf-barra"></div><span id="pf-testo"></span></div>
+        <div id="s-stat" class="stat"></div>
+        <details open><summary>Inventario</summary><ul id="s-inv"></ul></details>
+        <details><summary>Diario</summary><ul id="s-diario"></ul></details>
+      </div>
+      <div id="chat" aria-live="polite"></div>
+      <form id="form-azione" autocomplete="off">
+        <input id="azione" placeholder="Cosa fai?" maxlength="500">
+        <button type="submit" id="btn-invia">Invia</button>
+      </form>
+    </section>
+  </main>
+
+  <div id="fine" hidden>
+    <div class="fine-box">
+      <h2 id="fine-titolo"></h2>
+      <p id="fine-esito"></p>
+      <button type="button" id="btn-fine-nuova">Nuova partita</button>
+    </div>
+  </div>
+
+  <script src="/web/app.js"></script>
+</body>
+</html>

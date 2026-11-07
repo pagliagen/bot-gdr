@@ -1,0 +1,217 @@
+# Avventura: "Il Patto Sciolto"
+# Durata: 7 giorni di gioco (il giocatore arriva il giorno 1).
+#
+# PRINCIPIO: il mondo avanza da solo. Gli eventi della cronologia scattano al loro
+# giorno, qualunque cosa faccia il giocatore. Il giocatore può cambiare COME vanno
+# a finire (tramite i "flag"), non SE accadono.
+#
+# flag = variabili di stato che il codice imposta quando il giocatore fa certe cose.
+# Il master non può impostarli a parole: li imposta un tool, dopo una prova riuscita.
+
+premessa: >-
+  Sei arrivato a Pontevecchio per un lavoro qualsiasi (guardia, scorta, ricerca di
+  un amico, un po' di avventura). Appena arrivi il livello del fiume sotto il ponte
+  è visibilmente più basso del solito. Hai sette giorni prima della Festa
+  dell'Apertura, e la valle non lo sa, ma ce n'è bisogno.
+
+verita_nascosta: >-
+  Madre Corrente è prigioniera della diga: la Gilda ha usato la Pietra del Patto,
+  il suo contratto con la valle, come chiave di volta. La Pietra si sta spaccando.
+  Alla Festa, di sera, o il Patto viene rinnovato, o la Pietra cede e il fiume
+  si riprende tutto di colpo, travolgendo Borgo Basso.
+
+flag_iniziali:
+  pietra_recuperata: false        # la Pietra è stata tolta dalla diga
+  contratto_trovato: false        # il giocatore ha il Contratto originale
+  patto_rinnovato: false          # formaggio + racconto + firma consegnati a Madre Corrente
+  paratoie_aperte: false          # le paratoie sono state aperte con gradualità
+  borgo_evacuato: false           # Borgo Basso è stato avvisato e svuotato
+  diga_rinforzata: false          # il giocatore ha aiutato a rinforzare la diga
+  ruggero_alleato: false          # il capitano è dalla parte del giocatore
+  fiammetta_alleata: false        # l'apprendista aiuta a smontare la chiave di volta
+
+cronologia:
+  - giorno: 1
+    titolo: Il fiume cala
+    luogo: pontevecchio
+    pubblico: true
+    cosa_accade: >-
+      Il livello del fiume sotto il Ponte Vecchio è sceso di un palmo da ieri. I
+      pesci guardano i passanti come se fosse colpa loro. Tobia ne parla a tutti,
+      con aggiunte inventate.
+    in_segreto: La Gilda ha chiuso le paratoie minori per "controllare i livelli".
+
+  - giorno: 2
+    titolo: Il mulino di Borgo Basso si ferma
+    luogo: borgo_basso
+    pubblico: true
+    cosa_accade: >-
+      La ruota del mulino di Borgo Basso si ferma per mancanza d'acqua. I pescatori
+      tirano le barche a secco e iniziano a mormorare di maledizioni.
+    in_segreto: Fiammetta nota per la prima volta una crepa fina nella chiave di volta.
+
+  - giorno: 3
+    titolo: Lite per l'acqua, pedaggio raddoppiato
+    luogo: pontevecchio
+    pubblico: true
+    cosa_accade: >-
+      Contadini di Pontevecchio e pescatori di Borgo Basso litigano per l'acqua rimasta.
+      La baronessa, "per mantenere l'ordine", raddoppia il pedaggio sul ponte.
+    in_segreto: Ormando fa rinforzare in fretta i puntelli intorno alla diga.
+
+  - giorno: 4
+    titolo: Le anguille d'argento
+    luogo: borgo_basso
+    pubblico: true
+    cosa_accade: >-
+      Branchi di anguille argentee risalgono il letto asciutto, cercando una via
+      che non c'è più. Fratello Anguilla le prende per un segno e inizia a predicare
+      la fine della valle sul molo.
+    in_segreto: La chiave di volta emette per la prima volta un lamento udibile di notte.
+
+  - giorno: 5
+    titolo: Il sogno dell'ultimatum
+    luogo: tutta la valle
+    pubblico: true
+    cosa_accade: >-
+      Quella notte tutti gli abitanti fanno lo stesso sogno: una voce d'acqua, severa
+      ma educata, dice «Alla Festa. Formaggio, racconto e firma. O me ne vado e porto
+      con me quello che mi appartiene». Al risveglio nessuno vuole ammettere di aver
+      sognato.
+    in_segreto: Il capitano Ruggero riceve l'ordine di sigillare la strada della diga.
+    varianti:
+      - se_flag: ruggero_alleato
+        cosa_accade: >-
+          Ruggero finge di sigillare la strada ma lascia aperto il sentiero laterale
+          e avvisa il giocatore.
+
+  - giorno: 6
+    titolo: I preparativi della Festa
+    luogo: pontevecchio
+    pubblico: true
+    cosa_accade: >-
+      La piazza si riempie di bancarelle, ghirlande e musicanti. Ormando annuncia a
+      tutti che alla Festa «l'acqua tornerà più forte di prima» con una cerimonia
+      d'apertura delle paratoie. La baronessa prepara il palco e le teiere buone.
+    in_segreto: La Pietra del Patto è rotta per due terzi. Basta una scossa per farla cedere.
+    varianti:
+      - se_flag: pietra_recuperata
+        cosa_accade: >-
+          La diga è senza chiave di volta e regge in modo precario sui puntelli; la
+          Gilda è in subbuglio e Ormando cerca un colpevole.
+
+  - giorno: 7
+    titolo: La Festa dell'Apertura
+    luogo: pontevecchio
+    pubblico: true
+    cosa_accade: >-
+      È la sera della Festa. Alle spalle del palco l'aria si fa carica di umidità; il
+      fiume attende. Il destino della valle si decide in questa serata, ora dopo ora,
+      fino all'alba.
+    in_segreto: Finale determinato dai flag (vedi sotto).
+
+# Finali: si valutano IN ORDINE e vince il primo che soddisfa le condizioni.
+# richiede = flag che devono essere veri; esclude = flag che devono essere falsi.
+# L'ultimo non richiede nulla: è il finale "se non hai fatto niente di decisivo".
+finali:
+  - id: nuovo_patto
+    nome: Il Patto Rinnovato
+    richiede: [patto_rinnovato]
+    esclude: []
+    esito: >-
+      Il giocatore consegna formaggio, racconto e firma a Madre Corrente. Lo spirito
+      accetta, con una clausola nuova: il Patto va letto ad alta voce ogni anno, da
+      qualcuno che sia ascoltato. Il fiume torna a scorrere, la diga diventa un
+      serbatoio dignitoso e la Gilda deve imparare a chiedere permesso.
+  - id: liberazione
+    nome: Il Fiume Libero
+    richiede: [pietra_recuperata, paratoie_aperte]
+    esclude: []
+    esito: >-
+      Con la Pietra recuperata e le paratoie aperte piano, il fiume riprende il suo
+      corso senza travolgere nessuno. Madre Corrente, libera ma scontenta, lascia un
+      avviso formale alla Gilda e un conto da pagare a Ormando.
+  - id: diga_rinforzata
+    nome: La Diga Tiene (per ora)
+    richiede: [diga_rinforzata]
+    esclude: []
+    esito: >-
+      La Gilda festeggia. Il fiume si ritira in silenzio, per sempre. Il paesaggio
+      lentamente si secca. Il giocatore ha vinto una battaglia e perso la valle.
+  - id: evacuazione
+    nome: Salvi per un pelo
+    richiede: [borgo_evacuato]
+    esclude: [patto_rinnovato]
+    esito: >-
+      Borgo Basso è vuoto quando l'acqua arriva. Case perse, nessun morto. Madre
+      Corrente se ne va, e la valle dovrà ripartire senza un fiume amico.
+  - id: l_acqua_si_prende_tutto
+    nome: L'Acqua Si Prende Tutto
+    richiede: []
+    esclude: []
+    esito: >-
+      La Pietra cede. Il fiume torna di colpo e travolge Borgo Basso. La valle
+      sopravvive, ma ricorderà il giorno in cui nessuno ha letto l'avviso.
+
+# Come si cambiano i flag: il master chiama il tool imposta_flag, che controlla
+#  - di essere nel luogo giusto (luogo),
+#  - che i requisiti ci siano (richiede_flag, richiede_oggetto),
+#  - che l'ULTIMA prova di abilità sia riuscita, con la statistica giusta e una CD
+#    almeno pari a quella indicata qui.
+# Il master non può quindi "regalare" un esito a parole.
+prove_suggerite:
+  - flag: ruggero_alleato
+    cosa: convincere il Capitano Ruggero a disobbedire agli ordini della baronessa
+    statistica: intelletto
+    cd: 15
+    luogo: rocca_mezzaluna
+  - flag: fiammetta_alleata
+    cosa: convincere Fiammetta a mostrare le sue misure sulla crepa della chiave di volta
+    statistica: intelletto
+    cd: 12
+    luogo: mulino_alto
+  - flag: contratto_trovato
+    cosa: trovare il Contratto originale nell'archivio del Santuario
+    statistica: intelletto
+    cd: 13
+    luogo: santuario_sorgente
+  - flag: pietra_recuperata
+    cosa: staccare o spostare la Pietra del Patto dalla chiave di volta della diga
+    statistica: forza
+    cd: 18
+    luogo: la_diga
+  - flag: paratoie_aperte
+    cosa: aprire le paratoie della diga con gradualità
+    statistica: forza
+    cd: 16
+    luogo: la_diga
+  - flag: borgo_evacuato
+    cosa: convincere gli abitanti di Borgo Basso a evacuare
+    statistica: intelletto
+    cd: 15
+    luogo: borgo_basso
+  - flag: diga_rinforzata
+    cosa: aiutare la Gilda a rinforzare la diga con puntelli e travi
+    statistica: forza
+    cd: 12
+    luogo: la_diga
+  - flag: patto_rinnovato
+    cosa: recitare davanti a Madre Corrente il rito esatto del Patto (serve il Contratto, un formaggio stagionato nell'inventario e un racconto nuovo)
+    statistica: intelletto
+    cd: 15
+    luogo: la_diga
+    richiede_flag: [contratto_trovato]
+    richiede_oggetto: formaggio
+    consuma_oggetto: true
+
+# Prove senza flag, solo come guida per il master.
+altre_prove:
+  - cosa: entrare nella galleria di manutenzione dal canale di scolo (da Nonna Zelinda)
+    statistica: agilita
+    cd: 14
+  - cosa: arrampicarsi lungo la forra fino alla diga evitando le guardie
+    statistica: agilita
+    cd: 15
+  - cosa: scoprire la porticina laterale della diga dal greto (da Pina la Rana)
+    statistica: intelletto
+    cd: 12

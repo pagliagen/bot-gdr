@@ -1,0 +1,7 @@
+python-dotenv>=1.0
+pyyaml>=6.0
+ollama>=0.5
+fastapi>=0.110
+uvicorn>=0.30
+pillow>=10.0
+# Opzionale, solo se vuoi il provider Anthropic: anthropic>=1.0

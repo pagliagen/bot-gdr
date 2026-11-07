@@ -1,0 +1,123 @@
+# Personaggi non giocanti. "segreto" è noto solo al master (e al codice):
+# il master non lo rivela finché il giocatore non lo scopre con prove o indagini.
+
+png:
+  - id: tobia_bonvino
+    nome: Tobia Bonvino
+    ruolo: oste della Locanda del Pesce Pigro
+    luogo: pontevecchio
+    aspetto: uomo rotondo sulla sessantina, baffi enormi e barba grigia, berretto piatto, grembiule macchiato
+    carattere: loquace, millantatore, con un cuore grande e la memoria corta
+    scopo: tenere la locanda piena e la valle in pace
+    segreto: ha seguito l'ultima offerta a Madre Corrente da ragazzo e ricorda il rito esatto
+    voce: "«Ah, ho affrontato un drago, io, una volta... era piccolo, ma drago.»"
+    immagine: assets/png/tobia_bonvino.webp
+    aspetto_en: "a round jovial sixty-year-old innkeeper with an enormous thick grey handlebar mustache and a grey beard, flat cap, rosy cheeks, stained apron, holding a foaming wooden tankard"
+
+  - id: ormando_ruotanera
+    nome: Ormando Ruotanera
+    ruolo: capo della Gilda dei Mulini
+    luogo: mulino_alto
+    aspetto: uomo alto e magro, mani macchiate d'inchiostro, occhiali tondi
+    carattere: carismatico, ottimista a oltranza, convinto di fare il bene di tutti
+    scopo: aprire la diga alla Festa con uno spettacolo che faccia ricca la Gilda
+    segreto: la Pietra del Patto si sta crepando e lui lo nasconde perfino a se stesso
+    voce: "«Il progresso non si ferma. Al massimo rallenta, per ripartire meglio.»"
+    immagine: assets/png/ormando_ruotanera.webp
+    aspetto_en: "a tall thin charismatic engineer in his fifties, round spectacles, ink-stained fingers, leather apron over a fine waistcoat, optimistic confident smile, holding a rolled blueprint"
+
+  - id: fiammetta
+    nome: Fiammetta Spola
+    ruolo: apprendista ingegnera della Gilda
+    luogo: mulino_alto
+    aspetto: ragazza di vent'anni, treccia arruffata, mani nere d'olio
+    carattere: brillante, onesta, terrorizzata di sbagliare
+    scopo: capire perché la diga "canta" di notte
+    segreto: ha misurato le crepe nella chiave di volta e ne ha parlato solo con il suo diario
+    voce: "«I calcoli sono giusti. È la cosa che regge che non lo è.»"
+    immagine: assets/png/fiammetta.webp
+    aspetto_en: "a young female apprentice engineer, around twenty, messy braid, oil-stained hands, worried clever eyes, leather goggles on her forehead"
+
+  - id: odilia_mezzaluna
+    nome: Odilia di Mezzaluna
+    ruolo: baronessa di Mezzaluna
+    luogo: rocca_mezzaluna
+    aspetto: donna di cinquant'anni, dritta come un palo, tailleur di velluto verde, occhi stanchi
+    carattere: pragmatica, sarcastica, collezionista di teiere, tutt'altro che crudele
+    scopo: tenere la valle in ordine senza ispezioni dal regno
+    segreto: riceve una quota della diga e, in fondo, ne ha paura
+    voce: "«Il dovere è una tassa. Io l'ho semplicemente riscossa.»"
+    immagine: assets/png/odilia_mezzaluna.webp
+    aspetto_en: "a stern fifty-year-old baroness, straight posture, green velvet dress, tired sarcastic eyes, a small teacup in her hand"
+
+  - id: ruggero_duro
+    nome: Capitano Ruggero Duro
+    ruolo: capitano della guardia
+    luogo: rocca_mezzaluna
+    aspetto: uomo robusto sui quarant'anni, armatura ammaccata, sguardo da cane bastonato
+    carattere: onesto, stanco, ligio, con pessimo gusto per le battute
+    scopo: far rispettare la legge, qualunque cosa significhi oggi
+    segreto: sospetta della diga e vorrebbe essere convinto a disobbedire
+    voce: "«Obbedisco. Ma lo faccio con aria sospettosa.»"
+    immagine: assets/png/ruggero_duro.webp
+    aspetto_en: "a sturdy forty-year-old guard captain, dented armor, tired kind face, droopy moustache, helmet under his arm"
+
+  - id: sorella_brina
+    nome: Sorella Brina
+    ruolo: custode del Santuario della Sorgente
+    luogo: santuario_sorgente
+    aspetto: anziana minuta, scialle azzurro, occhiali spessi come fondi di bicchiere
+    carattere: pignola, testarda, sente benissimo quando le conviene
+    scopo: ritrovare la Pietra e rifare il Patto senza errori di forma
+    segreto: ha una copia del Contratto con la clausola di rinnovo
+    voce: "«Il modulo 7 va in triplice copia. Madre Corrente lo sa.»"
+    immagine: assets/png/sorella_brina.webp
+    aspetto_en: "a tiny elderly nun-like priestess, blue shawl, very thick glasses, holding a stack of stamped forms, stubborn kind face"
+
+  - id: gedeone_anguilla
+    nome: Gedeone Squamini, detto Fratello Anguilla
+    ruolo: predicatore della Setta dell'Anguilla Argentea
+    luogo: borgo_basso
+    aspetto: uomo magro con tunica di rete da pesca, barba bagnata, sguardo febbrile
+    carattere: drammatico, fervido, molto convinto, poco concludente
+    scopo: portare le anime al fiume prima che sia tardi
+    segreto: non ha ancora preso un solo pesce da quando ha cominciato a predicare
+    voce: "«Pentitevi! L'anguilla vede! L'anguilla... sa dove abitate!»"
+    immagine: assets/png/gedeone_anguilla.webp
+    aspetto_en: "a lean fervent preacher wearing a tunic woven from fishing nets, wet beard, wild feverish eyes, holding a small silver eel"
+
+  - id: nonna_zelinda
+    nome: Nonna Zelinda
+    ruolo: eremita del Bosco dei Salici
+    luogo: bosco_salici
+    aspetto: vecchina con cappello di paglia a falde larghe, bastone nodoso, gonna di mille toppe
+    carattere: ironica, imprevedibile, scambia i favori solo con altri favori
+    scopo: farsi lasciare in pace l'orto
+    segreto: conosce il canale di scolo che porta dentro la galleria di manutenzione della diga
+    voce: "«Zucche, ragazzo. Le uniche creature che non mentono.»"
+    immagine: assets/png/nonna_zelinda.webp
+    aspetto_en: "an old witch-like hermit woman, wide straw hat, knotty walking stick, patched skirt with a thousand patches, sly smile, giant pumpkin beside her"
+
+  - id: pina_la_rana
+    nome: Pina detta la Rana
+    ruolo: contrabbandiera e barcaiola
+    luogo: borgo_basso
+    aspetto: donna tarchiata di trent'anni, cappello a tesa, sorriso da furfante
+    carattere: furba, venale, con un codice d'onore tutto suo
+    scopo: guadagnare passaggi in barca (e ora che il fiume è secco, trovare altro)
+    segreto: sa di una porticina laterale della diga, accessibile solo dal greto
+    voce: "«Con il fiume secco i miei prezzi sono saliti. Sono io a doverci rimettere?»"
+    immagine: assets/png/pina_la_rana.webp
+    aspetto_en: "a stocky thirty-year-old female river smuggler, wide-brimmed hat, roguish grin, rope over her shoulder"
+
+  - id: madre_corrente
+    nome: Madre Corrente
+    ruolo: spirito del Fiume Verde
+    luogo: la_diga
+    aspetto: figura d'acqua trasparente dalle forme di una matrona, capelli di correnti, occhi di ciottoli
+    carattere: severa, formale, ironica, meticolosa; ferita dal mancato rispetto
+    scopo: ottenere il rispetto del Patto (formaggio, racconto, firma)
+    segreto: è stanca e, se non verrà rispettata, se ne va portandosi dietro la valle
+    voce: "«Ho aspettato mille anni per un grazie. Posso aspettare sette giorni per una scusa.»"
+    immagine: assets/png/madre_corrente.webp
+    aspetto_en: "a river spirit, a stern matronly figure made of translucent flowing water, hair of swirling currents, eyes like river pebbles, faint stamp-shaped seal glowing on her chest, dignified and slightly annoyed expression"

@@ -1,0 +1,110 @@
+# Bibbia dell'ambientazione: La Valle di Acquaverde
+# Dati strutturati (leggibili sia da te che dal codice). Il codice li userà per
+# il tool consulta_lore, per la mappa e per i prompt delle immagini dinamiche.
+
+nome: La Valle di Acquaverde
+sintesi: >-
+  Una piccola valle fertile, incastrata tra montagne basse e colline, attraversata dal
+  Fiume Verde, che non è soltanto un fiume: è Madre Corrente, uno spirito antico,
+  permaloso e molto attento ai contratti. Qui la magia è rara e il vero potere è
+  l'acqua: chi la controlla comanda.
+tono: >-
+  Fantasy medievale classico, avventuroso, con ironia. Nessun cattivo da fumetto:
+  tutti hanno le loro buone ragioni e almeno un difetto ridicolo.
+regno: >-
+  La valle appartiene nominalmente al Regno di Alta Marca, lontano e distratto.
+  Nella pratica la governa la Baronessa di Mezzaluna.
+
+# Stile fisso per TUTTE le immagini generate a runtime e per quelle statiche.
+stile_immagini: >-
+  hand-painted storybook fantasy illustration, warm watercolor and ink, soft natural
+  light, gentle humor, muted palette of river green, ochre and slate blue,
+  detailed but not photorealistic, no text, no watermark, no modern objects
+
+storia:
+  - era: Era del Guado
+    quando: circa mille anni fa
+    testo: >-
+      La valle era una palude. Una contadina testarda, Ilda Guadoforte, trattò con lo
+      spirito del fiume e firmò il Patto: ogni anno, alla Festa dell'Apertura, la valle
+      offre a Madre Corrente una forma di formaggio stagionato (la sua unica debolezza)
+      e un racconto nuovo; in cambio il fiume scorre, irriga e non esonda. Il Patto fu
+      scritto su pietra e timbrato con il sigillo dello spirito: la Pietra del Patto.
+  - era: Era dei Pedaggi
+    quando: circa duecento anni fa
+    testo: >-
+      Dopo la Guerra dei Pedaggi, tra tre signorotti che si contendevano il ponte, il
+      Regno di Alta Marca nominò un Barone di Mezzaluna per mettere pace. Tre
+      generazioni dopo la pace costa ancora cara: il pedaggio sul Ponte Vecchio.
+  - era: Era dei Mulini
+    quando: ultimi quarant'anni
+    testo: >-
+      Nasce la Gilda dei Mulini: ingegneri, mugnai e contabili. Con ruote e ingranaggi
+      la valle produce il triplo. Nessuno ricorda più di dover ringraziare qualcuno.
+  - era: La Congiura della Diga
+    quando: ultimi tre anni
+    testo: >-
+      La Gilda costruisce di nascosto una diga nella Forra, in alto, e la baronessa
+      chiude un occhio in cambio di una quota. Come chiave di volta viene usata la
+      Pietra del Patto, sottratta al Santuario con un pretesto. Madre Corrente è
+      prigioniera, ma educata: manda un avviso scritto, che nessuno legge.
+  - era: L'anno scorso
+    quando: dodici mesi fa
+    testo: >-
+      Il rito dell'Apertura viene "semplificato" dalla Gilda: niente formaggio, niente
+      racconto, solo un discorso del capo gilda. Lo spirito considera il Patto violato
+      e dà tempo fino alla prossima Festa.
+
+religioni:
+  - id: madre_corrente
+    nome: Culto di Madre Corrente
+    seguaci: contadini anziani, sorelle del Santuario
+    credenze: >-
+      Il fiume è una persona e va trattata con rispetto e formalità. Si prega con
+      moduli, si ringrazia per iscritto e si porta formaggio. I fedeli sono pignoli:
+      un rito sbagliato di una virgola è un rito da rifare.
+    simbolo: una goccia con un timbro rotondo
+  - id: santi_del_macinato
+    nome: Santi del Macinato
+    seguaci: la Gilda dei Mulini e chi ne vive
+    credenze: >-
+      Culto recente e pratico: San Sacco (patrono del raccolto) e Santa Ruota
+      (patrona del progresso). Dogma: ciò che non gira è sprecato. Non odiano il
+      fiume, lo considerano una risorsa inefficiente.
+    simbolo: una ruota dentata con una spiga
+  - id: anguilla_argentea
+    nome: Setta dell'Anguilla Argentea
+    seguaci: pescatori di Borgo Basso e qualche disperato
+    credenze: >-
+      Predicano che quando le anguille risalgono il fiume asciutto la valle sta per
+      finire e che bisogna "farsi trovare puliti". Hanno ragione per i motivi
+      sbagliati e sono molto rumorosi.
+    simbolo: un'anguilla che si morde la coda
+
+fazioni:
+  - id: gilda
+    nome: Gilda dei Mulini
+    scopo: aumentare la produzione e il profitto; non perdere la diga
+    segreto: la Pietra del Patto sta cedendo e Ormando lo sa
+  - id: baronia
+    nome: Baronia di Mezzaluna
+    scopo: pedaggi, ordine, non avere ispezioni dal regno
+    segreto: la baronessa prende una quota dei profitti della diga
+  - id: santuario
+    nome: Sorelle del Santuario
+    scopo: rifare il Patto e riavere la Pietra
+    segreto: custodiscono una copia del Contratto originale, con le clausole di rinnovo
+  - id: anguille
+    nome: Setta dell'Anguilla Argentea
+    scopo: salvare le anime prima della fine
+    segreto: il predicatore fa il pescatore da due giorni e non ne ha ancora preso uno
+  - id: contrabbandieri
+    nome: Barcaioli del fiume
+    scopo: guadagnare passaggi e silenzi
+    segreto: conoscono un'entrata laterale alla diga
+
+regole_mondo:
+  - "Il tempo di gioco si misura in giorni. Il giocatore arriva il giorno 1."
+  - "Il mondo avanza anche se il giocatore resta fermo: gli eventi della cronologia scattano al loro giorno."
+  - "La magia è rara; gli incantatori sono guardati con curiosità, non con paura."
+  - "Madre Corrente non è malvagia: vuole rispetto, formalità e il suo formaggio."

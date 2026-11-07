@@ -26,12 +26,15 @@ cp .env.example .env      # poi modifica .env (scegli OLLAMA_MODEL)
 ## Avvio
 
 ```bash
-python main.py              # riprende la partita salvata o ne crea una nuova
+python main.py --web        # interfaccia web locale su http://127.0.0.1:8000 (consigliata)
+python main.py              # versione da terminale: riprende la partita salvata o ne crea una nuova
 python main.py --nuova      # ignora il salvataggio
 python main.py --debug      # mostra i tool chiamati, con argomenti ed esiti
 ```
 
-Comandi in partita: `/scheda` `/mappa` `/diario` `/debug` `/salva` `/aiuto` `/esci`.
+**Interfaccia web.** Mostra l'immagine del luogo (se esiste in `assets/luoghi/`), i ritratti dei PNG presenti, la mappa con i luoghi scoperti (gli altri restano nella nebbia), scheda, inventario, diario, orologio e chat. Cliccare un PNG o un luogo sulla mappa scrive l'azione nel campo di testo. La casella *debug* mostra i tool chiamati sotto ogni risposta (attenzione: contengono spoiler). La partita si salva a ogni turno e riprende da sola.
+
+Comandi in partita (versione terminale): `/scheda` `/mappa` `/diario` `/debug` `/salva` `/aiuto` `/esci`.
 Il salvataggio è `saves/partita.json` (si aggiorna a ogni turno).
 
 Per confrontare modelli Ollama sullo stesso scenario: `python scripts/prova_modelli.py qwen3.5:9b gemma4:12b`.
@@ -40,8 +43,11 @@ Per confrontare modelli Ollama sullo stesso scenario: `python scripts/prova_mode
 
 ```
 main.py                 punto d'ingresso
+assets/                 immagini statiche (mappa, ritratti, luoghi)
 lore/                   mondo, luoghi, PNG e avventura (YAML)
 prompts/master.md       system prompt del narratore (modificabile anche a partita in corso)
+gdr/sessione.py         una partita in corso: stato + agente + salvataggio (senza interfaccia)
+gdr/web.py              interfaccia web (FastAPI); la pagina è in web/
 gdr/cli.py              interfaccia da terminale (unico file con input/print)
 gdr/agent.py            il ciclo dell'agente
 gdr/tools.py            schemi e implementazione dei tool
@@ -49,6 +55,7 @@ gdr/rules.py            regole pure (dadi, modificatori, prove)
 gdr/memory.py           system prompt dinamico + compressione della cronologia
 gdr/state.py, models.py stato della partita e salvataggio JSON
 gdr/character_creation.py  creazione del personaggio
+gdr/immagini.py         generazione di immagini in background (Ollama)
 gdr/lore.py             carica e interroga la lore (luoghi, PNG, eventi, finali)
 gdr/llm/                provider intercambiabili (Ollama; Anthropic opzionale)
 ```
@@ -70,6 +77,13 @@ La lore è in `lore/` (file YAML modificabili a mano):
 **Il master non può "regalare" i progressi.** `imposta_flag` controlla in codice luogo, requisiti, oggetti e che l'ultima prova di abilità sia riuscita con statistica e CD giuste. **La geografia è vincolata**: si va solo tra luoghi collegati.
 
 **La lore non sta tutta nel prompt.** Nel system prompt ci sono un riassunto, il luogo attuale con i PNG presenti, l'orologio e i flag. Per il resto il master usa `consulta_lore`. I segreti sono marcati come riservati.
+
+## Immagini
+
+- **Statiche** (le fai tu, prompt in `lore/immagini_statiche.md`): `assets/mappa.webp`, `assets/png/*.webp`, `assets/luoghi/*.webp`.
+- **Generate in locale** con un modello di immagini di Ollama (`ollama pull x/z-image-turbo`, circa 12 GB; richiede macOS con Apple Silicon): quando arrivi in un luogo senza immagine statica, il codice genera l'illustrazione, la salva in `assets/generate/` e la riusa. Il master può inoltre chiamare `illustra_scena` per i momenti chiave (limite: una ogni 3 turni); se nomina un PNG, il codice aggiunge in automatico il suo aspetto per mantenerlo coerente con il ritratto.
+- La generazione avviene **in background** (circa 30 secondi) e la pagina mostra l'immagine appena è pronta. Mentre un'immagine si genera, il modello di testo rallenta (usano la stessa GPU e memoria): se il PC fatica, metti `IMMAGINI=off` nel `.env`.
+- Vanno solo nell'interfaccia web, non nel terminale.
 
 ## Come funziona il ciclo dell'agente
 

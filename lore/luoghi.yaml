@@ -1,0 +1,128 @@
+# Luoghi della Valle di Acquaverde.
+# pos = coordinate sulla mappa, da 0 a 1 (x verso destra, y verso il basso).
+# Allineate alla mappa reale assets/mappa.webp (1024x559).
+# immagine = file statico (generato da te) oppure null: in quel caso, se serve,
+# l'immagine si genera a runtime con l'AI.
+# collegamenti = luoghi raggiungibili e ore di viaggio a piedi.
+
+iniziale: pontevecchio
+
+luoghi:
+  - id: pontevecchio
+    nome: Pontevecchio
+    tipo: villaggio
+    pos: [0.53, 0.55]
+    descrizione: >-
+      Il centro della valle: case di pietra grigia attorno a un ponte ad arco coperto
+      di muschio. Il pedaggio si paga a una garitta storta. Qui si trova la Locanda
+      del Pesce Pigro, dove tutti sanno tutto e metà è inventato.
+    dettagli: >-
+      Mercato ogni mattina, fontana al centro con una statua di Ilda Guadoforte (le
+      manca un braccio), odore di pane e di fiume.
+    luoghi_interni: [Locanda del Pesce Pigro, garitta del pedaggio, mercato, fontana]
+    immagine: assets/luoghi/pontevecchio.webp
+    prompt_immagine: >-
+      wide scene of a small stone village around a mossy arched bridge, a crooked toll booth, a fountain with a one-armed statue of a woman, a warm tavern with a fish-shaped sign, a shallow low river beneath the bridge, morning light
+    collegamenti: {mulino_alto: 3, rocca_mezzaluna: 4, borgo_basso: 5, bosco_salici: 3}
+
+  - id: mulino_alto
+    nome: Mulino Alto
+    tipo: sede della Gilda
+    pos: [0.35, 0.43]
+    descrizione: >-
+      Il primo e più grande mulino, sede della Gilda dei Mulini: una grande ruota che
+      gira e ingranaggi di legno e bronzo ovunque. Tutto è ordinato, pulito e
+      leggermente inquietante.
+    dettagli: >-
+      Uffici con scrivanie piene di progetti, un grande orologio ad acqua, guardie
+      della Gilda in grembiule di cuoio. La ruota gira più lentamente da qualche giorno.
+    luoghi_interni: [officina, ufficio del capo gilda, magazzino delle farine]
+    immagine: assets/luoghi/mulino_alto.webp
+    prompt_immagine: >-
+      a large watermill complex with a big slowly turning wooden wheel, brass and wood gears everywhere, tidy offices, guards in leather aprons, slightly eerie order, golden afternoon light
+    collegamenti: {pontevecchio: 3, la_diga: 4}
+
+  - id: la_diga
+    nome: La Diga della Forra
+    tipo: struttura segreta
+    pos: [0.23, 0.27]
+    descrizione: >-
+      Una diga massiccia di pietra e legno ficcata in una gola stretta. Dietro si vede
+      un lago nuovo, troppo calmo. Una pietra incisa, la chiave di volta, pulsa piano
+      di un debole bagliore verde.
+    dettagli: >-
+      Passerelle di servizio, paratoie con grandi volani, guardie con occhiaie. Si
+      sente l'acqua premere dall'altra parte.
+    luoghi_interni: [coronamento, sala delle paratoie, galleria di manutenzione]
+    immagine: assets/luoghi/la_diga.webp
+    prompt_immagine: >-
+      a massive stone and timber dam wedged in a narrow rocky gorge, a calm too-still lake behind it, a keystone glowing faint green, narrow walkways, tense atmosphere, twilight
+    collegamenti: {mulino_alto: 4, santuario_sorgente: 5}
+
+  - id: santuario_sorgente
+    nome: Santuario della Sorgente
+    tipo: santuario
+    pos: [0.07, 0.46]
+    descrizione: >-
+      Una piccola grotta tra felci e rocce bagnate dove il fiume nasce da una fessura.
+      Un tempietto semplice, con un altare vuoto dove un tempo c'era la Pietra del
+      Patto. Le sorelle vivono qui tra moduli, timbri e vasi di formaggio.
+    dettagli: >-
+      Archivio di pergamene in un armadio umido, candele, un pavimento sempre
+      scivoloso. La sorgente gorgoglia più piano ogni giorno.
+    luoghi_interni: [grotta, altare vuoto, archivio]
+    immagine: assets/luoghi/santuario_sorgente.webp
+    prompt_immagine: >-
+      a small cave shrine among ferns and wet rocks where a spring flows from a crack, a simple altar with an empty pedestal, candles, shelves of stamped parchments, soft green light
+    collegamenti: {la_diga: 5, bosco_salici: 6}
+
+  - id: rocca_mezzaluna
+    nome: Rocca di Mezzaluna
+    tipo: castello
+    pos: [0.78, 0.27]
+    descrizione: >-
+      Un castelletto su un colle a forma di mezzaluna, con torri piccole e bandiere
+      molto grandi. Dentro, la baronessa governa con registro dei pedaggi e una
+      collezione di teiere.
+    dettagli: >-
+      Sala delle udienze con sedie scomode di proposito, cortile con soldati
+      annoiati, torre con vista sulla valle e sulla diga lontana.
+    luoghi_interni: [sala delle udienze, cortile, torre, stanza dei registri]
+    immagine: assets/luoghi/rocca_mezzaluna.webp
+    prompt_immagine: >-
+      a small castle on a crescent-shaped hill, small towers with oversized banners, sleepy soldiers in a courtyard, a view over a quiet valley, late afternoon
+    collegamenti: {pontevecchio: 4, borgo_basso: 5}
+
+  - id: borgo_basso
+    nome: Borgo Basso
+    tipo: villaggio di pescatori
+    pos: [0.86, 0.69]
+    descrizione: >-
+      Case su palafitte lungo una grande ansa del fiume, barche tirate a secco,
+      reti stese ovunque. Qui il fiume dovrebbe essere largo; oggi è un rigagnolo
+      tra fango e pesci stupiti.
+    dettagli: >-
+      Un molo che finisce sulla terra, un'osteria galleggiante ormai incagliata,
+      un tempietto della Setta dell'Anguilla con un'insegna ancora fresca.
+    luoghi_interni: [molo, osteria incagliata, tempietto dell'Anguilla, mulino fermo]
+    immagine: assets/luoghi/borgo_basso.webp
+    prompt_immagine: >-
+      a fishing village on stilts on the banks of a nearly dry riverbed, the river has almost vanished leaving wide cracked mud flats and only a thin trickle and small puddles, wooden boats stranded on dry cracked mud, long wooden piers ending above empty ground, fishing nets hanging everywhere, a small shrine with an eel sign, stunned fish flopping in puddles, grey overcast morning
+    collegamenti: {pontevecchio: 5, rocca_mezzaluna: 5}
+
+  - id: bosco_salici
+    nome: Bosco dei Salici Parlanti
+    tipo: bosco
+    pos: [0.20, 0.77]
+    descrizione: >-
+      Un bosco umido di salici antichi che sussurrano quando soffia il vento (e a
+      volte anche quando no). Nel mezzo, una capanna storta dove vive Nonna
+      Zelinda, con un orto di zucche enormi.
+    dettagli: >-
+      Sentieri che cambiano idea, lucciole di giorno, funghi grandi come sgabelli.
+      Un vecchio canale di scolo porta al canale di manutenzione della diga.
+    luoghi_interni: [capanna di Zelinda, radura dei salici, canale di scolo]
+    immagine: assets/luoghi/bosco_salici.webp
+    prompt_immagine: >-
+      a damp ancient willow forest, whispering trees with faces in the bark, daytime fireflies, huge mushrooms like stools, a crooked hut with a garden of giant pumpkins, misty
+    collegamenti: {pontevecchio: 3, santuario_sorgente: 6}
