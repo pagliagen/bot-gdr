@@ -33,7 +33,7 @@ zone:
     - id: emporio
       nome: Emporio di Gelsomina
       orari: [8, 13]
-      chiusa_perche: "La serranda di legno è abbassata e c'è un cartello scritto a mano."
+      chiusa_perche: "Le imposte di legno sono chiuse e sbarrate, con una tavoletta appesa alla porta e un messaggio scritto col gesso."
       descrizione: >-
         Bottega piena di corde, lanterne, spezie e forme di formaggio stagionato appese
         al soffitto. Apre solo la mattina: nel pomeriggio Gelsomina va a fare i conti.
@@ -140,7 +140,7 @@ zone:
     - id: archivio
       nome: Archivio delle sorelle
       orari: [9, 17]
-      chiusa_perche: "Sorella Brina ha chiuso l'archivio con tre timbri e un cartello: «Orario d'ufficio»."
+      chiusa_perche: "Sorella Brina ha chiuso l'archivio con tre timbri di cera e una tavoletta: «Si riceve di giorno»."
       descrizione: >-
         Armadi umidi pieni di pergamene timbrate, moduli in triplice copia e vasi di
         formaggio. Il Contratto originale è da qualche parte qui dentro.

@@ -54,7 +54,7 @@ png:
     routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
       - {dalle: 10, alle: 16, zona: sala_udienze}
       - {dalle: 16, alle: 20, zona: torre}
-    aspetto: donna di cinquant'anni, dritta come un palo, tailleur di velluto verde, occhi stanchi
+    aspetto: donna di cinquant'anni, dritta come un palo, abito di velluto verde, occhi stanchi
     carattere: pragmatica, sarcastica, collezionista di teiere, tutt'altro che crudele
     scopo: tenere la valle in ordine senza ispezioni dal regno
     segreto: riceve una quota della diga e, in fondo, ne ha paura
