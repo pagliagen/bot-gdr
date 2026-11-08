@@ -17,6 +17,7 @@
       <label class="debug" title="Mostra i tool chiamati dal narratore (contiene spoiler: segreti dei PNG e retroscena)">
         <input type="checkbox" id="debug"> debug
       </label>
+      <button id="btn-mappa" type="button" hidden>🗺 Mappa</button>
       <button id="btn-nuova" type="button" hidden>Nuova partita</button>
     </div>
   </header>
@@ -54,10 +55,6 @@
       <div id="zone-lista" class="zone-lista" aria-label="Zone del luogo"></div>
       <div id="png-qui" class="png-lista"></div>
       <p id="collegamenti" class="piccolo"></p>
-      <div id="mappa-box">
-        <img id="img-mappa" alt="Mappa della valle" hidden>
-        <div id="pins"></div>
-      </div>
     </section>
 
     <section id="colonna-dx">
@@ -75,6 +72,18 @@
       </form>
     </section>
   </main>
+
+  <!-- Mappa in popup -->
+  <div id="mappa-popup" hidden role="dialog" aria-modal="true" aria-label="Mappa della valle">
+    <div class="mappa-contenitore">
+      <button type="button" id="btn-mappa-chiudi" class="chiudi" aria-label="Chiudi la mappa">✕</button>
+      <div id="mappa-box">
+        <img id="img-mappa" alt="Mappa della valle" hidden>
+        <div id="pins"></div>
+      </div>
+      <p class="piccolo">Clicca un luogo già visitato per scrivere l'azione di andarci.</p>
+    </div>
+  </div>
 
   <div id="fine" hidden>
     <div class="fine-box">

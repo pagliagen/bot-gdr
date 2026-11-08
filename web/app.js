@@ -37,7 +37,19 @@ function mostra(schermata) {
   $("gioco").hidden = schermata !== "gioco";
   $("orologio").hidden = schermata !== "gioco";
   $("btn-nuova").hidden = schermata !== "gioco";
+  $("btn-mappa").hidden = schermata !== "gioco";
+  if (schermata !== "gioco") $("mappa-popup").hidden = true;
 }
+
+// --- Mappa in popup ---------------------------------------------------------------
+function mappa(aperta) {
+  $("mappa-popup").hidden = !aperta;
+  if (aperta) $("btn-mappa-chiudi").focus(); else if (!$("gioco").hidden) $("btn-mappa").focus();
+}
+$("btn-mappa").addEventListener("click", () => mappa($("mappa-popup").hidden));
+$("btn-mappa-chiudi").addEventListener("click", () => mappa(false));
+$("mappa-popup").addEventListener("click", (e) => { if (e.target === $("mappa-popup")) mappa(false); });  // clic sullo sfondo
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("mappa-popup").hidden) mappa(false); });
 
 // --- Creazione personaggio ---------------------------------------------------------
 function costruisciCreazione(opz) {
@@ -142,12 +154,12 @@ function render(v) {
   $("collegamenti").textContent = "Da qui: " + l.collegamenti.map((c) => `${c.nome === "?" ? "luogo ignoto" : c.nome} (${c.ore} h)`).join(" · ");
 
   // Mappa
-  const mappa = $("img-mappa");
-  if (v.mappa.immagine) { mappa.src = v.mappa.immagine; mappa.hidden = false; }
+  const imgMappa = $("img-mappa");
+  if (v.mappa.immagine) { imgMappa.src = v.mappa.immagine; imgMappa.hidden = false; }
   $("pins").innerHTML = v.mappa.pins
     .map((pin) => `<div class="pin ${pin.stato}" style="left:${pin.x * 100}%;top:${pin.y * 100}%" data-nome="${esc(pin.nome)}" title="${esc(pin.nome)}"><div class="punto"></div>${pin.stato !== "vicino" ? `<div class="etichetta">${esc(pin.nome)}</div>` : ""}</div>`)
     .join("");
-  document.querySelectorAll(".pin.visitato").forEach((el) => el.addEventListener("click", () => inserisci(`Vado a ${el.dataset.nome}. `)));
+  document.querySelectorAll(".pin.visitato").forEach((el) => el.addEventListener("click", () => { mappa(false); inserisci(`Vado a ${el.dataset.nome}. `); }));
 
   // Scheda
   $("s-nome").textContent = p.nome;

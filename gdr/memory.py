@@ -26,7 +26,7 @@ def costruisci_system(prompt_base: str, stato: StatoPartita, mondo: Mondo | None
         f"{prompt_base}\n\n"
         f"{blocco_mondo}"
         "## STATO ATTUALE DEL PERSONAGGIO (dato dal gioco, è la verità)\n"
-        f"Personaggio: {p.nome}, {p.classe}. Statistiche: {stats}.\n"
+        f"Personaggio: {p.nome}, {p.classe}. Statistiche: {stats}. (Il nome è un dato di gioco: i PNG lo conoscono SOLO se il giocatore si è presentato a loro, vedi il diario.)\n"
         f"PF: {p.pf}/{p.pf_max}. Inventario: {', '.join(p.inventario) or 'vuoto'}.\n"
         f"Luogo attuale: {stato.luogo_corrente}. Luoghi visitati: {', '.join(stato.luoghi_visitati)}.\n\n"
         "## DIARIO DELLA PARTITA (eventi passati importanti)\n"
