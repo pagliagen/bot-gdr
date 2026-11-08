@@ -310,6 +310,8 @@ body.debug-on .tool-log { display: block; }
 
 #form-azione { display: flex; gap: 8px; }
 #azione { flex: 1; }
+button.secondario { background: transparent; border: 1px solid currentColor; color: inherit; }
+.fine-box button + button { margin-left: 8px; }
 
 /* Fine */
 #fine {

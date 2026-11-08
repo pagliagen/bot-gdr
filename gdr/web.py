@@ -11,11 +11,13 @@ chiamate al `GestoreSessioni` / alla `Sessione`. Si occupa però di sicurezza:
 from __future__ import annotations
 
 import hmac
+import json
+import queue
 import threading
 import time
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -177,6 +179,51 @@ def crea_app(cfg: Config, gestore: GestoreSessioni | None = None, utenti: Utenti
             esito["tool"] = []  # il dettaglio dei tool contiene segreti dei PNG e retroscena
         return {**esito, "vista": sess.vista()}
 
+    def _flusso(sess: Sessione, utente: str, testo: str, iniziale: bool) -> StreamingResponse:
+        """Il turno in streaming: righe JSON (una per riga) man mano che il narratore scrive.
+
+            {"tipo": "testo", "t": "..."}      un pezzetto di testo da accodare
+            {"tipo": "scarta"}                  il testo mostrato finora non era la narrazione: toglilo
+            {"tipo": "fine", "esito": {...}}    turno concluso (stesso contenuto della risposta non in streaming)
+            {"tipo": "errore", "stato": 409, "detail": "..."}
+        Il turno gira in un thread a parte e passa i pezzetti con una coda: così non si blocca il server.
+        """
+        coda: queue.Queue = queue.Queue()
+
+        def su_testo(pezzo: str | None) -> None:
+            coda.put({"tipo": "scarta"} if pezzo is None else {"tipo": "testo", "t": pezzo})
+
+        def lavora() -> None:
+            try:
+                esito = sess.inizia(su_testo) if iniziale else sess.turno(testo, su_testo)
+                if utente not in cfg.admin:
+                    esito["tool"] = []
+                coda.put({"tipo": "fine", "esito": {**esito, "vista": sess.vista()}})
+            except SessioneOccupata as e:
+                coda.put({"tipo": "errore", "stato": 409, "detail": str(e)})
+            except Exception as e:  # modello spento, rete...: il turno è già stato annullato dall'agente
+                coda.put({"tipo": "errore", "stato": 502, "detail": f"Errore nella chiamata al modello: {e}"})
+            coda.put(None)
+
+        threading.Thread(target=lavora, daemon=True, name="turno-stream").start()
+
+        def righe():
+            while (voce := coda.get()) is not None:
+                yield json.dumps(voce, ensure_ascii=False) + "\n"
+
+        return StreamingResponse(righe(), media_type="application/x-ndjson", headers={"X-Accel-Buffering": "no"})  # niente buffering se dietro nginx
+
+    @app.post("/api/partite/{avventura}/inizia-stream")
+    def inizia_stream(avventura: str, utente: str = Depends(utente_corrente)) -> StreamingResponse:
+        return _flusso(con_partita(utente, avventura), utente, "", True)
+
+    @app.post("/api/partite/{avventura}/turno-stream")
+    def turno_stream(avventura: str, azione: Azione, utente: str = Depends(utente_corrente)) -> StreamingResponse:
+        testo = azione.testo.strip()
+        if not testo:
+            raise HTTPException(400, "Scrivi cosa fa il tuo personaggio.")
+        return _flusso(con_partita(utente, avventura), utente, testo, False)
+
     @app.post("/api/partite/{avventura}/inizia")
     def inizia(avventura: str, utente: str = Depends(utente_corrente)) -> dict:
         return _turno(con_partita(utente, avventura), utente, "", iniziale=True)
@@ -187,6 +234,18 @@ def crea_app(cfg: Config, gestore: GestoreSessioni | None = None, utenti: Utenti
         if not testo:
             raise HTTPException(400, "Scrivi cosa fa il tuo personaggio.")
         return _turno(con_partita(utente, avventura), utente, testo)
+
+    @app.post("/api/partite/{avventura}/annulla")
+    def annulla(avventura: str, utente: str = Depends(utente_corrente)) -> dict:
+        """Annulla l'ultimo turno (anche se aveva chiuso la partita: per questo non passa da con_partita)."""
+        sess = sessione_di(utente, avventura)
+        if sess.stato is None and not sess.carica(anche_conclusa=True):
+            raise HTTPException(409, "Nessuna partita in questa avventura.")
+        try:
+            testo = sess.annulla()
+        except (SessioneOccupata, RuntimeError) as e:  # turno in corso, oppure niente da annullare
+            raise HTTPException(409, str(e))
+        return {"testo": testo, "vista": sess.vista()}
 
     # --- File statici ------------------------------------------------------------------
     # Solo le immagini di ogni avventura: la sua lore (con i segreti) non viene mai servita.

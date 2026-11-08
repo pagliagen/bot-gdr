@@ -20,6 +20,8 @@ from .tools import Strumenti
 
 # Callback per il debug: riceve (tipo_evento, dati). La CLI decide come mostrarli.
 SuEvento = Callable[[str, dict[str, Any]], None]
+# Callback dello streaming: riceve un pezzetto di testo, oppure None per "scarta quanto mostrato finora".
+SuTesto = Callable[[str | None], None]
 
 
 class Agente:
@@ -45,8 +47,13 @@ class Agente:
         self.mondo = mondo
         self.strumenti = strumenti or Strumenti(stato, mondo=mondo)
 
-    def turno(self, testo_giocatore: str) -> str:
-        """Gestisce un turno completo e restituisce il testo narrativo da mostrare."""
+    def turno(self, testo_giocatore: str, su_testo: SuTesto | None = None) -> str:
+        """Gestisce un turno completo e restituisce il testo narrativo da mostrare.
+
+        Se `su_testo` è dato, riceve il testo man mano che il modello lo scrive (streaming).
+        Riceve `None` quando il testo mostrato finora va buttato: il modello l'ha scritto prima
+        di chiamare un tool, quindi non è la narrazione finale.
+        """
         s = self.stato
         s.turno += 1
         self.strumenti.nuovo_turno()
@@ -54,7 +61,7 @@ class Agente:
         comprimi_se_serve(s, self.soglia_messaggi, self.messaggi_recenti)
 
         try:
-            return self._ciclo()
+            return self._ciclo(su_testo)
         except Exception:
             # Errore (rete, API...): annulla il turno così la cronologia resta coerente.
             s.turno -= 1
@@ -69,7 +76,7 @@ class Agente:
                 del m[i:]
                 return
 
-    def _ciclo(self) -> str:
+    def _ciclo(self, su_testo: SuTesto | None = None) -> str:
         s = self.stato
         for _ in range(self.max_iterazioni):
             # Il prompt si rilegge da file a ogni giro: lo puoi modificare a partita in corso.
@@ -77,7 +84,12 @@ class Agente:
             system = costruisci_system(prompt, s, self.mondo)
 
             # 1) chiama il modello
-            risposta = self.provider.chiama(system, s.messaggi, self.strumenti.schemi())
+            if su_testo:
+                risposta = self.provider.chiama_stream(system, s.messaggi, self.strumenti.schemi(), su_testo)
+                if risposta.chiamate_tool and risposta.testo:
+                    su_testo(None)  # non era la narrazione finale: l'interfaccia deve toglierla
+            else:
+                risposta = self.provider.chiama(system, s.messaggi, self.strumenti.schemi())
 
             # 2) registra la risposta del modello nella cronologia
             blocchi: list[dict] = []

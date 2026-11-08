@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable
 
 
 @dataclass
@@ -37,3 +37,14 @@ class LLMProvider(ABC):
     @abstractmethod
     def chiama(self, system: str, messaggi: list[dict], tools: list[dict]) -> RispostaLLM:
         """Una singola chiamata al modello. `tools` è la lista di TOOL_SCHEMAS."""
+
+    def chiama_stream(self, system: str, messaggi: list[dict], tools: list[dict], su_testo: Callable[[str], None]) -> RispostaLLM:
+        """Come `chiama`, ma passa a `su_testo` i pezzetti di testo man mano che arrivano.
+
+        Il provider che non sa fare streaming eredita questa versione: aspetta la risposta intera
+        e la consegna in un colpo solo (funziona uguale, solo senza l'effetto "scrive in diretta").
+        """
+        risposta = self.chiama(system, messaggi, tools)
+        if risposta.testo:
+            su_testo(risposta.testo)
+        return risposta

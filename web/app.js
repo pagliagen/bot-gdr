@@ -37,6 +37,39 @@ async function api(percorso, corpo) {
   return dati;
 }
 
+// Come api(), ma per le risposte in streaming: una riga JSON alla volta (vedi gdr/web.py, `_flusso`).
+// Chiama `suEvento` per ogni riga e restituisce l'esito finale del turno.
+async function apiFlusso(percorso, corpo, suEvento) {
+  const r = await fetch(percorso, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) });
+  if (!r.ok) {  // errori prima dell'inizio dello streaming (login, partita assente, testo vuoto...)
+    let dati = {};
+    try { dati = await r.json(); } catch (_) { /* non JSON */ }
+    if (r.status === 401) { utente = null; mostra("accesso"); }
+    throw new Error(typeof dati.detail === "string" ? dati.detail : `Errore ${r.status}`);
+  }
+  const lettore = r.body.getReader();
+  const decodifica = new TextDecoder();
+  let resto = "", esito = null;
+  const riga = (s) => {
+    if (!s.trim()) return;
+    const ev = JSON.parse(s);
+    if (ev.tipo === "errore") throw new Error(ev.detail);
+    if (ev.tipo === "fine") esito = ev.esito;
+    else suEvento(ev);
+  };
+  for (;;) {
+    const { done, value } = await lettore.read();
+    if (done) break;
+    resto += decodifica.decode(value, { stream: true });
+    const righe = resto.split("\n");
+    resto = righe.pop();  // l'ultima può essere incompleta
+    righe.forEach(riga);
+  }
+  riga(resto);
+  if (!esito) throw new Error("Connessione interrotta: riprova.");
+  return esito;
+}
+
 function mostra(schermata) {
   for (const s of ["accesso", "menu", "creazione", "gioco"]) $(s).hidden = schermata !== s;
   $("orologio").hidden = schermata !== "gioco";
@@ -278,6 +311,10 @@ function render(v) {
   $("s-inv").innerHTML = p.inventario.length ? p.inventario.map((o) => `<li>${esc(o)}</li>`).join("") : "<li>vuoto</li>";
   $("s-diario").innerHTML = v.diario.length ? v.diario.map((d) => `<li>${esc(d)}</li>`).join("") : "<li>vuoto</li>";
 
+  // Annulla: solo se c'è un turno da annullare
+  $("btn-annulla").hidden = !v.puo_annullare;
+  $("btn-fine-annulla").hidden = !v.puo_annullare;
+
   // Fine partita
   if (v.fine) {
     $("fine-titolo").textContent = v.fine.titolo;
@@ -341,19 +378,36 @@ function aggiungiNarrazione(esito) {
 function impostaOccupato(si) {
   occupato = si;
   $("btn-invia").disabled = si;
+  $("btn-annulla").disabled = si;
   $("azione").disabled = si;
   if (!si) $("azione").focus();
 }
 
-async function eseguiTurno(chiamata, ripristinaTesto) {
+// Esegue un turno in streaming: il testo del narratore compare man mano in una "bolla provvisoria",
+// che alla fine viene sostituita dalla narrazione definitiva (con eventi e log dei tool).
+async function eseguiTurno(percorso, corpo, ripristinaTesto) {
   impostaOccupato(true);
   const attesa = aggiungiMsg("sistema", 'Il narratore scrive<span class="pensando"> <span>.</span><span>.</span><span>.</span></span>');
+  let bolla = null, testo = "";
+  const togliBolla = () => { if (bolla) { bolla.remove(); bolla = null; } testo = ""; attesa.hidden = false; };
   try {
-    const esito = await chiamata();
+    const esito = await apiFlusso(percorso, corpo, (ev) => {
+      if (ev.tipo === "testo") {
+        testo += ev.t;
+        attesa.hidden = true;
+        if (!bolla) bolla = aggiungiMsg("narratore", "");
+        bolla.innerHTML = renderTesto(testo);
+        scorri();
+      } else if (ev.tipo === "scarta") {
+        togliBolla();  // il testo era un preambolo prima di un tool: non è la narrazione
+      }
+    });
+    togliBolla();
     attesa.remove();
     aggiungiNarrazione(esito);
     render(esito.vista);
   } catch (err) {
+    togliBolla();
     attesa.remove();
     aggiungiMsg("sistema", esc(err.message), "errore-msg");
     if (ripristinaTesto !== undefined) $("azione").value = ripristinaTesto;
@@ -363,7 +417,7 @@ async function eseguiTurno(chiamata, ripristinaTesto) {
 }
 
 function inizia() {
-  return eseguiTurno(() => api(partita("inizia"), {}));
+  return eseguiTurno(partita("inizia-stream"), {});
 }
 
 $("form-azione").addEventListener("submit", (e) => {
@@ -372,11 +426,30 @@ $("form-azione").addEventListener("submit", (e) => {
   if (!testo || occupato) return;
   $("azione").value = "";
   const mio = aggiungiMsg("giocatore", renderTesto(testo));
-  eseguiTurno(() => api(partita("turno"), { testo }), testo).then(() => {
+  eseguiTurno(partita("turno-stream"), { testo }, testo).then(() => {
     // se il turno è fallito la risposta d'errore resta nella chat: il messaggio del giocatore non è stato registrato
     if ($("chat").lastElementChild && $("chat").lastElementChild.classList.contains("errore-msg")) mio.remove();
   });
 });
+
+// Annulla l'ultimo turno: la chat si ricostruisce dal salvataggio e il testo scritto torna nella casella.
+async function annulla() {
+  if (occupato) return;
+  impostaOccupato(true);
+  try {
+    const { vista, testo } = await api(partita("annulla"), {});
+    $("chat").innerHTML = "";
+    for (const m of vista.cronologia) aggiungiMsg(m.ruolo, renderTesto(m.testo));
+    render(vista);
+    $("azione").value = testo;
+  } catch (err) {
+    aggiungiMsg("sistema", esc(err.message), "errore-msg");
+  } finally {
+    impostaOccupato(false);
+  }
+}
+$("btn-annulla").addEventListener("click", annulla);
+$("btn-fine-annulla").addEventListener("click", annulla);
 
 // --- Comandi dell'header --------------------------------------------------------------
 $("btn-menu").addEventListener("click", vaiMenu);

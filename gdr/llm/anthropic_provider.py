@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Callable
+
 import anthropic
 
 from .base import ChiamataTool, LLMProvider, RispostaLLM
@@ -23,6 +25,17 @@ class AnthropicProvider(LLMProvider):
             messages=messaggi,
             tools=tools,
         )
+        return self._converti(risposta)
+
+    def chiama_stream(self, system: str, messaggi: list[dict], tools: list[dict], su_testo: Callable[[str], None]) -> RispostaLLM:
+        with self.client.messages.stream(model=self.model, max_tokens=self.max_tokens, system=system, messages=messaggi, tools=tools) as flusso:
+            for pezzo in flusso.text_stream:
+                su_testo(pezzo)
+            risposta = flusso.get_final_message()
+        return self._converti(risposta)
+
+    @staticmethod
+    def _converti(risposta) -> RispostaLLM:
         testo, chiamate = [], []
         for blocco in risposta.content:
             if blocco.type == "text":

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from typing import Callable
 
 import ollama
 
@@ -49,18 +50,37 @@ class OllamaProvider(LLMProvider):
                         out.append({"role": "tool", "tool_name": nomi_tool.get(b["tool_use_id"], ""), "content": b["content"]})
         return out
 
-    def chiama(self, system: str, messaggi: list[dict], tools: list[dict]) -> RispostaLLM:
-        risposta = self.client.chat(
+    def _richiesta(self, system: str, messaggi: list[dict], tools: list[dict], **extra):
+        return self.client.chat(
             model=self.model,
             messages=self._converti_messaggi(system, messaggi),
             tools=self._converti_tools(tools),
             options={"num_ctx": self.num_ctx},
+            **extra,
         )
-        msg = risposta.message
-        # `msg.thinking` (il ragionamento dei modelli "thinking") viene ignorato di proposito.
+
+    @staticmethod
+    def _risposta(testo: str, tool_calls) -> RispostaLLM:
         chiamate = [
             # Ollama non assegna id alle chiamate: ne inventiamo uno univoco.
             ChiamataTool(id=f"ollama_{i}_{tc.function.name}", nome=tc.function.name, argomenti=dict(tc.function.arguments or {}))
-            for i, tc in enumerate(msg.tool_calls or [])
+            for i, tc in enumerate(tool_calls or [])
         ]
-        return RispostaLLM(testo=(msg.content or "").strip(), chiamate_tool=chiamate)
+        return RispostaLLM(testo=testo.strip(), chiamate_tool=chiamate)
+
+    def chiama(self, system: str, messaggi: list[dict], tools: list[dict]) -> RispostaLLM:
+        msg = self._richiesta(system, messaggi, tools).message
+        # `msg.thinking` (il ragionamento dei modelli "thinking") viene ignorato di proposito.
+        return self._risposta(msg.content or "", msg.tool_calls)
+
+    def chiama_stream(self, system: str, messaggi: list[dict], tools: list[dict], su_testo: Callable[[str], None]) -> RispostaLLM:
+        """Streaming: il testo arriva a pezzetti (`content`), le chiamate ai tool in un pezzo a parte."""
+        testo: list[str] = []
+        tool_calls: list = []
+        for pezzo in self._richiesta(system, messaggi, tools, stream=True):
+            msg = pezzo.message
+            if msg.content:  # il ragionamento (`thinking`) non si mostra
+                testo.append(msg.content)
+                su_testo(msg.content)
+            tool_calls.extend(msg.tool_calls or [])
+        return self._risposta("".join(testo), tool_calls)

@@ -124,7 +124,11 @@ Un tetto (`MAX_ITERAZIONI`) evita cicli infiniti. I tool non vanno mai in crash:
 
 **Memoria.** I messaggi vecchi non si mandano per sempre: sopra `SOGLIA_MESSAGGI` si tengono solo gli ultimi `MESSAGGI_RECENTI` (tagliando sempre all'inizio di un turno, per non separare un tool dal suo risultato). Il filo della storia resta nel **diario** (tool `scrivi_diario`), che viene reinserito nel system prompt a ogni chiamata.
 
-**Provider.** `gdr/llm/base.py` definisce un'interfaccia con un solo metodo, `chiama(system, messaggi, tools)`. Ogni provider traduce da/verso il proprio formato; l'agente non sa quale usa.
+**Provider.** `gdr/llm/base.py` definisce un'interfaccia con `chiama(system, messaggi, tools)` e `chiama_stream(...)`. Ogni provider traduce da/verso il proprio formato; l'agente non sa quale usa. Un provider senza streaming eredita una versione che consegna tutto il testo in un colpo solo.
+
+**Streaming.** Nel web il testo del narratore compare man mano (`/api/partite/<avventura>/turno-stream`, una riga JSON per pezzetto). Se il modello scrive del testo *prima* di chiamare un tool, quel testo non è la narrazione finale: l'agente manda un segnale "scarta" e l'interfaccia lo toglie. La narrazione definitiva (con eventi e log dei tool) sostituisce la bolla provvisoria alla fine del turno.
+
+**Annulla ultimo turno.** Prima di ogni turno si ricorda lo stato com'era (`<avventura>.prev.json` accanto al salvataggio). Il pulsante "↩ Annulla" lo ripristina e rimette nella casella il testo scritto, per riformularlo. Un solo livello; l'apertura dell'avventura non si annulla. Attenzione: i dadi vengono tirati di nuovo, quindi annullare dopo una prova fallita è un modo per ritentare.
 
 ## Limiti noti
 
@@ -138,3 +142,15 @@ Un tetto (`MAX_ITERAZIONI`) evita cicli infiniti. I tool non vanno mai in crash:
 3. **Combattimento strutturato**: iniziativa, CA e attacchi gestiti dal codice, con vantaggio/svantaggio come in 5e.
 4. **Immagini**: generare un'illustrazione per ogni nuova località, partendo dal tool `sposta_in`.
 5. **Riassunti automatici**: a un certo punto far riassumere la storia al modello stesso, per diari molto lunghi.
+
+## Test
+
+I test girano in locale, senza modello, senza Ollama e senza toccare `saves/` (usano un modello finto e cartelle temporanee):
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
+Coprono regole e dadi, tool (compresi i flag che il master non può regalare), zone e orari, ciclo dell'agente, sessioni, utenti e login, API web con la sicurezza, e per ognuna delle tre avventure la coerenza dei dati e la raggiungibilità di tutti i finali.
+

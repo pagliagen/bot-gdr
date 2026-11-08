@@ -6,6 +6,7 @@ loro si occupano solo di mostrare e di raccogliere input.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import threading
 from pathlib import Path
@@ -57,15 +58,20 @@ class Sessione:
         self._posto_visto: tuple[str, str] = ("", "")  # (luogo, zona) dell'ultimo turno: per accorgersi che il giocatore si è mosso
 
     @property
+    def _percorso_precedente(self) -> Path:
+        """Lo stato di prima dell'ultimo turno (serve ad 'Annulla'): acquaverde.json -> acquaverde.prev.json."""
+        return self.percorso_salvataggio.with_suffix(".prev.json")
+
+    @property
     def _cartella_generate(self) -> Path:
         """Cache delle immagini generate: dentro l'avventura, servita insieme alle sue immagini statiche."""
         return self.mondo.cartella / "assets" / "generate"
 
     # --- Ciclo di vita ----------------------------------------------------------
-    def carica(self) -> bool:
-        """Riprende il salvataggio, se esiste ed è ancora in corso."""
+    def carica(self, anche_conclusa: bool = False) -> bool:
+        """Riprende il salvataggio, se esiste ed è ancora in corso (o anche se è conclusa, per poter annullare l'ultimo turno)."""
         stato = salvataggi.carica(self.percorso_salvataggio)
-        if stato is None or stato.finale or stato.personaggio.pf <= 0:
+        if stato is None or (not anche_conclusa and (stato.finale or stato.personaggio.pf <= 0)):
             return False
         self._usa(stato)
         return True
@@ -75,6 +81,7 @@ class Sessione:
         stato = StatoPartita(personaggio=crea_personaggio(nome, classe, valori), luogo_corrente="")
         self.mondo.stato_iniziale(stato)
         self._usa(stato)
+        self._percorso_precedente.unlink(missing_ok=True)  # la partita vecchia non si può più "annullare"
         salvataggi.salva(stato, self.percorso_salvataggio)
 
     def _usa(self, stato: StatoPartita) -> None:
@@ -156,10 +163,10 @@ class Sessione:
         return None
 
     # --- Turni -------------------------------------------------------------------
-    def inizia(self) -> dict[str, Any]:
-        return self.turno(PROMPT_INIZIO)
+    def inizia(self, su_testo=None) -> dict[str, Any]:
+        return self.turno(PROMPT_INIZIO, su_testo)
 
-    def turno(self, testo: str) -> dict[str, Any]:
+    def turno(self, testo: str, su_testo=None) -> dict[str, Any]:
         """Esegue un turno. Restituisce narrazione, tool chiamati ed eventi del mondo (solo i titoli)."""
         if self.agente is None or self.stato is None:
             raise RuntimeError("Nessuna partita in corso.")
@@ -167,10 +174,11 @@ class Sessione:
             raise SessioneOccupata("Il narratore sta ancora scrivendo.")
         try:
             self._eventi = []
+            prima = copy.deepcopy(self.stato)  # per "Annulla": lo stato com'era prima di questo turno
             if self._semaforo:
                 self._semaforo.acquire()  # se la GPU è occupata da altri giocatori, si aspetta in coda
             try:
-                narrazione = self.agente.turno(testo)  # in caso di errore annulla il turno e rilancia
+                narrazione = self.agente.turno(testo, su_testo)  # in caso di errore annulla il turno e rilancia
             finally:
                 if self._semaforo:
                     self._semaforo.release()
@@ -178,6 +186,8 @@ class Sessione:
                 self._posto_visto = (self.stato.luogo_id, self.stato.zona_id)
                 self.stato.scena = None  # l'illustrazione di scena valeva per il posto di prima
                 self._richiedi_luogo()
+            if testo != PROMPT_INIZIO:  # l'apertura dell'avventura non si annulla (si ripartirebbe da una cronologia vuota)
+                salvataggi.salva(prima, self._percorso_precedente)
             self._salva()
             eventi, self._eventi = self._eventi, []
         finally:
@@ -189,6 +199,28 @@ class Sessione:
             for e in ev["risultato"].get("eventi_mondo", [])
         ]
         return {"narrazione": narrazione, "tool": eventi, "eventi_mondo": titoli}
+
+    def puo_annullare(self) -> bool:
+        return self._percorso_precedente.exists()
+
+    def annulla(self) -> str:
+        """Torna a prima dell'ultimo turno (un solo livello). Restituisce il testo che il giocatore aveva scritto,
+        così l'interfaccia può rimetterlo nella casella per correggerlo."""
+        if self.agente is None or self.stato is None:
+            raise RuntimeError("Nessuna partita in corso.")
+        if not self._lock.acquire(blocking=False):
+            raise SessioneOccupata("Il narratore sta ancora scrivendo.")
+        try:
+            precedente = salvataggi.carica(self._percorso_precedente)
+            if precedente is None:
+                raise RuntimeError("Non c'è niente da annullare.")
+            testo = next((m["content"] for m in reversed(self.stato.messaggi) if m["role"] == "user" and isinstance(m["content"], str)), "")
+            self._usa(precedente)
+            self._percorso_precedente.unlink(missing_ok=True)  # un solo livello: dopo l'annulla non si torna ancora indietro
+            self._salva()
+        finally:
+            self._lock.release()
+        return testo
 
     # --- Vista per l'interfaccia -------------------------------------------------
     def _url(self, percorso: str | None) -> str | None:
@@ -257,6 +289,7 @@ class Sessione:
             },
             "mappa": {"immagine": self._url("assets/mappa.webp"), "pins": pins},
             "avventura": {"id": m.id, "titolo": m.titolo},
+            "puo_annullare": self.puo_annullare(),
             "diario": list(s.diario),
             "cronologia": self._cronologia(),
             "fine": fine,
