@@ -5,6 +5,10 @@ const $ = (id) => document.getElementById(id);
 const STATISTICHE = [["forza", "Forza"], ["agilita", "Agilità"], ["intelletto", "Intelletto"]];
 
 let occupato = false;
+let utente = null;        // nome dell'utente collegato
+let sonoAdmin = false;    // può vedere il debug
+let avventuraId = null;   // avventura in corso
+const partita = (azione) => `/api/partite/${encodeURIComponent(avventuraId)}/${azione}`;
 
 // --- Utilità ---------------------------------------------------------------------
 function esc(t) {
@@ -28,17 +32,118 @@ async function api(percorso, corpo) {
   const r = await fetch(percorso, opzioni);
   let dati = {};
   try { dati = await r.json(); } catch (_) { /* risposta non JSON */ }
-  if (!r.ok) throw new Error(dati.detail || `Errore ${r.status}`);
+  if (r.status === 401 && percorso !== "/api/accedi") { utente = null; mostra("accesso"); }  // sessione scaduta
+  if (!r.ok) throw new Error(typeof dati.detail === "string" ? dati.detail : `Errore ${r.status}`);
   return dati;
 }
 
 function mostra(schermata) {
-  $("creazione").hidden = schermata !== "creazione";
-  $("gioco").hidden = schermata !== "gioco";
+  for (const s of ["accesso", "menu", "creazione", "gioco"]) $(s).hidden = schermata !== s;
   $("orologio").hidden = schermata !== "gioco";
-  $("btn-nuova").hidden = schermata !== "gioco";
   $("btn-mappa").hidden = schermata !== "gioco";
-  if (schermata !== "gioco") $("mappa-popup").hidden = true;
+  $("btn-menu").hidden = !utente || schermata === "menu";
+  $("btn-esci").hidden = !utente;
+  $("utente").hidden = !utente;
+  $("utente").textContent = utente || "";
+  $("debug-box").hidden = !(utente && sonoAdmin);
+  if (schermata === "accesso" || schermata === "menu") $("titolo").textContent = "Master GDR";
+  if (schermata !== "gioco") { $("mappa-popup").hidden = true; $("fine").hidden = true; }
+}
+
+// --- Accesso -----------------------------------------------------------------------
+let modoRegistra = false;
+function impostaModoAccesso(registra) {
+  modoRegistra = registra;
+  $("accesso-titolo").textContent = registra ? "Crea un account" : "Accedi";
+  $("btn-accedi").textContent = registra ? "Registrati" : "Accedi";
+  $("acc-codice-riga").hidden = !registra;
+  $("acc-password").autocomplete = registra ? "new-password" : "current-password";
+  $("cambia-modo").textContent = registra ? "Hai già un account? Accedi" : "Non hai un account? Registrati";
+  $("cambia-modo").hidden = registra ? false : !registrazioneAperta;
+  $("errore-accesso").textContent = "";
+}
+let registrazioneAperta = false;
+$("cambia-modo").addEventListener("click", (e) => { e.preventDefault(); impostaModoAccesso(!modoRegistra); });
+
+$("form-accesso").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("btn-accedi").disabled = true;
+  try {
+    const corpo = { nome: $("acc-nome").value, password: $("acc-password").value };
+    if (modoRegistra) corpo.codice = $("acc-codice").value;
+    await api(modoRegistra ? "/api/registrati" : "/api/accedi", corpo);
+    $("acc-password").value = "";
+    $("acc-codice").value = "";
+    await avvio();
+  } catch (err) {
+    $("errore-accesso").textContent = err.message;
+  } finally {
+    $("btn-accedi").disabled = false;
+  }
+});
+
+$("btn-esci").addEventListener("click", async () => {
+  try { await api("/api/esci", {}); } catch (_) { /* esce comunque */ }
+  utente = null; avventuraId = null;
+  $("chat").innerHTML = "";
+  impostaModoAccesso(false);
+  mostra("accesso");
+});
+
+// --- Scelta dell'avventura -----------------------------------------------------------
+async function vaiMenu() {
+  avventuraId = null;
+  mostra("menu");
+  $("avventure").innerHTML = '<p class="piccolo">Carico le avventure…</p>';
+  try {
+    const { avventure } = await api("/api/avventure");
+    $("avventure").innerHTML = avventure.map(cardAvventura).join("");
+    document.querySelectorAll("[data-continua]").forEach((b) => b.addEventListener("click", () => continua(b.dataset.continua)));
+    document.querySelectorAll("[data-nuova]").forEach((b) => b.addEventListener("click", () => nuovaPartita(b.dataset.nuova, b.dataset.titolo, b.dataset.conferma === "1")));
+  } catch (err) {
+    $("avventure").innerHTML = `<p class="errore">${esc(err.message)}</p>`;
+  }
+}
+
+function cardAvventura(a) {
+  const s = a.salvataggio;
+  let stato = "", azioni = "";
+  const nuova = (testo, secondario, conferma) =>
+    `<button type="button" class="${secondario ? "secondario" : ""}" data-nuova="${esc(a.id)}" data-titolo="${esc(a.titolo)}" data-conferma="${conferma ? 1 : 0}">${testo}</button>`;
+  if (s && !s.conclusa) {
+    stato = `Partita in corso: ${esc(s.personaggio)} il ${esc(s.classe)} · giorno ${s.giorno} di ${a.giorni}, ${String(s.ora).padStart(2, "0")}:00 · ${esc(s.luogo)}`;
+    azioni = `<button type="button" data-continua="${esc(a.id)}">Continua</button>${nuova("Nuova partita", true, true)}`;
+  } else if (s) {
+    stato = `Conclusa: ${esc(s.personaggio)} · ${esc(s.esito || "")}`;
+    azioni = nuova("Nuova partita", false, false);
+  } else {
+    azioni = nuova("Inizia l'avventura", false, false);
+  }
+  return `<article class="avventura"><h3>${esc(a.titolo)}</h3><p>${esc(a.presentazione)}</p>
+    <p class="piccolo">${a.giorni} giorni di gioco · ${esc(a.mondo)}</p>
+    ${stato ? `<p class="salvataggio">${stato}</p>` : ""}<div class="azioni">${azioni}</div></article>`;
+}
+
+async function continua(id) {
+  avventuraId = id;
+  try {
+    const { vista } = await api(partita("continua"), {});
+    $("chat").innerHTML = "";
+    entraInPartita(vista);
+    for (const m of vista.cronologia) aggiungiMsg(m.ruolo, renderTesto(m.testo));
+    if (vista.cronologia.length === 0) await inizia();  // partita creata ma mai avviata
+  } catch (err) {
+    await vaiMenu();
+    alert(err.message);
+  }
+}
+
+function nuovaPartita(id, titolo, conferma) {
+  if (conferma && !confirm("Iniziare una nuova partita? Il salvataggio di questa avventura verrà sostituito.")) return;
+  avventuraId = id;
+  $("nome").value = "";
+  $("creazione-avventura").textContent = `— ${titolo}`;
+  mostra("creazione");
 }
 
 // --- Mappa in popup ---------------------------------------------------------------
@@ -86,7 +191,7 @@ $("form-creazione").addEventListener("submit", async (e) => {
     const valori = {};
     document.querySelectorAll("#statistiche select").forEach((s) => (valori[s.dataset.stat] = Number(s.value)));
     const classe = document.querySelector("input[name=classe]:checked").value;
-    const { vista } = await api("/api/nuova", { nome: $("nome").value.trim(), classe, valori });
+    const { vista } = await api(partita("nuova"), { nome: $("nome").value.trim(), classe, valori });
     $("chat").innerHTML = "";
     entraInPartita(vista);
     await inizia();
@@ -100,6 +205,7 @@ $("form-creazione").addEventListener("submit", async (e) => {
 // --- Rendering della partita ---------------------------------------------------------
 function entraInPartita(vista) {
   mostra("gioco");
+  $("titolo").textContent = vista.avventura.titolo;
   render(vista);
 }
 
@@ -107,7 +213,7 @@ function render(v) {
   const p = v.personaggio, t = v.tempo, l = v.luogo;
 
   $("orologio-testo").textContent = `Giorno ${t.giorno} di ${t.giorni_totali} · ${String(t.ora).padStart(2, "0")}:00`;
-  $("barra-giorni").style.width = `${Math.min(100, ((t.giorno - 1) * 24 + t.ora) / ((t.giorni_totali - 1) * 24 + 20) * 100)}%`;
+  $("barra-giorni").style.width = `${Math.min(100, ((t.giorno - 1) * 24 + t.ora) / (t.ore_finali) * 100)}%`;
 
   // Scena
   const img = $("img-luogo");
@@ -189,7 +295,7 @@ function programmaAggiornamento(v) {
   timerImmagini = setTimeout(async () => {
     timerImmagini = null;
     if (!occupato) {
-      try { const s = await api("/api/stato"); if (s.vista) render(s.vista); } catch (_) { /* riproverà al prossimo giro */ }
+      try { const s = await api(partita("stato")); if (s.vista) render(s.vista); } catch (_) { /* riproverà al prossimo giro */ }
     } else {
       programmaAggiornamento({ immagini: { in_corso: 1 } });
     }
@@ -257,7 +363,7 @@ async function eseguiTurno(chiamata, ripristinaTesto) {
 }
 
 function inizia() {
-  return eseguiTurno(() => api("/api/inizia", {}));
+  return eseguiTurno(() => api(partita("inizia"), {}));
 }
 
 $("form-azione").addEventListener("submit", (e) => {
@@ -266,22 +372,15 @@ $("form-azione").addEventListener("submit", (e) => {
   if (!testo || occupato) return;
   $("azione").value = "";
   const mio = aggiungiMsg("giocatore", renderTesto(testo));
-  eseguiTurno(() => api("/api/turno", { testo }), testo).then(() => {
+  eseguiTurno(() => api(partita("turno"), { testo }), testo).then(() => {
     // se il turno è fallito la risposta d'errore resta nella chat: il messaggio del giocatore non è stato registrato
     if ($("chat").lastElementChild && $("chat").lastElementChild.classList.contains("errore-msg")) mio.remove();
   });
 });
 
 // --- Comandi dell'header --------------------------------------------------------------
-let opzioniCreazione = null;
-function nuovaPartita() {
-  if (!confirm("Iniziare una nuova partita? Il salvataggio attuale verrà sostituito.")) return;
-  $("fine").hidden = true;
-  $("nome").value = "";
-  mostra("creazione");
-}
-$("btn-nuova").addEventListener("click", nuovaPartita);
-$("btn-fine-nuova").addEventListener("click", () => { $("fine").hidden = true; mostra("creazione"); });
+$("btn-menu").addEventListener("click", vaiMenu);
+$("btn-fine-nuova").addEventListener("click", vaiMenu);
 
 $("debug").addEventListener("change", (e) => {
   document.body.classList.toggle("debug-on", e.target.checked);
@@ -294,17 +393,16 @@ async function avvio() {
     if (localStorage.getItem("gdr-debug") === "1") { $("debug").checked = true; document.body.classList.add("debug-on"); }
   } catch (_) { /* ignora */ }
   try {
-    const s = await api("/api/stato");
-    opzioniCreazione = s.creazione;
-    costruisciCreazione(s.creazione);
-    if (!s.in_corso) { mostra("creazione"); return; }
-    entraInPartita(s.vista);
-    // Ripristina la chat dalla cronologia salvata
-    for (const m of s.vista.cronologia) aggiungiMsg(m.ruolo, renderTesto(m.testo));
-    if (s.vista.cronologia.length === 0) await inizia(); // partita creata ma mai avviata
+    const io = await api("/api/io");
+    costruisciCreazione(io.creazione);
+    utente = io.utente;
+    sonoAdmin = io.admin;
+    registrazioneAperta = io.registrazione_aperta;
+    if (!utente) { impostaModoAccesso(false); mostra("accesso"); return; }
+    await vaiMenu();
   } catch (err) {
-    mostra("creazione");
-    $("errore-creazione").textContent = "Impossibile contattare il server: " + err.message;
+    mostra("accesso");
+    $("errore-accesso").textContent = "Impossibile contattare il server: " + err.message;
   }
 }
 avvio();

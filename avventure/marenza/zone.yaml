@@ -1,0 +1,200 @@
+# Zone di Marenza (vedi la spiegazione dei campi in avventure/acquaverde/zone.yaml).
+
+zone:
+  campo_grande:
+    - id: campo
+      nome: Piazza di Campo Grande
+      ingresso: true
+      descrizione: >-
+        La piazza bianca con il campanile al centro, tra caffè e gridi di barcaioli.
+      prompt_immagine: >-
+        a large sunlit white stone square with a tall bell tower, cafes with striped awnings, boatmen shouting, colorful paper lanterns overhead
+    - id: prefettura
+      nome: Palazzo della Prefettura
+      orari: [9, 19]
+      chiusa_perche: "Il portone è chiuso e due guardie in livrea dicono che il Prefetto è in comitato. A quest'ora, qualunque."
+      descrizione: >-
+        Un palazzo di marmo con scrivanie piene di pergamene, comitati che discutono a
+        voce alta e un ufficio dove il Prefetto riceve.
+      prompt_immagine: >-
+        the interior of a grand administrative palace with marble columns, desks piled with parchment scrolls, clerks arguing in small groups, a large office door, warm light
+    - id: locanda
+      nome: Locanda del Gabbiano Brillo
+      orari: [10, 2]
+      chiusa_perche: "Le persiane sono chiuse e dall'alto un gabbiano ti fissa con disprezzo."
+      descrizione: >-
+        Una locanda rumorosa con travi basse, lanterne colorate e un gabbiano impagliato che
+        brilla di fuliggine. Qui si sa tutto, anche ciò che non è successo.
+      prompt_immagine: >-
+        a noisy cozy tavern with low wooden beams, colorful lanterns, a stuffed seagull on a shelf, patrons gossiping, warm candlelight
+    - id: tribuna
+      nome: Tribuna delle Lanterne
+      orari: [8, 23]
+      chiusa_perche: "La tribuna è chiusa con una catena fino a domattina."
+      descrizione: >-
+        Un palco di legno addobbato di ghirlande e lanterne, da cui il Prefetto accende la
+        Lanterna Maestra alla Notte delle Lanterne.
+      prompt_immagine: >-
+        a wooden grandstand stage decorated with garlands and paper lanterns in a big square, a velvet cushion on a pedestal, crowd gathering, dusk
+  tempio_dei_lumi:
+    - id: scalinata
+      nome: Scalinata del Tempio
+      ingresso: true
+      descrizione: >-
+        Gradini di marmo che scendono nell'acqua, con barche ormeggiate e fedeli che
+        sussurrano.
+      prompt_immagine: >-
+        wide marble steps descending into turquoise canal water, small boats moored, worshippers whispering, a golden dome above, soft light
+    - id: navata
+      nome: Navata del Tempio
+      orari: [7, 20]
+      chiusa_perche: "Il portone di bronzo è chiuso e una custode dall'interno dice che il Tempio riapre domattina."
+      descrizione: >-
+        Una sala di marmo con mille lampade sospese a catene d'argento e un profumo di olio
+        e incenso.
+      prompt_immagine: >-
+        the interior of an elegant temple with a golden dome, thousands of oil lamps hanging on silver chains, marble columns, incense haze, soft golden light
+    - id: cella_del_lume
+      nome: Cella della Lanterna
+      orari: [9, 17]
+      chiusa_perche: "La cella è chiusa e sigillata dal Prefetto: si entra solo di giorno e con il permesso."
+      descrizione: >-
+        Una piccola stanza di marmo con una teca di cristallo vuota su un cuscino di velluto
+        ancora segnato. Sul pavimento, tracce che sembrano di piedini bagnati.
+      prompt_immagine: >-
+        a small marble chamber with an empty crystal display case on a velvet cushion, small wet footprints on the floor, light from a high window
+    - id: sagrestia
+      nome: Sagrestia
+      orari: [8, 18]
+      chiusa_perche: "La sagrestia è chiusa a chiave: è l'ora delle preghiere private."
+      descrizione: >-
+        Armadi di legno con tonache e registri delle custodi. Su un tavolino, una tazza di
+        tisana ancora tiepida.
+      prompt_immagine: >-
+        a small temple sacristy with wooden wardrobes of robes, ledgers on a table, a half-drunk cup of herbal tea, a window overlooking a canal, warm light
+  palazzo_dandolo:
+    - id: atrio
+      nome: Atrio di Palazzo Dandolo
+      ingresso: true
+      descrizione: >-
+        Un atrio di marmo rosa con statue, un pappagallo e un maggiordomo che ti
+        squadra.
+      prompt_immagine: >-
+        a pink marble palace entrance hall with statues, a parrot on a perch, a haughty butler, tall arched windows
+    - id: salone
+      nome: Salone di Palazzo Dandolo
+      orari: [10, 23]
+      chiusa_perche: "Il maggiordomo ti informa che la Contessa non riceve a quest'ora."
+      descrizione: >-
+        Un salone con affreschi, specchi dorati e una Contessa elegantissima che sorseggia
+        qualcosa e tiene d'occhio tutti.
+      prompt_immagine: >-
+        a grand salon with frescoed walls, gilded mirrors, a countess in an elegant gown sipping from a glass, tall windows, afternoon light
+    - id: giardino
+      nome: Giardino pensile
+      orari: [8, 20]
+      chiusa_perche: "Il giardino è chiuso: i cancelli si serrano al tramonto."
+      descrizione: >-
+        Un giardino sul tetto con limoni in vaso, siepi potate a forma di galeone e una
+        vista di mezza città.
+      prompt_immagine: >-
+        a rooftop hanging garden with potted lemon trees, hedges trimmed into ship shapes, a view over lagoon rooftops, golden light
+    - id: collezione
+      nome: Sala della Collezione
+      orari: [10, 20]
+      richiede_flag: [copia_scoperta]
+      chiusa_perche: "Il maggiordomo ti sbarra la strada: la Collezione non si mostra a chi non è atteso, né a chi non sa cosa cercare."
+      descrizione: >-
+        Una sala di vetrine con oggetti rari. In fondo, una teca con una lanterna di vetro
+        e bronzo identica alla Lanterna Maestra, ma più lucida.
+      prompt_immagine: >-
+        a gallery of display cases with rare objects, at the far end a case with a glass and bronze lantern, polished and shiny, dim elegant light
+  mercato_galleggiante:
+    - id: banchina
+      nome: Banchina del Mercato
+      ingresso: true
+      descrizione: >-
+        Il molo d'ingresso, con barcaioli che gridano le tariffe e passerelle tra le
+        barche.
+      prompt_immagine: >-
+        a busy wooden wharf at the entrance of a floating market, boatmen shouting fares, plank walkways between boats, hanging lanterns, morning light
+    - id: bancarelle
+      nome: Bancarelle sui ponti di barche
+      orari: [6, 15]
+      chiusa_perche: "Le bancarelle sono smontate: i mercanti sono andati a dormire sulle loro barche."
+      descrizione: >-
+        Il cuore del mercato: frutta, spezie, stoffe e pesce su barche ormeggiate. Pico
+        corre tra i banchi.
+      prompt_immagine: >-
+        colorful market stalls on moored boats with fruit, spices, fabrics and fish, awnings, a small ragged boy darting between stalls, bright sun
+    - id: taverna
+      nome: Taverna del Granchio
+      orari: [11, 3]
+      chiusa_perche: "La taverna è chiusa: il granchio sull'insegna ha le chele incrociate."
+      descrizione: >-
+        Una taverna ricavata da un vecchio peschereccio, tavoli inchiodati al ponte e
+        Madama Gelsa che sa tutto di tutti.
+      prompt_immagine: >-
+        a tavern built inside an old fishing boat, tables nailed to the deck, a big crab sign, hanging lanterns, patrons laughing, warm light over water
+    - id: cantina_sommersa
+      nome: Cantina sommersa
+      richiede_flag: [pico_trovato]
+      chiusa_perche: "Dal molo c'è solo una botola bagnata. Serve qualcuno che sappia dove portarti."
+      descrizione: >-
+        Una cantina allagata sotto il mercato, con casse impilate sull'acqua e un bagliore
+        tremolante che balla sulle pareti.
+      prompt_immagine: >-
+        a flooded cellar beneath a market, crates stacked above water, a small dancing flame glowing on the walls, reflections on dark water, magical warm light
+  arsenale_vecchio:
+    - id: darsena
+      nome: Darsena dell'Arsenale
+      ingresso: true
+      descrizione: >-
+        Una darsena di pietra con navi in riparazione e gru di legno che scricchiolano.
+      prompt_immagine: >-
+        a stone dock with ships under repair, wooden cranes creaking, ropes and barrels, afternoon haze
+    - id: ufficio_porto
+      nome: Ufficio del Capitano di porto
+      orari: [8, 18]
+      chiusa_perche: "L'ufficio è chiuso; sulla porta, un biglietto con scritto «Torno subito» datato tre giorni fa."
+      descrizione: >-
+        Un ufficio stipato di registri, mappe della laguna e un tavolo con una teiera.
+        Il Capitano Brando ti fa sedere su una sedia traballante.
+      prompt_immagine: >-
+        a cluttered harbormaster's office with ledgers, maps of the lagoon, a teapot on a table, a wobbly chair, a captain with a raised eyebrow, warm light
+    - id: magazzini
+      nome: Magazzini sbarrati
+      orari: [6, 20]
+      chiusa_perche: "I magazzini sono sbarrati e le guardie giurano che dentro c'è solo sale. Molto sale."
+      descrizione: >-
+        File di magazzini di mattoni, con barili sospetti e un odore che non è sale.
+      prompt_immagine: >-
+        rows of brick warehouses with suspicious barrels stacked inside, guards pretending to be bored, dim light through slats
+  isola_dei_vetrai:
+    - id: fornace
+      nome: Piazzale della Fornace
+      ingresso: true
+      descrizione: >-
+        Una piazzetta tra fornaci fumanti, con vetrai che si urlano contro e una vetrina
+        di lanterne.
+      prompt_immagine: >-
+        a small square between smoking glass furnaces, glassblowers arguing, a shop window filled with colorful lanterns, sparks in the air
+    - id: bottega
+      nome: Bottega di Fausto
+      orari: [7, 18]
+      chiusa_perche: "La fornace è spenta e la porta chiusa: Fausto è a pranzo, a cena o a colpa."
+      descrizione: >-
+        La bottega del Maestro Fausto, piena di lanterne in ogni stadio di lavorazione e
+        tutte più belle di quella che serve davvero.
+      prompt_immagine: >-
+        a glassmaker's workshop full of lanterns at every stage of work, a hot furnace glowing, a master glassblower with a blowpipe, warm orange light
+    - id: laboratorio
+      nome: Laboratorio nascosto
+      orari: [8, 16]
+      richiede_flag: [copia_scoperta]
+      chiusa_perche: "Una porta dietro la fornace è chiusa. Fausto dice che dietro ci sono solo scope."
+      descrizione: >-
+        Una stanza riservata dove Fausto lavora ai pezzi più delicati. Su un tavolo, stampi,
+        bozzetti e una lanterna identica alla Maestra, in attesa di essere ritirata.
+      prompt_immagine: >-
+        a secret glassworking room with molds and sketches on a table, a glass and bronze lantern identical to a famous relic waiting to be collected, dim warm light

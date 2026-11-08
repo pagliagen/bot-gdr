@@ -31,7 +31,7 @@ SCENARIO = [
 def prova(modello: str, cfg) -> None:
     print(f"\n{'=' * 60}\nMODELLO: {modello}\n{'=' * 60}")
     pg = crea_personaggio("Prova", "Ladro", {"forza": 10, "agilita": 15, "intelletto": 13})
-    mondo = carica_mondo(cfg.percorso_lore)
+    mondo = carica_mondo(cfg.percorso_avventure / "acquaverde")  # lo scenario è scritto per questa avventura
     stato = StatoPartita(personaggio=pg, luogo_corrente="", luoghi_visitati=[])
     mondo.stato_iniziale(stato)
     chiamati: list[str] = []

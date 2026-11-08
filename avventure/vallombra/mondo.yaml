@@ -1,0 +1,105 @@
+# Bibbia dell'ambientazione: Vallombra (folk horror)
+
+nome: Vallombra
+sintesi: >-
+  Un villaggio di montagna isolato in fondo a una valle stretta, dove l'inverno
+  arriva presto e se ne va tardi. Gli abitanti sono cortesi, ospitali, sempre pronti
+  a offrire pane caldo e un letto. Da trecento anni nessun forestiero riparte
+  da Vallombra a metà inverno, e nessuno ne parla.
+epoca: >-
+  Tardo Medioevo, in pieno inverno, in alta montagna: candele, torce di resina,
+  lanterne, pellicce, lana grezza, ferro, sale, pergamene, campane. Niente armi da
+  fuoco, vetro fine o oggetti moderni.
+tono: >-
+  Horror gotico e folk horror, lento e inquietante. Nessuna battuta. La paura nasce da
+  dettagli sbagliati, silenzi, sorrisi troppo larghi e cortesia sinistra, non dal sangue
+  gratuito. Descrizioni brevi e sensoriali (freddo, odori, rumori in lontananza).
+  Il pericolo è reale e il personaggio può morire. Gli abitanti non sono mostri da
+  fumetto: credono di fare la cosa giusta.
+regno: >-
+  Vallombra dipende da un signore lontano che non vi manda più nessuno da decenni.
+  Sul registro delle tasse il villaggio è "in pace, con scarsa fame".
+
+stile_immagini: >-
+  dark gothic folk horror illustration, moody oil painting with ink hatching, heavy
+  shadows, cold blue-grey snow and sickly yellow candlelight, winter mountain village,
+  unsettling but not gory, detailed, no text, no watermark, no modern objects
+
+# Prompt della mappa (la generi con scripts/genera_immagini.py; i pin sono coordinate in luoghi.yaml).
+prompt_mappa: >-
+  dark fantasy map of a snowy mountain valley seen from above, aged parchment with ink
+  hatching and faint cold watercolor, heavy shadows. A small village with a well and
+  a bell tower in the center. A grey stone church with a crooked tower on a hill at
+  the upper right. A graveyard full of tiny crosses at the upper left. A tiny hut in
+  a dark pine forest at the lower left. A narrow mountain pass with a broken bridge at
+  the lower right. A pale cave entrance between black cliffs at the very top center.
+  Snowy paths connect the places. Black mountains and pines around the edges. Empty
+  parchment margins. No text, no labels, no compass, no legend, no scale bar, no watermark
+
+storia:
+  - era: L'Inverno Senza Fine
+    quando: circa trecento anni fa
+    testo: >-
+      Un inverno durò due anni. Metà del villaggio morì di fame. Dalla Grotta Bianca
+      scese un pastore pallido, con un bastone e un gregge di lupi, e propose un patto:
+      ogni anno, nella notte del solstizio, un forestiero accolto e nutrito nel villaggio
+      sarebbe stato dato a lui. In cambio gli inverni sarebbero stati miti e il raccolto
+      sicuro. Gli abitanti accettarono, per fame.
+  - era: Le Cento Veglie
+    quando: tre secoli di inverni
+    testo: >-
+      Il patto è diventato rito: la Veglia. Il forestiero viene trattenuto con la neve
+      (il passo si chiude da solo), curato, ingrassato e infine condotto alla Grotta
+      Bianca. I nomi degli offerti sono incisi su croci senza nome nel camposanto.
+      Nessun abitante ammette di sapere. Tutti fanno la loro parte.
+  - era: Il Prete Che Ricorda
+    quando: ultimi vent'anni
+    testo: >-
+      Don Anselmo arrivò come giovane parroco e capì tutto al terzo inverno. Ha
+      scritto ogni cosa in un diario e nascosto la scala della cripta dove è inciso il
+      vero nome del Pastore. Non ha mai trovato il coraggio di usarlo.
+  - era: L'anno scorso
+    quando: dodici mesi fa
+    testo: >-
+      L'offerto fu Matteo, un venditore ambulante e fratello di Costanza Vetri, che
+      aveva sposato un uomo del villaggio. Lei lo ha scoperto solo dopo. Da allora non
+      parla più con il sindaco.
+
+religioni:
+  - id: santa_candela
+    nome: Culto di Santa Candela
+    seguaci: gli abitanti di Vallombra, quasi tutti
+    credenze: >-
+      La chiesa di San Gelasio predica ospitalità e luce: si tiene una candela accesa in
+      ogni finestra, per i viandanti. Il rito della Veglia è nascosto sotto la liturgia:
+      la candela guida l'ospite alla grotta.
+    simbolo: una candela con tre fiamme
+  - id: pastore_bianco
+    nome: Il Pastore Bianco
+    seguaci: nessuno lo ammette; tutti lo servono
+    credenze: >-
+      Spirito antico dell'inverno e della fame. Non ama la crudeltà: ama il patto, e
+      chi lo infrange. Ha un nome vero, inciso in cripta; chi lo pronuncia davanti a
+      sale benedetto spezza il patto. Il sale lo tiene lontano, il nome lo lega.
+    simbolo: un bastone da pastore con in cima un teschio di lupo
+
+fazioni:
+  - id: custodi
+    nome: I Custodi della Veglia
+    scopo: celebrare il rito e proteggere il villaggio da un altro inverno senza fine
+    segreto: sono guidati dal sindaco Osvaldo, ma ognuno nutre un dubbio che non confessa
+  - id: dubbiosi
+    nome: I Dubbiosi
+    scopo: fermare il rito senza farsi scoprire
+    segreto: sono pochissimi, divisi, e si guardano tra loro con paura
+  - id: viandanti
+    nome: Gli Offerti
+    scopo: nessuno, ormai
+    segreto: trecento nomi su trecento croci, e nessuno ha mai lasciato il villaggio
+
+regole_mondo:
+  - "Il giocatore arriva al tramonto del giorno 1. Il passo innevato si chiude subito dopo il suo arrivo: nessuno può lasciare la valle per le strade normali."
+  - "Il mondo avanza anche se il giocatore resta fermo: ogni notte accade qualcosa di più strano."
+  - "Gli abitanti sono gentili e non attaccano apertamente prima dell'ultima notte, a meno che il giocatore non si comporti in modo da mostrarsi una minaccia."
+  - "Il Pastore Bianco compare solo di notte, e solo alla Grotta Bianca. Il sale benedetto lo respinge."
+  - "Il vero nome del Pastore è inciso nella cripta di San Gelasio. Senza conoscerlo, il patto non si spezza."

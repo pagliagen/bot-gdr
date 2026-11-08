@@ -8,6 +8,17 @@
 # flag = variabili di stato che il codice imposta quando il giocatore fa certe cose.
 # Il master non può impostarli a parole: li imposta un tool, dopo una prova riuscita.
 
+# --- Scheda dell'avventura (mostrata nella scelta dell'avventura) e tempo ---
+titolo: Il Patto Sciolto
+presentazione: >-
+  Il fiume della valle sta calando e nessuno sa perché. Hai sette giorni prima
+  della Festa dell'Apertura per scoprire chi ha rotto un patto antico, e
+  decidere cosa ne sarà di un'intera valle.
+giorni: 7                                   # durata in giorni di gioco
+ora_inizio: 8                               # ora d'arrivo del giocatore, il giorno 1
+ora_finale: 20                              # ora (dell'ultimo giorno) in cui il tempo si ferma e si decide il finale
+momento_finale: la Festa dell'Apertura      # come si chiama quel momento, nei messaggi al master
+
 premessa: >-
   Sei arrivato a Pontevecchio per un lavoro qualsiasi (guardia, scorta, ricerca di
   un amico, un po' di avventura). Appena arrivi il livello del fiume sotto il ponte

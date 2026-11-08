@@ -1,0 +1,105 @@
+# Bibbia dell'ambientazione: Marenza (giallo ironico)
+
+nome: Marenza
+sintesi: >-
+  Una città costruita su cento isole di una laguna, tenuta insieme da ponti, canali e
+  pettegolezzi. Mercanti, vetrai e nobili decaduti convivono in un equilibrio di
+  piccole bugie. Sopra la città brilla, da quattrocento anni, la Lanterna Maestra del
+  Tempio dei Lumi: dicono che finché arde, la Nebbia Grigia non entra in laguna.
+epoca: >-
+  Tardo Medioevo mercantile, quasi Rinascimento: gondole e barche a remi, ponti di
+  pietra, lanterne a olio, vetro soffiato, pergamene, sigilli, ducati d'argento, banchieri.
+  Niente armi da fuoco, orologi meccanici portatili o oggetti moderni.
+tono: >-
+  Giallo ironico e brioso: indagine, battute taglienti, intrighi di mercanti e nobili,
+  personaggi eccentrici. Tutti hanno una piccola colpa da nascondere, quasi nessuno è
+  davvero cattivo. Il pericolo fisico è basso; la posta in gioco è la città e la
+  reputazione. Il giocatore deve interrogare, osservare e collegare gli indizi, non
+  combattere.
+regno: >-
+  Marenza è una Repubblica della Laguna: governa un Prefetto eletto ogni sette anni,
+  che non ha mai deciso nulla senza consultare almeno tre comitati.
+
+stile_immagini: >-
+  warm gouache and watercolor storybook illustration, sunlit Venetian-inspired fantasy
+  lagoon city, terracotta roofs, turquoise water, golden light, playful ironic mood,
+  detailed but not photorealistic, no text, no watermark, no modern objects
+
+# Prompt della mappa (la generi con scripts/genera_immagini.py; i pin sono coordinate in luoghi.yaml).
+prompt_mappa: >-
+  colorful fantasy map of a lagoon city seen from above, aged parchment with watercolor
+  and ink, many small islands joined by arched bridges and canals, turquoise water. A
+  large central square with a tall bell tower in the middle. An elegant temple with a
+  golden dome on an island at the upper left. A grand palace with a hanging garden at
+  the upper right. A floating market of boats and stalls at the lower center. An old
+  shipyard with docks and cranes at the lower left. A glassmaker island with smoking
+  furnaces at the lower right. Faint wisps of grey fog at the edges. Empty parchment
+  margins. No text, no labels, no compass, no legend, no scale bar, no watermark
+
+storia:
+  - era: L'Era della Nebbia
+    quando: circa quattrocento anni fa
+    testo: >-
+      La Nebbia Grigia inghiottiva ogni anno barche e marinai. I primi Marenzani,
+      disperati, catturarono una scintilla di fuoco vivo che danzava sull'acqua nelle
+      notti di tempesta: era il Lume, uno spirito antico della laguna. Lo chiusero in una
+      lanterna di vetro e bronzo, e la nebbia arretrò. Da allora si accende ogni anno
+      alla Notte delle Lanterne.
+  - era: L'Era dei Mercanti
+    quando: ultimi duecento anni
+    testo: >-
+      Marenza diventa ricca. Nascono le grandi famiglie, la Casa Dandolo in testa, e il
+      Mercato Galleggiante. La Lanterna diventa un simbolo, meno una necessità: pochi
+      ricordano che dentro c'è qualcuno.
+  - era: Il Tempo del Tempio
+    quando: ultimi decenni
+    testo: >-
+      Il Tempio dei Lumi custodisce la Lanterna in una teca di cristallo. Le custodi
+      si tramandano la regola: mai parlare al Lume. Sorella Isotta, la più giovane
+      custode che la città ricordi, ha ignorato la regola ogni sera da quando è
+      arrivata, e il Lume le ha risposto.
+  - era: L'anno scorso
+    quando: dodici mesi fa
+    testo: >-
+      Il Lume, annoiato dopo quattro secoli, confida a Pico, un monello che puliva i vetri
+      del Tempio, il suo desiderio più grande: vedere la città da vicino, una volta sola.
+
+religioni:
+  - id: culto_dei_lumi
+    nome: Culto dei Lumi
+    seguaci: le custodi del Tempio, i barcaioli, gran parte della città
+    credenze: >-
+      Ogni lanterna accesa è una preghiera. La Lanterna Maestra è il Lume dei Lumi: va
+      onorata, mai toccata, e mai interrogata. Le custodi non devono parlarle.
+    simbolo: una fiamma dentro una goccia
+  - id: scettici_del_ducato
+    nome: Scettici del Ducato
+    seguaci: banchieri, notai e qualche vetraio
+    credenze: >-
+      Credono che la Nebbia sia solo meteorologia e che il Lume sia una superstizione
+      costosa. Fanno però la fila al Tempio il giorno prima dei viaggi.
+    simbolo: una bilancia con una candela su un piatto
+
+fazioni:
+  - id: prefettura
+    nome: La Prefettura
+    scopo: ritrovare la Lanterna prima della Notte delle Lanterne senza creare panico
+    segreto: il Prefetto ha già chiesto in segreto a un vetraio una copia, nel caso
+  - id: casa_dandolo
+    nome: Casa Dandolo
+    scopo: prestigio e collezioni
+    segreto: la Contessa ha commissionato una copia della Lanterna mesi fa, per esporla
+  - id: barcaioli
+    nome: I Barcaioli
+    scopo: lavorare, pettegolare, non perdersi nella nebbia
+    segreto: sanno più di quanto dicono su chi è passato dal Tempio all'alba
+  - id: arsenale
+    nome: L'Arsenale
+    scopo: tenere sotto controllo il porto
+    segreto: il Capitano nasconde un carico di contrabbando nei magazzini
+
+regole_mondo:
+  - "Il tempo di gioco si misura in giorni. Il giocatore arriva il mattino del giorno 1, convocato dal Prefetto."
+  - "Il mondo avanza anche se il giocatore resta fermo: la nebbia sale ogni giorno e gli eventi scattano al loro giorno."
+  - "Il Lume è un'entità curiosa e gentile, non pericolosa: non si trova per forza, bisogna seguire gli indizi."
+  - "Quasi ogni sospettato ha un segreto che lo fa sembrare colpevole ma non lo è: accusare il primo che capita porta a un finale sbagliato."

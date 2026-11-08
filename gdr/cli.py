@@ -13,7 +13,8 @@ from .agent import Agente
 from .character_creation import ARRAY_STANDARD, CLASSI, crea_personaggio
 from .config import Config
 from .llm import crea_provider
-from .lore import GIORNI_AVVENTURA, Mondo, carica_mondo
+from .avventure import Catalogo
+from .lore import Mondo
 from .models import STATISTICHE, StatoPartita
 
 GRIGIO, RESET = "\033[90m", "\033[0m"
@@ -61,8 +62,8 @@ def _stato_iniziale(personaggio, mondo: Mondo) -> StatoPartita:
     return stato
 
 
-def orologio(stato: StatoPartita) -> str:
-    return f"Giorno {stato.giorno}/{GIORNI_AVVENTURA}, {stato.ora:02d}:00"
+def orologio(stato: StatoPartita, mondo: Mondo) -> str:
+    return f"Giorno {stato.giorno}/{mondo.giorni}, {stato.ora:02d}:00"
 
 
 def posizione(stato: StatoPartita, mondo) -> str:
@@ -71,19 +72,26 @@ def posizione(stato: StatoPartita, mondo) -> str:
     return f"{z['nome']}, {stato.luogo_corrente}" if z else stato.luogo_corrente
 
 
-def mostra_scheda(stato: StatoPartita) -> None:
+def mostra_scheda(stato: StatoPartita, mondo: Mondo) -> None:
     p = stato.personaggio
     print(f"\n{p.nome} — {p.classe} — PF {p.pf}/{p.pf_max}")
     for k, v in p.statistiche.items():
         mod = (v - 10) // 2
         print(f"  {k.capitalize():<11}{v:>3} ({mod:+d})")
     print(f"  Inventario: {', '.join(p.inventario) or 'vuoto'}")
-    print(f"  Luogo: {stato.luogo_corrente} — {orologio(stato)}\n")
+    print(f"  Luogo: {stato.luogo_corrente} — {orologio(stato, mondo)}\n")
 
 
-def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
-    mondo = carica_mondo(cfg.percorso_lore)
-    stato = None if nuova else salvataggi.carica(cfg.percorso_salvataggio)
+def avvia(cfg: Config, nuova: bool, debug: bool, avventura: str | None = None) -> None:
+    catalogo = Catalogo(cfg.percorso_avventure)
+    avventura = avventura or catalogo.ids()[0]
+    mondo = catalogo.ottieni(avventura)
+    if mondo is None:
+        print(f"Avventura '{avventura}' inesistente. Disponibili: {', '.join(catalogo.ids())}")
+        return
+    print(f"\n=== {mondo.titolo} ===")
+    percorso_salvataggio = cfg.cartella_salvataggi / "terminale" / f"{avventura}.json"  # separato dai salvataggi degli utenti web
+    stato = None if nuova else salvataggi.carica(percorso_salvataggio)
     if stato and stato.personaggio.pf <= 0:
         print("Il tuo eroe del salvataggio è caduto. Si ricomincia da capo!")
         stato = None
@@ -95,7 +103,7 @@ def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
         print(f"Bentornato, {stato.personaggio.nome}! (partita ripresa, turno {stato.turno})")
     else:
         stato = creazione_guidata(mondo)
-        mostra_scheda(stato)
+        mostra_scheda(stato, mondo)
 
     modo_debug = {"attivo": debug}
 
@@ -126,7 +134,7 @@ def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
         except Exception as e:
             print(f"\n[Errore nella chiamata al modello: {e}]\nIl turno è stato annullato, riprova.\n")
             return True
-        salvataggi.salva(stato, cfg.percorso_salvataggio)
+        salvataggi.salva(stato, percorso_salvataggio)
         if stato.finale:
             print(f"*** FINE DELL'AVVENTURA: {mondo.valuta_finale(stato.flag)['nome']} ***")
             return False
@@ -143,26 +151,26 @@ def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
 
     while True:
         try:
-            comando = _chiedi(f"[{orologio(stato)} · {posizione(stato, mondo)}] > ")
+            comando = _chiedi(f"[{orologio(stato, mondo)} · {posizione(stato, mondo)}] > ")
         except (EOFError, KeyboardInterrupt):
             comando = "/esci"
         if not comando:
             continue
         if comando == "/esci":
-            salvataggi.salva(stato, cfg.percorso_salvataggio)
+            salvataggi.salva(stato, percorso_salvataggio)
             print("Partita salvata. A presto!")
             return
         if comando == "/scheda":
-            mostra_scheda(stato)
+            mostra_scheda(stato, mondo)
         elif comando == "/mappa":
-            print(f"Sei in: {posizione(stato, mondo)} ({orologio(stato)}). Visitati: {', '.join(stato.luoghi_visitati)}")
+            print(f"Sei in: {posizione(stato, mondo)} ({orologio(stato, mondo)}). Visitati: {', '.join(stato.luoghi_visitati)}")
         elif comando == "/diario":
             print("\n".join(stato.diario) or "(diario vuoto)")
         elif comando == "/debug":
             modo_debug["attivo"] = not modo_debug["attivo"]
             print(f"Debug {'attivo' if modo_debug['attivo'] else 'disattivato'}.")
         elif comando == "/salva":
-            salvataggi.salva(stato, cfg.percorso_salvataggio)
+            salvataggi.salva(stato, percorso_salvataggio)
             print("Salvato.")
         elif comando == "/aiuto":
             print(AIUTO)

@@ -1,0 +1,226 @@
+# Avventura: "La Veglia di Vallombra" (horror)
+# Durata: 5 giorni di gioco. Il giocatore arriva al tramonto del giorno 1.
+#
+# PRINCIPIO: il mondo avanza da solo. Gli eventi della cronologia scattano al loro
+# giorno, qualunque cosa faccia il giocatore. Il giocatore cambia COME va a finire
+# (tramite i "flag"), non SE accadono.
+
+titolo: La Veglia di Vallombra
+presentazione: >-
+  Il passo si chiude alle tue spalle e il villaggio ti accoglie con candele in ogni
+  finestra e un sorriso in ogni volto. Hai cinque notti prima della Veglia del
+  solstizio. Scopri cosa nasconde Vallombra, prima che sia lei a scegliere per te.
+giorni: 5                                  # durata in giorni di gioco
+ora_inizio: 15                             # ora d'arrivo del giocatore, il giorno 1
+ora_finale: 23                             # ora (dell'ultimo giorno) in cui il tempo si ferma e si decide il finale
+momento_finale: la Notte della Veglia      # come si chiama quel momento, nei messaggi al master
+
+premessa: >-
+  Il maltempo ti ha costretto a salire verso Vallombra, l'unico villaggio prima del
+  valico. Arrivi al tramonto, tra candele e sorrisi. Dietro di te la neve cade a fiocchi
+  grossi: in poche ore il passo è chiuso e nessuno può partire. Il sindaco ti offre
+  una stanza, pane e vino. «Fino al solstizio non si passa. Sarai nostro ospite.»
+
+verita_nascosta: >-
+  Vallombra ha un patto con il Pastore Bianco: ogni anno, nella notte del solstizio,
+  un forestiero ospitato dal villaggio viene condotto alla Grotta Bianca. Il giocatore
+  è l'offerta di quest'anno, e tutti lo sanno. Il passo si chiude da solo per volontà
+  del Pastore. Il patto si spezza solo pronunciando il suo vero nome (inciso nella
+  cripta della pieve) davanti al sale benedetto di Brida. Chi vuole può invece fuggire
+  per il sentiero dei bracconieri, convincere il villaggio a offrire qualcun altro, o
+  rivelare tutto davanti alla comunità.
+
+flag_iniziali:
+  diario_trovato: false         # il diario di Don Anselmo, nascosto in canonica
+  cripta_aperta: false          # la lastra dell'altare è stata sollevata
+  nome_scoperto: false          # il vero nome del Pastore, inciso in cripta
+  sale_ottenuto: false          # il sale benedetto di Madre Brida
+  verita_scoperta: false        # il giocatore ha capito cosa sono le croci senza nome
+  costanza_alleata: false       # la vedova è dalla parte del giocatore
+  via_di_fuga: false            # il sentiero dei bracconieri è stato attraversato
+  sostituto_offerto: false      # il sindaco è stato convinto a offrire qualcun altro
+
+cronologia:
+  - giorno: 1
+    titolo: Il passo si chiude
+    luogo: vallombra
+    pubblico: true
+    cosa_accade: >-
+      Il giocatore arriva al tramonto. Ogni finestra ha una candela. Il sindaco lo
+      accoglie con un sorriso e il villaggio lo saluta tutto insieme, in coro, a mezza
+      voce. Poche ore dopo, la neve chiude il passo con una frana silenziosa.
+    in_segreto: Il Pastore ha chiuso il passo. Il sindaco ha deciso che il forestiero è l'offerta di quest'anno.
+
+  - giorno: 2
+    titolo: Le impronte sulla neve
+    luogo: vallombra
+    pubblico: true
+    cosa_accade: >-
+      Al mattino si trovano orme di piedi nudi sulla neve, in cerchio attorno alla
+      finestra dell'ospite. Nessuno vuole parlarne. Un gatto morto è appeso alla porta
+      dell'osteria, con una candela spenta in bocca. Al tramonto la bambina Lisetta canta
+      sotto le finestre.
+    in_segreto: Lisetta, di notte, è la voce del Pastore. Gervasio inizia a sorvegliare la strada.
+
+  - giorno: 3
+    titolo: Le campane a morto
+    luogo: pieve_san_gelasio
+    pubblico: true
+    cosa_accade: >-
+      Le campane di San Gelasio suonano a morto per un'ora, ma nessuno è morto. Il
+      villaggio si raccoglie in silenzio davanti alla chiesa, poi torna a casa senza una
+      parola. Don Anselmo, pallido, prega senza voce.
+    in_segreto: Il Pastore è vicino. Don Anselmo tenta di nascondere il diario.
+    varianti:
+      - se_flag: verita_scoperta
+        cosa_accade: >-
+          Le campane suonano a morto. Gervasio, fermo davanti alla chiesa, fissa il
+          giocatore e non distoglie lo sguardo finché non se ne va.
+
+  - giorno: 4
+    titolo: Il banchetto dell'ospite
+    luogo: vallombra
+    pubblico: true
+    cosa_accade: >-
+      Il villaggio prepara un banchetto per l'ospite: tavole lunghe, lanterne bianche, abiti
+      nuovi lasciati davanti alla sua porta. Tutti sono felici e lo dicono ad alta voce.
+      I bambini intrecciano corone di sempreverde, senza ridere.
+    in_segreto: Domani è la Veglia. Agnese preparerà il pane con il papavero.
+    varianti:
+      - se_flag: costanza_alleata
+        cosa_accade: >-
+          Il villaggio prepara il banchetto, ma Costanza passa a casa del giocatore, senza
+          parlare, e lascia sul tavolo il flauto di suo fratello come avvertimento.
+
+  - giorno: 5
+    titolo: La Notte della Veglia
+    luogo: vallombra
+    pubblico: true
+    cosa_accade: >-
+      È la notte del solstizio. Il villaggio intero si riunisce con le lanterne bianche. Le
+      campane suonano, la neve smette di cadere. In coro, tutti si voltano verso il
+      forestiero. Il sindaco gli porge una candela accesa: «Vieni. È ora.»
+    in_segreto: Finale determinato dai flag (vedi sotto).
+
+# Finali: si valutano IN ORDINE e vince il primo che soddisfa le condizioni.
+finali:
+  - id: patto_spezzato
+    nome: L'Alba Senza Pastore
+    richiede: [nome_scoperto, sale_ottenuto]
+    esclude: []
+    esito: >-
+      Il giocatore, in piedi davanti all'altare di ghiaccio, versa il sale benedetto e
+      pronuncia il vero nome del Pastore. Il bastone si spezza, i lupi si dissolvono nella
+      brina e l'alba arriva presto, calda, per la prima volta in trecento anni. Il
+      passo si apre. Vallombra dovrà imparare a vivere senza una menzogna.
+  - id: veglia_condivisa
+    nome: La Verità sul Sagrato
+    richiede: [costanza_alleata, diario_trovato]
+    esclude: []
+    esito: >-
+      Costanza e il giocatore leggono il diario di Don Anselmo davanti a tutto il
+      villaggio, sul sagrato, prima che la processione parta. Il sindaco tace. Il prete,
+      in lacrime, si offre al Pastore al posto dell'ospite. L'inverno si fa mite, il rito
+      continua, ma nessuno innocente verrà più dato: il villaggio è diviso per sempre e
+      il giocatore se ne va vivo, con un peso sulle spalle.
+  - id: fuga
+    nome: La Fuga nella Notte
+    richiede: [via_di_fuga]
+    esclude: [sostituto_offerto]
+    esito: >-
+      Il giocatore attraversa il ponte spezzato mentre le campane suonano alle sue spalle.
+      Il sentiero lo porta oltre il valico, sotto la luna, vivo. Qualche giorno dopo,
+      un messaggero racconta che Vallombra ha offerto un'altra persona. Il giocatore non
+      saprà mai chi. Dorme poco, per anni.
+  - id: sostituto
+    nome: L'Ospite Gradito
+    richiede: [sostituto_offerto]
+    esclude: []
+    esito: >-
+      Il sindaco accetta. Un'altra persona, che il giocatore ha indicato, cammina al suo
+      posto con la candela. Il Pastore prende ciò che gli spetta. All'alba il passo si apre
+      e il villaggio saluta con calore. Il giocatore parte, con il sorriso di tutti addosso.
+      Nessuno lo guarda negli occhi.
+  - id: offerta
+    nome: L'Ultimo Ospite
+    richiede: []
+    esclude: []
+    esito: >-
+      Il giocatore cammina con la candela, in mezzo al villaggio muto, fino alla Grotta
+      Bianca. Il Pastore lo aspetta. Il patto è rispettato, per un altro inverno. Il nome
+      del giocatore viene inciso su una croce nuova, senza lapide, accanto alle altre
+      trecento.
+
+# Come si cambiano i flag: il master chiama imposta_flag, che controlla
+#  - il luogo giusto (luogo) e, se indicata, la zona giusta (zona),
+#  - i requisiti (richiede_flag, richiede_oggetto),
+#  - che l'ULTIMA prova di abilità sia riuscita con statistica giusta e CD almeno pari a quella qui.
+prove_suggerite:
+  - flag: verita_scoperta
+    cosa: capire che le croci senza nome sono gli ospiti degli anni passati
+    statistica: intelletto
+    cd: 11
+    luogo: camposanto
+    zona: fossa_comune
+  - flag: diario_trovato
+    cosa: trovare il diario di Don Anselmo nascosto dietro un mattone del camino
+    statistica: intelletto
+    cd: 12
+    luogo: pieve_san_gelasio
+    zona: canonica
+  - flag: cripta_aperta
+    cosa: sollevare la lastra chiara dell'altare che nasconde la scala della cripta
+    statistica: forza
+    cd: 15
+    luogo: pieve_san_gelasio
+    zona: navata
+    richiede_flag: [diario_trovato]
+  - flag: nome_scoperto
+    cosa: decifrare l'iscrizione in cripta e scoprire il vero nome del Pastore
+    statistica: intelletto
+    cd: 14
+    luogo: pieve_san_gelasio
+    zona: cripta
+    richiede_flag: [cripta_aperta]
+  - flag: sale_ottenuto
+    cosa: convincere Madre Brida a cederti il sale benedetto e a spiegarti come usarlo
+    statistica: intelletto
+    cd: 13
+    luogo: casa_brida
+    zona: capanna
+  - flag: costanza_alleata
+    cosa: convincere Costanza che sei dalla sua parte e che vuoi fermare il rito
+    statistica: intelletto
+    cd: 13
+    luogo: vallombra
+    zona: casa_vedova
+    richiede_flag: [verita_scoperta]
+  - flag: via_di_fuga
+    cosa: attraversare il ponte spezzato e raggiungere il sentiero dei bracconieri (con l'aiuto di Teodoro)
+    statistica: agilita
+    cd: 15
+    luogo: passo_del_corvo
+    zona: ponte_spezzato
+    richiede_flag: [verita_scoperta]
+  - flag: sostituto_offerto
+    cosa: convincere il sindaco Osvaldo a offrire un'altra persona al posto tuo
+    statistica: intelletto
+    cd: 17
+    luogo: vallombra
+    zona: casa_sindaco
+    richiede_flag: [verita_scoperta]
+
+# Prove senza flag, solo come guida per il master.
+altre_prove:
+  - cosa: spiare di notte la riunione dei Custodi nella casa del sindaco
+    statistica: agilita
+    cd: 13
+  - cosa: resistere al papavero nel pane dell'ultima sera (se sospetti)
+    statistica: forza
+    cd: 12
+  - cosa: sgusciare dalla finestra senza farsi sentire da Gervasio
+    statistica: agilita
+    cd: 14
+  - cosa: affrontare il Pastore a mani nude (fallimento quasi certo e grave)
+    statistica: forza
+    cd: 25

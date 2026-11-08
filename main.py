@@ -7,6 +7,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Master di gioco di ruolo con LLM")
     parser.add_argument("--web", action="store_true", help="avvia l'interfaccia web locale invece del terminale")
     parser.add_argument("--porta", type=int, default=8000, help="porta dell'interfaccia web (default 8000)")
+    parser.add_argument("--host", default="127.0.0.1", help="indirizzo su cui ascoltare (default 127.0.0.1, solo questo PC; 0.0.0.0 per aprirlo in rete)")
+    parser.add_argument("--avventura", help="(terminale) id dell'avventura (cartella in avventure/); default la prima")
     parser.add_argument("--debug", action="store_true", help="(terminale) mostra i tool chiamati e i loro esiti")
     parser.add_argument("--nuova", action="store_true", help="(terminale) ignora il salvataggio e inizia una nuova partita")
     parser.add_argument("--provider", choices=["anthropic", "ollama"], help="sovrascrive LLM_PROVIDER del .env")
@@ -29,13 +31,16 @@ def main() -> None:
         from gdr.web import crea_app
 
         url = f"http://127.0.0.1:{args.porta}"
-        threading.Timer(1.5, lambda: webbrowser.open(url)).start()
+        if args.host in ("127.0.0.1", "localhost"):
+            threading.Timer(1.5, lambda: webbrowser.open(url)).start()
+        if cfg.codice_invito is None:
+            print("Nota: CODICE_INVITO non è impostato nel .env, quindi nessuno può registrarsi (e senza utenti non si gioca).")
         print(f"Interfaccia web su {url}  (Ctrl+C per fermare)")
-        uvicorn.run(crea_app(cfg), host="127.0.0.1", port=args.porta, log_level="warning")
+        uvicorn.run(crea_app(cfg), host=args.host, port=args.porta, log_level="warning")
     else:
         from gdr.cli import avvia
 
-        avvia(cfg, nuova=args.nuova, debug=args.debug)
+        avvia(cfg, nuova=args.nuova, debug=args.debug, avventura=args.avventura)
 
 
 if __name__ == "__main__":

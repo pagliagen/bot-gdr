@@ -1,0 +1,97 @@
+# Luoghi di Marenza. pos = coordinate sulla mappa (0-1). collegamenti = ore di viaggio (a piedi o in barca).
+
+iniziale: campo_grande
+
+luoghi:
+  - id: campo_grande
+    nome: Campo Grande
+    tipo: piazza centrale
+    pos: [0.49, 0.40]
+    descrizione: >-
+      La grande piazza di Marenza, lastricata di pietra bianca, con il campanile al
+      centro e botteghe, caffè e barcaioli che gridano. Il Prefetto ha qui il suo
+      palazzo, e un pubblico quotidiano di pettegoli.
+    dettagli: >-
+      Il campanile suona le ore con un po' di ritardo. Decine di lanterne di carta
+      sono già appese per la Notte delle Lanterne.
+    immagine: assets/luoghi/campo_grande.webp
+    prompt_immagine: >-
+      a large sunlit white stone square in a fantasy lagoon city, a tall bell tower in the center, cafes and shops, boatmen shouting, colorful paper lanterns strung between the buildings, bustling crowd, golden morning light
+    collegamenti: {tempio_dei_lumi: 1, mercato_galleggiante: 1, palazzo_dandolo: 1}
+
+  - id: tempio_dei_lumi
+    nome: Tempio dei Lumi
+    tipo: tempio
+    pos: [0.23, 0.19]
+    descrizione: >-
+      Un tempio elegante con una cupola dorata, scalinate di marmo che scendono nell'acqua
+      e mille lampade appese. Qui la Lanterna Maestra brillava da quattrocento anni.
+    dettagli: >-
+      Silenzio profumato di olio e incenso. Una teca di cristallo vuota, con un
+      cuscino di velluto ancora segnato.
+    immagine: assets/luoghi/tempio_dei_lumi.webp
+    prompt_immagine: >-
+      an elegant temple with a golden dome beside a canal, marble steps going down into turquoise water, thousands of hanging oil lamps, incense haze, a sense of quiet reverence, soft golden light
+    collegamenti: {campo_grande: 1, palazzo_dandolo: 1}
+
+  - id: palazzo_dandolo
+    nome: Palazzo Dandolo
+    tipo: palazzo nobiliare
+    pos: [0.80, 0.18]
+    descrizione: >-
+      Il palazzo più bello di Marenza, con un giardino pensile e loggiati di marmo rosa. La
+      Contessa Ludovica Dandolo vi riceve i visitatori con una cortesia affilata.
+    dettagli: >-
+      Collezioni d'arte ovunque, servitori che non parlano mai, un pappagallo che
+      ripete le frasi sbagliate.
+    immagine: assets/luoghi/palazzo_dandolo.webp
+    prompt_immagine: >-
+      a grand pink marble palace on a canal with a hanging garden on the roof, loggias with arched windows, a servant on the steps, a parrot on a balcony, bright afternoon light
+    collegamenti: {campo_grande: 1, tempio_dei_lumi: 1}
+
+  - id: mercato_galleggiante
+    nome: Mercato Galleggiante
+    tipo: mercato
+    pos: [0.43, 0.70]
+    descrizione: >-
+      Centinaia di barche ormeggiate fianco a fianco formano un mercato che ondeggia: frutta,
+      spezie, pesce, stoffe, pettegolezzi. Si può camminare da una barca all'altra, e
+      cadere in acqua con lo stesso gesto.
+    dettagli: >-
+      Bancarelle sui ponti di barche, una taverna fatta su un vecchio peschereccio e un
+      vecchio molo che scende in una cantina allagata.
+    immagine: assets/luoghi/mercato_galleggiante.webp
+    prompt_immagine: >-
+      a colorful floating market of hundreds of moored boats with stalls of fruit spices and fish, awnings and hanging lanterns, planks between boats, a tavern on an old fishing boat, bustling, morning sun on turquoise water
+    collegamenti: {campo_grande: 1, arsenale_vecchio: 1, isola_dei_vetrai: 2}
+
+  - id: arsenale_vecchio
+    nome: Arsenale Vecchio
+    tipo: porto
+    pos: [0.12, 0.74]
+    descrizione: >-
+      Il vecchio cantiere navale di Marenza, con darsene di pietra, gru di legno e magazzini
+      sbarrati. Il Capitano di porto governa con il registro in mano e un sopracciglio
+      sollevato.
+    dettagli: >-
+      Navi in riparazione, odore di catrame, barili ovunque e guardie che fingono di non
+      guardare.
+    immagine: assets/luoghi/arsenale_vecchio.webp
+    prompt_immagine: >-
+      an old shipyard with stone docks, wooden cranes, ships under repair, barrels and warehouses, guards pretending not to look, smell of tar, afternoon haze over the lagoon
+    collegamenti: {mercato_galleggiante: 1, isola_dei_vetrai: 2}
+
+  - id: isola_dei_vetrai
+    nome: Isola dei Vetrai
+    tipo: isola artigiana
+    pos: [0.83, 0.84]
+    descrizione: >-
+      Un'isola di fornaci fumanti, botteghe luminose e soffiatori di vetro che lavorano
+      tra scintille e risate. Qui nascono tutte le lanterne di Marenza.
+    dettagli: >-
+      Vetrine di sculture trasparenti, mastri vetrai che si urlano contro in dialetto, il
+      calore delle fornaci che non lascia mai la pelle.
+    immagine: assets/luoghi/isola_dei_vetrai.webp
+    prompt_immagine: >-
+      an island of glassblowers with smoking furnaces, workshops glowing orange, artisans blowing colorful glass, shelves of transparent sculptures and lanterns, sparks in the air, golden evening light
+    collegamenti: {mercato_galleggiante: 2, arsenale_vecchio: 2}

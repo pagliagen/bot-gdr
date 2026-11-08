@@ -16,7 +16,7 @@ import random
 from typing import Any, Callable
 
 from . import rules
-from .lore import FESTA_ORE, GIORNI_AVVENTURA, Mondo
+from .lore import Mondo
 from .models import StatoPartita
 
 MAX_OGGETTI = 30
@@ -135,7 +135,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "valuta_finale",
-        "description": "Chiude l'avventura. Chiamalo SOLO quando è iniziata la Festa dell'Apertura (sera del giorno 7). Il codice decide il finale in base ai progressi del giocatore: tu lo racconti.",
+        "description": "Chiude l'avventura. Chiamalo SOLO quando il tempo ha raggiunto il momento finale (te lo segnalano avanza_tempo e sposta_in con momento_finale_raggiunto). Il codice decide il finale in base ai progressi del giocatore: tu lo racconti.",
         "input_schema": {"type": "object", "properties": {}},
     },
     {
@@ -377,10 +377,10 @@ class Strumenti:
         s.ore_totali = prima + ore
         info: dict[str, Any] = {}
         if self.mondo:
-            if s.ore_totali >= FESTA_ORE:  # il tempo non va oltre la Festa: è il momento del finale
-                s.ore_totali = max(prima, FESTA_ORE)
-                info["la_festa_e_iniziata"] = True
-                info["nota_per_il_master"] = "È la sera della Festa dell'Apertura: il tempo si ferma qui. Narra la scena e chiama valuta_finale."
+            if s.ore_totali >= self.mondo.ore_finali:  # il tempo non va oltre il momento finale: è ora del finale
+                s.ore_totali = max(prima, self.mondo.ore_finali)
+                info["momento_finale_raggiunto"] = True
+                info["nota_per_il_master"] = f"È arrivato il momento finale ({self.mondo.momento_finale}): il tempo si ferma qui. Narra la scena e chiama valuta_finale."
             eventi = self._fai_scattare_eventi()
             if eventi:
                 info["eventi_mondo"] = eventi
@@ -473,8 +473,9 @@ class Strumenti:
         if self.mondo is None:
             raise rules.ErroreRegole("Nessuna avventura caricata.")
         s = self.stato
-        if s.ore_totali < FESTA_ORE:
-            raise rules.ErroreRegole(f"La Festa non è ancora iniziata: ora è il giorno {s.giorno} alle {s.ora:02d}:00 (inizia il giorno {GIORNI_AVVENTURA} alle 20:00).")
+        if s.ore_totali < self.mondo.ore_finali:
+            m = self.mondo
+            raise rules.ErroreRegole(f"{m.momento_finale} non è ancora iniziato/a: ora è il giorno {s.giorno} alle {s.ora:02d}:00 (arriva il giorno {m.giorni} alle {m.ora_finale:02d}:00).")
         f = self.mondo.valuta_finale(s.flag)
         s.finale = f["id"]
         s.diario.append(f"[giorno {s.giorno}] FINALE: {f['nome']}")

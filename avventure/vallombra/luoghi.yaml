@@ -1,0 +1,96 @@
+# Luoghi di Vallombra. pos = coordinate sulla mappa (0-1). collegamenti = ore di viaggio a piedi (nella neve).
+
+iniziale: vallombra
+
+luoghi:
+  - id: vallombra
+    nome: Vallombra
+    tipo: villaggio
+    pos: [0.47, 0.46]
+    descrizione: >-
+      Case di pietra e legno attorno a una piazza con un pozzo, sotto la neve. In
+      ogni finestra c'è una candela accesa. Il fumo sale dritto dai camini. Gli
+      abitanti salutano con un sorriso e si voltano a guardarti andare via.
+    dettagli: >-
+      Silenzio ovattato, odore di resina e di carne affumicata, impronte sulla neve
+      che portano tutte nella stessa direzione: verso la chiesa.
+    immagine: assets/luoghi/vallombra.webp
+    prompt_immagine: >-
+      a snowy medieval mountain village at dusk, stone and timber houses around a small square with a well, a candle lit in every window, smoke rising straight from chimneys, a church bell tower beyond, long blue shadows, eerie stillness
+    collegamenti: {pieve_san_gelasio: 2, camposanto: 2, casa_brida: 3, passo_del_corvo: 4}
+
+  - id: pieve_san_gelasio
+    nome: Pieve di San Gelasio
+    tipo: chiesa
+    pos: [0.72, 0.23]
+    descrizione: >-
+      Una chiesa di pietra grigia su un'altura, con un campanile storto. All'interno
+      brillano mille candele. Le campane suonano da sole, anche senza vento.
+    dettagli: >-
+      Panche consumate da secoli, un altare con una lastra più chiara delle altre,
+      una canonica con il camino sempre acceso.
+    immagine: assets/luoghi/pieve_san_gelasio.webp
+    prompt_immagine: >-
+      a grey stone parish church on a snowy hill with a crooked bell tower, hundreds of candles glowing through the windows, dark pines around, cold twilight, ominous
+    collegamenti: {vallombra: 2, grotta_bianca: 3}
+
+  - id: camposanto
+    nome: Camposanto dei Senza Nome
+    tipo: cimitero
+    pos: [0.30, 0.21]
+    descrizione: >-
+      Un cimitero di campagna recintato da un muretto, con file ordinate di piccole croci
+      di legno senza nomi. Sono tantissime. In un angolo, la terra è smossa da poco.
+    dettagli: >-
+      Un becchino con la pala sempre in mano, una cappella-ossario, corvi immobili
+      sul muro.
+    immagine: assets/luoghi/camposanto.webp
+    prompt_immagine: >-
+      a snowy rural graveyard with endless rows of small plain wooden crosses without names, a low stone wall, motionless crows, a small ossuary chapel, grey fog, desolate
+    collegamenti: {vallombra: 2, grotta_bianca: 3}
+
+  - id: casa_brida
+    nome: Casa di Madre Brida
+    tipo: capanna nel bosco
+    pos: [0.14, 0.85]
+    descrizione: >-
+      Una capanna di legno in mezzo a un bosco di abeti neri. Fumo, erbe appese e
+      un orto gelato dove niente muore. Il villaggio la tollera perché serve a tutti
+      e non le parla.
+    dettagli: >-
+      Barattoli di sale e di erbe, un gatto nero che guarda ma non si avvicina,
+      una strega o una guaritrice a seconda di chi lo racconta.
+    immagine: assets/luoghi/casa_brida.webp
+    prompt_immagine: >-
+      a small wooden hut deep in a black fir forest under snow, herbs hanging by the door, a frozen garden, a black cat watching from the windowsill, smoke from the chimney, cold moonlit blue
+    collegamenti: {vallombra: 3}
+
+  - id: passo_del_corvo
+    nome: Passo del Corvo
+    tipo: valico di montagna
+    pos: [0.70, 0.79]
+    descrizione: >-
+      L'unica strada che esce dalla valle: un sentiero tra rocce nere, ora chiuso da
+      una frana di neve alta come due uomini. Il ponte di legno è spezzato, e la
+      neve non sembra venire dal cielo.
+    dettagli: >-
+      Un bivacco di cacciatori, corvi che seguono chi passa, un silenzio innaturale.
+    immagine: assets/luoghi/passo_del_corvo.webp
+    prompt_immagine: >-
+      a narrow mountain pass between black rocks buried under a huge wall of snow, a broken wooden bridge over a ravine, crows perched on rocks, a small hunters' bivouac in the distance, bleak grey light
+    collegamenti: {vallombra: 4}
+
+  - id: grotta_bianca
+    nome: Grotta Bianca
+    tipo: grotta
+    pos: [0.49, 0.11]
+    descrizione: >-
+      Un'apertura pallida tra pareti nere, da cui esce un fiato gelato. All'interno il
+      ghiaccio brilla di un bagliore azzurro. Il Pastore non esce di giorno.
+    dettagli: >-
+      Pareti di ghiaccio con ossa incastrate, un altare di roccia coperto di brina,
+      un gregge di lupi silenziosi che attende.
+    immagine: assets/luoghi/grotta_bianca.webp
+    prompt_immagine: >-
+      a pale cave entrance between black cliffs exhaling cold mist, walls of blue ice with bones frozen inside, faint blue glow, silent wolves waiting in the dark, ominous
+    collegamenti: {pieve_san_gelasio: 3, camposanto: 3}

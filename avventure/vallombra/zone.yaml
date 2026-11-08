@@ -1,0 +1,187 @@
+# Zone di Vallombra (vedi la spiegazione dei campi in avventure/acquaverde/zone.yaml).
+
+zone:
+  vallombra:
+    - id: piazza
+      nome: Piazza del Pozzo
+      ingresso: true
+      descrizione: >-
+        Piazzetta innevata con un pozzo di pietra e candele sui davanzali. Gli abitanti
+        si fermano a salutare, sorridendo un po' troppo.
+      prompt_immagine: >-
+        a snowy medieval village square at dusk with an old stone well, candles in every window, villagers smiling too widely in the distance, long blue shadows
+    - id: osteria
+      nome: Osteria del Corvo Zoppo
+      orari: [12, 1]
+      chiusa_perche: "La porta è chiusa e dalle fessure non esce luce."
+      descrizione: >-
+        Una sala calda con un camino grande, tavoli lunghi e una zuppa sempre pronta.
+        Si mangia bene. Troppo bene. Agnese non ti lascia mai il piatto vuoto.
+      prompt_immagine: >-
+        a warm medieval tavern interior with a big fireplace, long wooden tables, bowls of steaming stew, a wooden crow with a limp painted over the door, dim candlelight, unsettling coziness
+    - id: macelleria
+      nome: Macelleria di Gervasio
+      orari: [7, 17]
+      chiusa_perche: "Le imposte sono chiuse. Dall'interno arriva solo il rumore sordo di una lama."
+      descrizione: >-
+        Una bottega fredda con quarti di carne appesi, un ceppo segnato da mille colpi
+        e una porta sul retro che il macellaio tiene sempre chiusa.
+      prompt_immagine: >-
+        a cold medieval butcher's shop with hanging sides of meat, a deeply scarred chopping block, a locked back door, grey winter light through a small window
+    - id: casa_sindaco
+      nome: Casa del Sindaco
+      orari: [8, 21]
+      chiusa_perche: "Il portone è chiuso. Dalla finestra ti guarda una candela, non una persona."
+      descrizione: >-
+        La casa più grande del villaggio, calda e ordinata, con un tavolo apparecchiato per
+        molte più persone di quante ne abitino. Osvaldo riceve qui.
+      prompt_immagine: >-
+        the interior of a large well-kept medieval house, a long table set for far too many guests, a stone hearth, a portrait of old bearded men on the wall, candlelight, eerie hospitality
+    - id: casa_vedova
+      nome: Casa di Costanza
+      orari: [7, 21]
+      chiusa_perche: "La porta è chiusa dall'interno e la finestra è coperta da una coperta."
+      descrizione: >-
+        Una casetta povera e pulitissima. Sul tavolo c'è un posto apparecchiato per
+        nessuno. Nel cassetto, una lettera mai spedita.
+      prompt_immagine: >-
+        a small poor but spotless medieval cottage interior, a single place set at the table for nobody, a single candle, a drawer slightly open, melancholy
+  pieve_san_gelasio:
+    - id: sagrato
+      nome: Sagrato della Pieve
+      ingresso: true
+      descrizione: >-
+        Uno spiazzo di neve calpestata davanti alla chiesa. Le campane suonano da sole.
+      prompt_immagine: >-
+        a snowy churchyard in front of a grey stone church with a crooked bell tower, the bells swaying by themselves, a thin path of footprints, cold dusk
+    - id: navata
+      nome: Navata di San Gelasio
+      orari: [6, 20]
+      chiusa_perche: "Il portone è chiuso. Dall'interno si sente un canto basso."
+      descrizione: >-
+        Panche consumate, mille candele, un altare con una lastra di pietra più chiara
+        delle altre. Don Anselmo prega qui.
+      prompt_immagine: >-
+        the interior of an old stone church lit by a thousand candles, worn wooden pews, an altar with one paler stone slab, long shadows, solemn and unsettling
+    - id: canonica
+      nome: Canonica
+      orari: [7, 21]
+      chiusa_perche: "La porta è sprangata e dal camino non esce fumo."
+      descrizione: >-
+        Una stanza stretta con un camino sempre acceso, libri e candele. Sulla mensola,
+        un mattone che sembra mosso più volte.
+      prompt_immagine: >-
+        a narrow priest's room with a roaring fireplace, shelves of books and candles, one loose brick on the mantel, a simple bed, warm yellow light
+    - id: campanile
+      nome: Campanile
+      orari: [8, 18]
+      chiusa_perche: "La botola della scala è bloccata dall'alto."
+      descrizione: >-
+        In cima c'è la campana di bronzo, con una crepa a forma di sorriso. Da qui si
+        vede tutta la valle, e la Grotta Bianca all'orizzonte.
+      prompt_immagine: >-
+        the top of a stone bell tower with a large bronze bell with a crack shaped like a smile, a view over a snowy valley and a distant pale cave, cold light
+    - id: cripta
+      nome: Cripta
+      richiede_flag: [cripta_aperta]
+      chiusa_perche: "Sotto l'altare c'è solo pietra: serve prima scoprire come sollevare la lastra."
+      descrizione: >-
+        Una scala porta a una stanza bassa di pietra nera. Alle pareti sono incisi
+        simboli antichi, e in fondo, una parola che non si capisce al primo sguardo.
+      prompt_immagine: >-
+        a low crypt of black stone beneath a church, ancient symbols carved on the walls, a faint cold glow, a single large inscription at the far end, dust and frost
+  camposanto:
+    - id: cancello
+      nome: Cancello del Camposanto
+      ingresso: true
+      descrizione: >-
+        Un cancello di ferro arrugginito aperto su file di piccole croci. I corvi
+        guardano immobili.
+      prompt_immagine: >-
+        a rusted iron gate open onto rows of small wooden crosses in snow, motionless crows on the wall, grey fog
+    - id: fossa_comune
+      nome: Fossa delle croci senza nome
+      descrizione: >-
+        Il lato più vecchio del cimitero, con trecento croci uguali, in file perfette.
+        Nessuna ha un nome. Sotto alcune, la terra è smossa da poco.
+      prompt_immagine: >-
+        endless neat rows of identical small wooden crosses without names in a snowy field, freshly turned earth in one corner, a shovel stuck in the ground, bleak
+    - id: ossario
+      nome: Cappella dell'ossario
+      orari: [8, 17]
+      chiusa_perche: "Il chiavistello è chiuso e il becchino ha le chiavi."
+      descrizione: >-
+        Una cappella bassa piena di teschi ordinati su scaffali. Su uno scaffale, una
+        fila di oggetti personali: anelli, borse, un flauto.
+      prompt_immagine: >-
+        a low stone ossuary chapel with skulls neatly arranged on shelves, a row of personal belongings beneath them, rings and purses and a small flute, dim candlelight
+  casa_brida:
+    - id: sentiero
+      nome: Sentiero tra gli abeti
+      ingresso: true
+      descrizione: >-
+        Un sentiero stretto tra abeti neri. Sulla neve ci sono solo impronte di gatto.
+      prompt_immagine: >-
+        a narrow snowy path between black fir trees leading to a distant hut with a lit window, paw prints in the snow, cold blue dusk
+    - id: capanna
+      nome: Capanna di Brida
+      orari: [8, 22]
+      chiusa_perche: "La porta è sbarrata con una sbarra di ferro e un barattolo di sale sulla soglia."
+      descrizione: >-
+        Una stanza calda piena di barattoli, erbe e mazzi appesi. Un gatto nero ti
+        osserva dalla mensola. Brida non sorride mai.
+      prompt_immagine: >-
+        the inside of a witch healer's hut, jars of salt and herbs, bundles hanging from the beams, a black cat on a shelf, a bubbling pot, warm low light
+    - id: orto
+      nome: Orto gelato
+      descrizione: >-
+        Un orto sotto la neve dove le piante verdi non muoiono mai. Qui il gelo non
+        passa.
+      prompt_immagine: >-
+        a garden of healthy green herbs growing under snow in a ring of salt, black fir trees around, blue twilight, strangely warm glow
+  passo_del_corvo:
+    - id: strada
+      nome: Strada della frana
+      ingresso: true
+      descrizione: >-
+        La strada che esce dalla valle, sepolta sotto un muro di neve alto due uomini.
+        Ai lati, corvi.
+      prompt_immagine: >-
+        a mountain road buried under a huge wall of snow, black rocks on both sides, crows perched everywhere, grey sky
+    - id: bivacco
+      nome: Bivacco del cacciatore
+      descrizione: >-
+        Un riparo di pietra e travi con un focolare, pelli e una mappa incisa su una
+        tavola. Teodoro vive qui, lontano da tutti.
+      prompt_immagine: >-
+        a small stone and timber hunters' shelter, a hearth, furs on the walls, a crude map carved on a wooden board, a bow and traps, warm smoky light
+    - id: ponte_spezzato
+      nome: Ponte spezzato
+      descrizione: >-
+        Un ponte di corde e assi spezzato sopra una forra. Dall'altra parte si vede il
+        sentiero dei bracconieri.
+      prompt_immagine: >-
+        a broken rope and plank bridge over a deep snowy ravine, a faint trail on the far side, mist rising from the bottom, vertigo
+  grotta_bianca:
+    - id: imboccatura
+      nome: Imboccatura della grotta
+      ingresso: true
+      descrizione: >-
+        Un'apertura pallida da cui esce un fiato gelato. Si sentono passi leggeri,
+        come di un gregge.
+      prompt_immagine: >-
+        a pale cave entrance exhaling freezing mist, tracks of many wolves in the snow leading inside, black cliffs, faint blue glow from within
+    - id: cunicoli
+      nome: Cunicoli di ghiaccio
+      descrizione: >-
+        Gallerie di ghiaccio azzurro con ossa incastrate come insetti nell'ambra. Si
+        sentono sussurri.
+      prompt_immagine: >-
+        winding tunnels of blue ice with bones frozen inside like insects in amber, a faint glow, whispering darkness
+    - id: altare
+      nome: Altare del Gelo
+      descrizione: >-
+        Una sala di ghiaccio con un altare di roccia. Di notte il Pastore è qui, con il
+        suo gregge.
+      prompt_immagine: >-
+        a vast ice cavern with a rough stone altar covered in frost, a tall pale shepherd figure with a wolf skull face and a crook, silent wolves around, cold blue light

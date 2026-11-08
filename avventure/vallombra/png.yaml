@@ -1,0 +1,147 @@
+# Personaggi non giocanti di Vallombra. "segreto" è noto solo al master (e al codice).
+# zona = dove sta di default; routine = [dalle, alle) -> zona. Fuori orario (senza zona) non è reperibile.
+
+png:
+  - id: osvaldo_ferrante
+    nome: Osvaldo Ferrante
+    ruolo: sindaco di Vallombra
+    luogo: vallombra
+    routine:
+      - {dalle: 8, alle: 12, zona: casa_sindaco}
+      - {dalle: 12, alle: 14, zona: osteria}
+      - {dalle: 14, alle: 21, zona: casa_sindaco}
+    aspetto: uomo di sessant'anni, barba curata, abito di lana pesante, sorriso paterno
+    aspetto_en: "a dignified sixty-year-old village mayor with a neatly trimmed grey beard, heavy dark wool clothes, a warm fatherly smile that does not reach his tired eyes"
+    carattere: cortese, premuroso, irremovibile; crede sinceramente di salvare il villaggio
+    scopo: portare a termine la Veglia senza scandali e senza dover usare la forza
+    segreto: ha deciso fin dal primo giorno che il forestiero sarà l'offerta di quest'anno; ordina a tutti di essere gentili perché "l'ospite deve arrivare sereno"
+    voce: "«Sei il benvenuto, straniero. Qui nessuno parte a stomaco vuoto.»"
+    immagine: assets/png/osvaldo_ferrante.webp
+
+  - id: agnese_corvo
+    nome: Agnese Corvo
+    ruolo: oste dell'Osteria del Corvo Zoppo
+    luogo: vallombra
+    routine:
+      - {dalle: 12, alle: 1, zona: osteria}
+    aspetto: donna robusta di quarant'anni, mani arrossate, grembiule bianco, occhi lucidi
+    aspetto_en: "a sturdy forty-year-old innkeeper woman with red chapped hands, a clean white apron, glassy eyes that avoid direct looks, a forced kind smile"
+    carattere: materna, nervosa, parla troppo del tempo e troppo poco di ciò che sa
+    scopo: sfamare l'ospite e non pensare a cosa succederà dopo
+    segreto: il pane dell'ultima sera conterrà papavero per renderti docile; lei prova a avvisarti con frasi come "non mangiare tutto, quella sera"
+    voce: "«Mangia, mangia. Il freddo qui non perdona, e il pane aiuta a dormire.»"
+    immagine: assets/png/agnese_corvo.webp
+
+  - id: don_anselmo
+    nome: Don Anselmo Pieri
+    ruolo: parroco di San Gelasio
+    luogo: pieve_san_gelasio
+    routine:
+      - {dalle: 6, alle: 7, zona: navata}
+      - {dalle: 7, alle: 12, zona: canonica}
+      - {dalle: 12, alle: 20, zona: navata}
+    aspetto: prete allampanato di sessant'anni, tonaca consunta, mani che tremano, occhiaie scure
+    aspetto_en: "a gaunt sixty-year-old priest in a worn black cassock, trembling hands, deep dark circles under his eyes, haunted guilty expression, a rosary wrapped around his wrist"
+    carattere: gentile, timoroso, pieno di sensi di colpa; parla a bassa voce guardandosi alle spalle
+    scopo: confessare tutto a qualcuno prima che sia troppo tardi, e non essere visto farlo
+    segreto: ha scritto un diario che nasconde dietro un mattone del camino in canonica; sa che sotto la lastra chiara dell'altare c'è una scala per la cripta con il vero nome del Pastore
+    voce: "«Figliolo... qui l'ospitalità è una virtù. E una condanna.»"
+    immagine: assets/png/don_anselmo.webp
+
+  - id: lisetta_ferri
+    nome: Lisetta Ferri
+    ruolo: bambina del villaggio
+    luogo: vallombra
+    routine:
+      - {dalle: 7, alle: 20, zona: piazza}
+    aspetto: bambina di otto anni, treccine bionde, cappottino rosso, sguardo fisso
+    aspetto_en: "a pale eight-year-old girl with blonde braids and a small red coat, standing perfectly still in the snow, an unblinking calm stare, unsettling and sweet"
+    carattere: educata, serena, canticchia sempre la stessa ninna nanna; non ricorda cosa dice di notte
+    scopo: "nessuno consapevole: è la voce del Pastore quando cala la sera"
+    segreto: "di notte il Pastore parla attraverso di lei; la ninna nanna contiene frammenti del suo vero nome, ma lei non lo sa. È una vittima, non una minaccia: non va mai fatta soffrire"
+    voce: "«Dormi, dormi, forestiero, che il pastore porta il gregge...»"
+    immagine: assets/png/lisetta_ferri.webp
+
+  - id: teodoro_rame
+    nome: Teodoro Rame
+    ruolo: cacciatore
+    luogo: passo_del_corvo
+    zona: bivacco
+    aspetto: uomo di cinquant'anni, spalle larghe, barba ispida, pelli di volpe, poche parole
+    aspetto_en: "a rugged fifty-year-old hunter with a thick unkempt beard, fox furs over his shoulders, a long bow on his back, weathered eyes, silent and wary"
+    carattere: taciturno, diffidente, onesto, odia il sindaco e non lo dice
+    scopo: restare lontano dal villaggio e dalle sue regole
+    segreto: conosce il sentiero dei bracconieri oltre il ponte spezzato, l'unica via per uscire dalla valle senza passare dalla frana; sa che l'offerto di ogni anno non torna mai e non ha mai avuto il coraggio di aiutarlo
+    voce: "«Questa non è una valle. È una gola. E si chiude.»"
+    immagine: assets/png/teodoro_rame.webp
+
+  - id: madre_brida
+    nome: Madre Brida
+    ruolo: erborista e guaritrice
+    luogo: casa_brida
+    routine:
+      - {dalle: 8, alle: 22, zona: capanna}
+    aspetto: donna di settant'anni, schiena dritta, occhi chiari, sciarpa di lana grigia, gatto nero in braccio
+    aspetto_en: "a stern seventy-year-old herbalist woman with a straight back, pale piercing eyes, a grey wool scarf, holding a black cat, jars of salt behind her"
+    carattere: schietta, dura, ironica solo con sé stessa; protegge chi lo merita
+    scopo: spezzare il patto prima di morire, senza essere lei a sacrificarsi
+    segreto: possiede sale benedetto con cui tiene lontano il Pastore dal suo orto; sa che il patto si spezza solo pronunciando il nome vero davanti al sale, ma non conosce il nome
+    voce: "«Lo so cos'è. Lo so da quarant'anni. Il problema è che non so come si chiama.»"
+    immagine: assets/png/madre_brida.webp
+
+  - id: gervasio_macello
+    nome: Gervasio Macello
+    ruolo: macellaio
+    luogo: vallombra
+    routine:
+      - {dalle: 7, alle: 17, zona: macelleria}
+      - {dalle: 17, alle: 21, zona: piazza}
+    aspetto: uomo enorme di quarant'anni, braccia coperte di cicatrici, grembiule macchiato, sorriso fisso
+    aspetto_en: "a huge forty-year-old butcher with scarred forearms, a stained leather apron, a fixed polite smile and cold small eyes, holding a heavy cleaver loosely"
+    carattere: educato e pacato, braccio operativo del sindaco; più pericoloso di quanto appaia
+    scopo: assicurarsi che l'ospite non lasci Vallombra
+    segreto: è lui che sorveglia la strada e le finestre dell'ospite; a notte fonda, se l'ospite scappa, lo riporta con la forza
+    voce: "«Un forestiero che cammina da solo di notte rischia di perdersi. Meglio restare insieme.»"
+    immagine: assets/png/gervasio_macello.webp
+
+  - id: costanza_vetri
+    nome: Costanza Vetri
+    ruolo: vedova del villaggio
+    luogo: vallombra
+    routine:
+      - {dalle: 7, alle: 21, zona: casa_vedova}
+    aspetto: donna di trent'anni, occhi arrossati, scialle nero, mani sempre in movimento
+    aspetto_en: "a thin thirty-year-old woman in a black shawl, red-rimmed eyes, restless hands, a fragile but determined expression"
+    carattere: spezzata, furiosa, prudente; sussurra
+    scopo: vendicare suo fratello Matteo, offerto l'anno scorso, e impedire che accada ancora
+    segreto: ha ritrovato il flauto di Matteo nell'ossario e sa dove sono nascosti i suoi oggetti; non ha le prove né il coraggio per accusare il sindaco
+    voce: "«Mio fratello è partito per Natale. Lo dicono tutti. Nessuno ha visto da che parte.»"
+    immagine: assets/png/costanza_vetri.webp
+
+  - id: ilario_pala
+    nome: Ilario Pala
+    ruolo: becchino
+    luogo: camposanto
+    routine:
+      - {dalle: 7, alle: 18, zona: fossa_comune}
+    aspetto: vecchio curvo, naso rosso, cappello floscio, pala in spalla, sorriso gentile
+    aspetto_en: "a hunched old gravedigger with a red nose, a floppy felt hat, a shovel over his shoulder, a gentle almost cheerful smile among the crosses"
+    carattere: gioviale in modo disturbante, abitudinario, parla dei morti come di vicini
+    scopo: tenere in ordine le tombe, tutte, anche quelle senza nome
+    segreto: ha scavato trecento fosse in quarant'anni e ricorda ogni nome; ne ha scavata una anche per quest'anno, vuota, già pronta
+    voce: "«Una fossa ogni inverno. Si fa presto, con la terra molle di stagione.»"
+    immagine: assets/png/ilario_pala.webp
+
+  - id: pastore_bianco
+    nome: Il Pastore Bianco
+    ruolo: spirito dell'inverno
+    luogo: grotta_bianca
+    routine:
+      - {dalle: 20, alle: 6, zona: altare}
+    aspetto: figura altissima e pallida, fatta di neve e ossa, con un teschio di lupo al posto del viso e un lungo bastone
+    aspetto_en: "a tall pale shepherd figure made of snow and old bones, a wolf skull in place of a face, a long crook staff, tattered white robes, silent wolves at his feet, cold blue light"
+    carattere: antico, calmo, formale; non odia, esige. Parla piano e senza fretta
+    scopo: ricevere ciò che gli è dovuto, ogni anno, secondo il patto
+    segreto: il suo vero nome è inciso in cripta. Se qualcuno lo pronuncia davanti al sale benedetto, il patto si spezza e lui si dissolve. Non può mentire
+    voce: "«Il patto è antico quanto la fame. Chi lo ha firmato era pieno di paura. Voi lo siete ancora.»"
+    immagine: assets/png/pastore_bianco.webp

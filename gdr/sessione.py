@@ -15,10 +15,9 @@ from . import state as salvataggi
 from .agent import Agente
 from .character_creation import ARRAY_STANDARD, CLASSI, crea_personaggio
 from .config import RADICE, Config
-from .immagini import CodaImmagini, GeneratoreImmagini, crea_generatore
-from .llm import crea_provider
+from .immagini import CodaImmagini
 from .llm.base import LLMProvider
-from .lore import GIORNI_AVVENTURA, Mondo, carica_mondo
+from .lore import Mondo
 from .models import StatoPartita
 
 PROMPT_INIZIO = (
@@ -32,30 +31,40 @@ class SessioneOccupata(RuntimeError):
 
 
 class Sessione:
+    """Una partita: UN utente in UNA avventura. Più sessioni convivono (le crea il GestoreSessioni)."""
+
     def __init__(
         self,
         cfg: Config,
-        mondo: Mondo | None = None,
-        provider: LLMProvider | None = None,
-        generatore: GeneratoreImmagini | None = None,
+        mondo: Mondo,
+        provider: LLMProvider,
+        percorso_salvataggio: Path,
+        coda: CodaImmagini | None = None,  # coda condivisa tra tutte le sessioni (la GPU è una)
+        semaforo: threading.Semaphore | None = None,  # limita i turni del narratore eseguiti insieme
     ):
         self.cfg = cfg
-        self.mondo = mondo or carica_mondo(cfg.percorso_lore)
-        self.provider = provider or crea_provider(cfg)
+        self.mondo = mondo
+        self.provider = provider
+        self.percorso_salvataggio = Path(percorso_salvataggio)
         self.stato: StatoPartita | None = None
         self.agente: Agente | None = None
         self._eventi: list[dict[str, Any]] = []
         self._lock = threading.Lock()
         self._lock_salva = threading.Lock()
-        # Immagini generate a runtime: coda in background (None se disattivate)
-        generatore = generatore or crea_generatore(cfg)
-        self.coda: CodaImmagini | None = CodaImmagini(generatore) if generatore else None
+        self.coda = coda
+        self._semaforo = semaforo
+        self._attesa: set[str] = set()  # immagini richieste da QUESTA partita e non ancora pronte
         self._posto_visto: tuple[str, str] = ("", "")  # (luogo, zona) dell'ultimo turno: per accorgersi che il giocatore si è mosso
+
+    @property
+    def _cartella_generate(self) -> Path:
+        """Cache delle immagini generate: dentro l'avventura, servita insieme alle sue immagini statiche."""
+        return self.mondo.cartella / "assets" / "generate"
 
     # --- Ciclo di vita ----------------------------------------------------------
     def carica(self) -> bool:
         """Riprende il salvataggio, se esiste ed è ancora in corso."""
-        stato = salvataggi.carica(self.cfg.percorso_salvataggio)
+        stato = salvataggi.carica(self.percorso_salvataggio)
         if stato is None or stato.finale or stato.personaggio.pf <= 0:
             return False
         self._usa(stato)
@@ -66,7 +75,7 @@ class Sessione:
         stato = StatoPartita(personaggio=crea_personaggio(nome, classe, valori), luogo_corrente="")
         self.mondo.stato_iniziale(stato)
         self._usa(stato)
-        salvataggi.salva(stato, self.cfg.percorso_salvataggio)
+        salvataggi.salva(stato, self.percorso_salvataggio)
 
     def _usa(self, stato: StatoPartita) -> None:
         self.mondo.assicura_zona(stato)  # salvataggi vecchi senza zona
@@ -88,7 +97,7 @@ class Sessione:
 
     def _salva(self) -> None:
         with self._lock_salva:  # può essere chiamato anche dal thread delle immagini
-            salvataggi.salva(self.stato, self.cfg.percorso_salvataggio)  # type: ignore[arg-type]
+            salvataggi.salva(self.stato, self.percorso_salvataggio)  # type: ignore[arg-type]
 
     # --- Immagini generate -------------------------------------------------------
     def _stile(self) -> str:
@@ -96,8 +105,8 @@ class Sessione:
 
     def _percorso_zona(self, luogo_id: str, zona_id: str) -> Path:
         """Immagine statica della zona (assets/zone/), se esiste; altrimenti il percorso della copia generata."""
-        statica = RADICE / "assets" / "zone" / f"{luogo_id}_{zona_id}.webp"
-        return statica if statica.exists() else self.cfg.percorso_generate / "zone" / f"{luogo_id}_{zona_id}.webp"
+        statica = self.mondo.cartella / "assets" / "zone" / f"{luogo_id}_{zona_id}.webp"
+        return statica if statica.exists() else self._cartella_generate / "zone" / f"{luogo_id}_{zona_id}.webp"
 
     def _richiedi_luogo(self) -> None:
         """Se la zona corrente non ha un'immagine (né statica né già generata), la genera: una volta sola, poi è in cache."""
@@ -107,13 +116,14 @@ class Sessione:
         if not z or not z.get("prompt_immagine"):
             return
         percorso = self._percorso_zona(self.stato.luogo_id, z["id"])
-        self.coda.accoda(f"{z['prompt_immagine'].strip()}, {self._stile()}", percorso)  # False (nulla da fare) se esiste già
+        self._accoda(f"{z['prompt_immagine'].strip()}, {self._stile()}", percorso)  # nulla da fare se esiste già
 
     def _richiedi_scena(self, descrizione: str, didascalia: str) -> None:
         """Chiamata dal tool illustra_scena: mette in coda l'illustrazione e la mostrerà quando è pronta."""
         s, luogo = self.stato, self.stato.luogo_id  # type: ignore[union-attr]
-        nome = f"{s.turno:04d}_{hashlib.sha1(descrizione.encode()).hexdigest()[:8]}.webp"
-        percorso = self.cfg.percorso_generate / "scene" / nome
+        # il nome include la partita: due giocatori con la stessa descrizione allo stesso turno non devono condividere il file
+        nome = f"{s.turno:04d}_{hashlib.sha1((str(self.percorso_salvataggio) + descrizione).encode()).hexdigest()[:10]}.webp"
+        percorso = self._cartella_generate / "scene" / nome
 
         def pronta(ok: bool) -> None:
             if ok and self.stato is s:
@@ -123,7 +133,20 @@ class Sessione:
         # I PNG nominati nella descrizione vengono resi con il loro aspetto vero (come nei ritratti)
         aspetti = ". ".join(self.mondo.aspetti_in_scena(descrizione))
         prompt = f"{descrizione}. {aspetti}. {self._stile()}" if aspetti else f"{descrizione}, {self._stile()}"
-        self.coda.accoda(prompt, percorso, pronta)  # type: ignore[union-attr]
+        self._accoda(prompt, percorso, pronta)
+
+    def _accoda(self, prompt: str, percorso: Path, al_termine=None) -> None:
+        """Mette in coda un'immagine e tiene il conto di quelle di questa partita (per il badge 'in preparazione')."""
+        chiave = str(percorso)
+
+        def fatto(ok: bool) -> None:
+            self._attesa.discard(chiave)
+            if al_termine:
+                al_termine(ok)
+
+        self._attesa.add(chiave)
+        if not self.coda.accoda(prompt, percorso, fatto):  # type: ignore[union-attr]
+            self._attesa.discard(chiave)  # esisteva già o era già in lavorazione
 
     @staticmethod
     def _url_file(percorso: Path) -> str | None:
@@ -144,7 +167,13 @@ class Sessione:
             raise SessioneOccupata("Il narratore sta ancora scrivendo.")
         try:
             self._eventi = []
-            narrazione = self.agente.turno(testo)  # in caso di errore annulla il turno e rilancia
+            if self._semaforo:
+                self._semaforo.acquire()  # se la GPU è occupata da altri giocatori, si aspetta in coda
+            try:
+                narrazione = self.agente.turno(testo)  # in caso di errore annulla il turno e rilancia
+            finally:
+                if self._semaforo:
+                    self._semaforo.release()
             if (self.stato.luogo_id, self.stato.zona_id) != self._posto_visto:  # il giocatore si è spostato
                 self._posto_visto = (self.stato.luogo_id, self.stato.zona_id)
                 self.stato.scena = None  # l'illustrazione di scena valeva per il posto di prima
@@ -162,12 +191,9 @@ class Sessione:
         return {"narrazione": narrazione, "tool": eventi, "eventi_mondo": titoli}
 
     # --- Vista per l'interfaccia -------------------------------------------------
-    @staticmethod
-    def _url(percorso: str | None) -> str | None:
-        """URL di un'immagine statica, solo se il file esiste davvero."""
-        if percorso and (RADICE / percorso).exists():
-            return "/" + percorso
-        return None
+    def _url(self, percorso: str | None) -> str | None:
+        """URL di un'immagine statica dell'avventura, solo se il file esiste davvero."""
+        return self.mondo.url_asset(percorso)
 
     def vista(self) -> dict[str, Any]:
         s, m = self.stato, self.mondo
@@ -206,7 +232,7 @@ class Sessione:
                 "statistiche": {k: {"valore": v, "mod": (v - 10) // 2} for k, v in p.statistiche.items()},
                 "inventario": list(p.inventario),
             },
-            "tempo": {"giorno": s.giorno, "ora": s.ora, "giorni_totali": GIORNI_AVVENTURA},
+            "tempo": {"giorno": s.giorno, "ora": s.ora, "giorni_totali": m.giorni, "ore_finali": m.ore_finali},
             "luogo": {
                 "id": s.luogo_id,
                 "nome": s.luogo_corrente,
@@ -226,10 +252,11 @@ class Sessione:
             "scena": self._scena_valida(),
             "immagini": {
                 "attive": self.coda is not None,
-                "in_corso": self.coda.n_in_corso if self.coda else 0,
+                "in_corso": len(self._attesa),
                 "errore": self.coda.ultimo_errore if self.coda else None,
             },
             "mappa": {"immagine": self._url("assets/mappa.webp"), "pins": pins},
+            "avventura": {"id": m.id, "titolo": m.titolo},
             "diario": list(s.diario),
             "cronologia": self._cronologia(),
             "fine": fine,

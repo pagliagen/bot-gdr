@@ -71,8 +71,8 @@ header h1 { margin: 0; font-size: 1.15rem; color: var(--accento); white-space: n
 header button { padding: 6px 12px; font-size: 0.9rem; background: var(--pannello-2); color: var(--testo); border: 1px solid var(--bordo); }
 
 /* Creazione */
-#creazione { display: flex; justify-content: center; padding: 24px 16px; }
-#form-creazione {
+#creazione, #accesso { display: flex; justify-content: center; padding: 24px 16px; }
+#form-creazione, #form-accesso {
   width: 100%;
   max-width: 560px;
   background: var(--pannello);
@@ -83,8 +83,9 @@ header button { padding: 6px 12px; font-size: 0.9rem; background: var(--pannello
   flex-direction: column;
   gap: 16px;
 }
-#form-creazione h2 { margin: 0; color: var(--accento); }
-#form-creazione label { display: flex; flex-direction: column; gap: 4px; }
+#form-creazione h2, #form-accesso h2 { margin: 0; color: var(--accento); }
+#form-creazione h2 small { color: var(--testo-tenue); font-weight: normal; font-size: 0.8rem; }
+#form-creazione label, #form-accesso label { display: flex; flex-direction: column; gap: 4px; }
 fieldset { border: 1px solid var(--bordo); border-radius: 8px; padding: 10px 12px; margin: 0; }
 legend { padding: 0 6px; color: var(--testo-tenue); }
 legend small { color: var(--testo-tenue); }
@@ -105,6 +106,20 @@ legend small { color: var(--testo-tenue); }
 .stat-riga { display: grid; grid-template-columns: 1fr 90px 50px; align-items: center; gap: 8px; padding: 4px 0; }
 .stat-riga .mod { color: var(--testo-tenue); width: 50px; text-align: right; }
 .errore { color: var(--rosso); min-height: 1.4em; margin: 0; }
+
+/* Scelta dell'avventura */
+#menu { max-width: 760px; margin: 0 auto; padding: 24px 16px; display: block; }
+#menu h2 { color: var(--accento); margin-top: 0; }
+#avventure { display: grid; gap: 14px; }
+.avventura {
+  background: var(--pannello); border: 1px solid var(--bordo); border-radius: var(--raggio);
+  padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;
+}
+.avventura h3 { margin: 0; color: var(--accento); }
+.avventura p { margin: 0; }
+.avventura .salvataggio { color: var(--testo-tenue); font-size: 0.9rem; }
+.avventura .azioni { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.avventura .secondario { background: var(--pannello-2); color: var(--testo); border: 1px solid var(--bordo); }
 
 /* Partita */
 #gioco {

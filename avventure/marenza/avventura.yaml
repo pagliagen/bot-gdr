@@ -1,0 +1,207 @@
+# Avventura: "Il Furto della Lanterna Maestra" (giallo ironico)
+# Durata: 4 giorni di gioco. Il giocatore arriva la mattina del giorno 1, convocato dal Prefetto.
+#
+# PRINCIPIO: il mondo avanza da solo (la nebbia sale, gli eventi scattano al loro giorno).
+# Il giocatore cambia COME va a finire (i "flag"), non SE gli eventi accadono.
+
+titolo: Il Furto della Lanterna Maestra
+presentazione: >-
+  Nella città lagunare di Marenza è sparita la Lanterna che tiene lontana la Nebbia Grigia.
+  Hai quattro giorni, un Prefetto in panico e una lista di sospettati con troppi segreti,
+  per scoprire chi ha rubato cosa, e perché. Il colpevole non è chi sembra.
+giorni: 4                                  # durata in giorni di gioco
+ora_inizio: 9                              # ora d'arrivo del giocatore, il giorno 1
+ora_finale: 21                             # ora (dell'ultimo giorno) in cui il tempo si ferma e si decide il finale
+momento_finale: la Notte delle Lanterne    # come si chiama quel momento, nei messaggi al master
+
+premessa: >-
+  Il Prefetto di Marenza ti ha convocato in fretta, con una lettera piena di
+  sottolineature. All'alba, nel Tempio dei Lumi, la Lanterna Maestra è sparita dalla sua
+  teca di cristallo, a quattro giorni dalla Notte delle Lanterne. Senza la Lanterna accesa,
+  la Nebbia Grigia tornerà. Nessuno sa come sia stata rubata: il Tempio era chiuso a chiave.
+
+verita_nascosta: >-
+  Nessuno ha rubato la Lanterna: il Lume, lo spirito che vive dentro, ha chiesto a Pico, un
+  monello che puliva i vetri del Tempio, di portarlo fuori a vedere la città. Pico lo tiene
+  nascosto in una cantina allagata sotto il Mercato Galleggiante. Senza il Tempio, il Lume
+  si indebolisce, e la nebbia sale. Tutti i sospettati hanno segreti che li fanno sembrare
+  colpevoli: la Contessa ha ordinato una copia della Lanterna, il Capitano nasconde del
+  contrabbando, Sorella Isotta parlava con il Lume ogni sera, il Prefetto ha ordinato
+  anche lui una copia, e Fausto le ha fatte entrambe. Il Lume tornerà volentieri se gli si
+  lascia vedere la Notte delle Lanterne.
+
+flag_iniziali:
+  tempio_ispezionato: false     # tracce di piedini bagnati e nessun segno di scasso nella cella
+  testimone_barcaiolo: false    # Nino ha visto un bambino con un sacco all'alba
+  pico_trovato: false           # Pico è stato raggiunto
+  copia_scoperta: false         # Fausto ammette di aver fatto una copia per la Contessa
+  contessa_smascherata: false   # la Contessa confessa che voleva solo esporre una copia
+  lume_convinto: false          # il Lume accetta di tornare al Tempio dopo la Notte
+  lume_liberato: false          # il Lume resta libero e il giocatore lo aiuta a nascondersi
+  accusa_pubblica: false        # il giocatore ha accusato qualcuno davanti alla città
+
+cronologia:
+  - giorno: 1
+    titolo: La Lanterna è sparita
+    luogo: tempio_dei_lumi
+    pubblico: true
+    cosa_accade: >-
+      All'alba la teca di cristallo del Tempio è vuota. La notizia corre per Marenza in
+      meno di un'ora, e in due ore è già diventata un complotto di sei persone. Il Prefetto
+      convoca l'investigatore: tu.
+    in_segreto: Pico ha già portato il Lume nella cantina allagata. Il Lume è felicissimo e ammira il soffitto dell'acqua.
+
+  - giorno: 2
+    titolo: La Nebbia Grigia sale
+    luogo: tutta la città
+    pubblico: true
+    cosa_accade: >-
+      Una nebbia sottile sale dai canali all'alba e non se ne va. I barcaioli perdono il
+      senso dell'orientamento, due gondole si scontrano alla Pescheria e un mercante
+      entra per sbaglio in una chiesa. Il Prefetto convoca tre comitati.
+    in_segreto: Più il Lume resta lontano dal Tempio, più è debole e più la nebbia avanza.
+
+  - giorno: 3
+    titolo: Il Capitano chiude i moli
+    luogo: arsenale_vecchio
+    pubblico: true
+    cosa_accade: >-
+      Il Capitano Brando blocca i moli «per cercare il ladro». I barcaioli protestano. La
+      Contessa Dandolo offre una taglia di cinquecento ducati a chi ritrova la Lanterna e
+      denuncia il colpevole. La città impazzisce di sospetti reciproci.
+    in_segreto: Il Capitano nasconde nei magazzini un carico di contrabbando e ha paura che lo trovino.
+    varianti:
+      - se_flag: contessa_smascherata
+        cosa_accade: >-
+          Il Capitano blocca i moli, ma la Contessa ritira la taglia e chiede scusa
+          pubblicamente per «un equivoco di collezionismo». La città è colpita.
+
+  - giorno: 4
+    titolo: La Notte delle Lanterne
+    luogo: campo_grande
+    pubblico: true
+    cosa_accade: >-
+      È la sera della Notte delle Lanterne. A Campo Grande la nebbia è fitta come lana. Il
+      Prefetto, sulla tribuna, tiene un discorso. Tutti guardano il cuscino di velluto vuoto.
+    in_segreto: Finale determinato dai flag (vedi sotto).
+
+# Finali: si valutano IN ORDINE e vince il primo che soddisfa le condizioni.
+finali:
+  - id: lume_a_casa
+    nome: Il Lume Torna a Casa
+    richiede: [lume_convinto]
+    esclude: []
+    esito: >-
+      Il giocatore porta il Lume a Campo Grande, in un barattolo di vetro, nascosto sotto un
+      mantello. Il Lume vede la Notte delle Lanterne dalla piazza, ride a lungo, e poi
+      risale da solo la scalinata del Tempio. La Lanterna si riaccende. La nebbia arretra.
+      Il Prefetto dichiara che il furto è stato risolto «da un suo piano»; Pico, perdonato,
+      diventa apprendista delle custodi.
+  - id: lume_libero
+    nome: La Lanterna Libera
+    richiede: [lume_liberato]
+    esclude: []
+    esito: >-
+      Il Lume non torna in teca. Resta libero, fiammella tra le fiammelle, sulle lanterne
+      di carta della Notte. La nebbia si ritira a metà e si capisce che basta la sua gioia a
+      tenerla lontana. Il Tempio perde la sua reliquia ma guadagna un ospite. Il Prefetto
+      indice un comitato sulla questione, che durerà anni.
+  - id: copia_che_brilla
+    nome: La Copia che Brilla
+    richiede: [copia_scoperta, contessa_smascherata]
+    esclude: [lume_convinto, lume_liberato]
+    esito: >-
+      La Contessa presta la copia di Fausto al Prefetto, che la accende con solennità sulla
+      tribuna. Non ha nessun potere, ma dalla laguna il vero Lume, che osserva, trova la
+      scena così buffa che decide di fare finta di niente: la nebbia si ritira. La città
+      festeggia. Il vero ladro non viene mai trovato, perché non c'era.
+  - id: accusa_sbagliata
+    nome: Il Colpevole Sbagliato
+    richiede: [accusa_pubblica]
+    esclude: []
+    esito: >-
+      Il giocatore ha accusato qualcuno davanti a tutti e l'accusato, innocente, passa la
+      notte in una cella del Prefetto. La Lanterna non si trova. La nebbia vince la Notte
+      delle Lanterne, ma il pettegolezzo vince la nebbia: per mesi i Marenzani parlano solo
+      di chi è stato accusato e di chi ha accusato.
+  - id: nebbia
+    nome: La Nebbia Grigia
+    richiede: []
+    esclude: []
+    esito: >-
+      La Notte delle Lanterne si svolge nella nebbia. Nessuno trova la Lanterna e nessuno
+      trova la strada di casa. La mattina dopo, tutta Marenza si ritrova in un posto sbagliato,
+      e il Prefetto convoca ventidue comitati.
+
+# Come si cambiano i flag: il master chiama imposta_flag, che controlla
+#  - il luogo giusto (luogo) e, se indicata, la zona giusta (zona),
+#  - i requisiti (richiede_flag, richiede_oggetto),
+#  - che l'ULTIMA prova di abilità sia riuscita con statistica giusta e CD almeno pari a quella qui.
+prove_suggerite:
+  - flag: tempio_ispezionato
+    cosa: esaminare la cella del Tempio e notare le tracce di piedini bagnati e l'assenza di scasso
+    statistica: intelletto
+    cd: 12
+    luogo: tempio_dei_lumi
+    zona: cella_del_lume
+  - flag: testimone_barcaiolo
+    cosa: convincere Nino Remo a ricordare chi ha visto all'alba (un bambino con un sacco)
+    statistica: intelletto
+    cd: 11
+    luogo: mercato_galleggiante
+    zona: banchina
+  - flag: pico_trovato
+    cosa: raggiungere Pico tra le bancarelle e convincerlo a portarti dal suo amico
+    statistica: agilita
+    cd: 14
+    luogo: mercato_galleggiante
+    zona: bancarelle
+    richiede_flag: [testimone_barcaiolo]
+  - flag: copia_scoperta
+    cosa: far ammettere a Fausto di aver fabbricato una copia della Lanterna
+    statistica: intelletto
+    cd: 12
+    luogo: isola_dei_vetrai
+    zona: bottega
+  - flag: contessa_smascherata
+    cosa: mettere la Contessa davanti alla copia e farle confessare che voleva solo esporla
+    statistica: intelletto
+    cd: 14
+    luogo: palazzo_dandolo
+    zona: salone
+    richiede_flag: [copia_scoperta]
+  - flag: lume_convinto
+    cosa: convincere il Lume a tornare al Tempio dopo aver visto la Notte delle Lanterne
+    statistica: intelletto
+    cd: 15
+    luogo: mercato_galleggiante
+    zona: cantina_sommersa
+    richiede_flag: [pico_trovato, tempio_ispezionato]
+  - flag: lume_liberato
+    cosa: decidere di non riportare il Lume in teca e aiutarlo a nascondersi tra le lanterne
+    statistica: intelletto
+    cd: 10
+    luogo: mercato_galleggiante
+    zona: cantina_sommersa
+    richiede_flag: [pico_trovato]
+  - flag: accusa_pubblica
+    cosa: accusare pubblicamente qualcuno davanti alla folla (di solito sbagliando)
+    statistica: intelletto
+    cd: 8
+    luogo: campo_grande
+    zona: tribuna
+
+# Prove senza flag, solo come guida per il master.
+altre_prove:
+  - cosa: sbirciare nei registri del Capitano senza farsi vedere
+    statistica: agilita
+    cd: 14
+  - cosa: carpire un segreto a Madama Gelsa offrendone uno in cambio
+    statistica: intelletto
+    cd: 12
+  - cosa: restare in piedi su una barca in movimento durante un inseguimento
+    statistica: agilita
+    cd: 13
+  - cosa: sollevare la botola bagnata della cantina senza fare rumore
+    statistica: forza
+    cd: 11

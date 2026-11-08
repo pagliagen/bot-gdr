@@ -1,0 +1,137 @@
+# Personaggi non giocanti di Marenza. "segreto" è noto solo al master (e al codice).
+# zona = dove sta di default; routine = [dalle, alle) -> zona. Fuori orario (senza zona) non è reperibile.
+
+png:
+  - id: ottavio_zen
+    nome: Ottavio Zen
+    ruolo: Prefetto della Laguna
+    luogo: campo_grande
+    routine:
+      - {dalle: 9, alle: 19, zona: prefettura}
+      - {dalle: 19, alle: 23, zona: locanda}
+    aspetto: uomo di cinquant'anni, panciuto, toga rossa di velluto, baffi pettinati
+    aspetto_en: "a plump fifty-year-old city prefect in a red velvet robe, carefully combed moustache, a heavy gold chain of office, a worried but dignified expression"
+    carattere: pomposo, ansioso, abituato a delegare; ripete «ne parlerò al comitato»
+    scopo: ritrovare la Lanterna prima della Notte delle Lanterne senza ammettere di non avere un piano
+    segreto: ha già chiesto in segreto a Fausto una copia della Lanterna, per sicurezza; se si sapesse, il suo mandato finirebbe
+    voce: "«Siamo in un momento delicatissimo. Delicatissimo e, ahimè, pubblico.»"
+    immagine: assets/png/ottavio_zen.webp
+
+  - id: isotta_baldi
+    nome: Sorella Isotta Baldi
+    ruolo: custode del Tempio dei Lumi
+    luogo: tempio_dei_lumi
+    routine:
+      - {dalle: 7, alle: 9, zona: navata}
+      - {dalle: 9, alle: 12, zona: cella_del_lume}
+      - {dalle: 12, alle: 18, zona: sagrestia}
+      - {dalle: 18, alle: 20, zona: navata}
+    aspetto: giovane donna di venticinque anni, tonaca bianca, grandi occhi, anelli d'argento alle dita
+    aspetto_en: "a young twenty-five-year-old temple keeper woman in a white robe, large nervous eyes, silver rings on every finger, holding a small oil lamp"
+    carattere: nervosa, devota, bugiarda maldestra; parla in fretta quando mente
+    scopo: nascondere di essere l'ultima ad aver visto la Lanterna e di aver parlato al Lume ogni sera
+    segreto: ogni sera da due anni parlava con il Lume, contro la regola; l'ultima sera il Lume le disse «forse domani esco a vedere la città» e lei non lo prese sul serio
+    voce: "«Io? Io dormivo. Profondamente. Con la finestra chiusa. E i timpani tappati.»"
+    immagine: assets/png/isotta_baldi.webp
+
+  - id: ludovica_dandolo
+    nome: Contessa Ludovica Dandolo
+    ruolo: nobile e collezionista
+    luogo: palazzo_dandolo
+    routine:
+      - {dalle: 10, alle: 13, zona: giardino}
+      - {dalle: 13, alle: 23, zona: salone}
+    aspetto: donna di cinquantacinque anni, elegantissima, abito di seta verde, collana di perle, sorriso affilato
+    aspetto_en: "an elegant fifty-five-year-old countess in a green silk gown, a pearl necklace, a sharp polite smile, a long feather fan in her hand"
+    carattere: raffinata, sarcastica, offesa per sport; mente per divertimento
+    scopo: sembrare innocente e non perdere la reputazione di prima collezionista di Marenza
+    segreto: ha commissionato a Fausto una copia della Lanterna Maestra per esporla in collezione, non per rubarla; non lo dice perché sembrerebbe proprio ciò che non è
+    voce: "«Io rubare? Cara, io acquisto. È infinitamente più elegante.»"
+    immagine: assets/png/ludovica_dandolo.webp
+
+  - id: brando_fosco
+    nome: Capitano Brando Fosco
+    ruolo: capitano di porto
+    luogo: arsenale_vecchio
+    routine:
+      - {dalle: 8, alle: 18, zona: ufficio_porto}
+      - {dalle: 18, alle: 20, zona: darsena}
+    aspetto: uomo di quarantacinque anni, spalle larghe, cicatrice sul mento, giubba blu, sguardo di chi sta mentendo
+    aspetto_en: "a broad-shouldered forty-five-year-old harbor captain with a scar on his chin, a blue naval coat, one eyebrow permanently raised, a shifty sidelong look"
+    carattere: spiccio, sospettoso, falso burbero; cerca di essere onesto da quando è diventato capitano
+    scopo: nascondere un carico di contrabbando fino al giorno dopo la Festa
+    segreto: la notte del furto era all'Arsenale con il suo carico, e vide un monello con un sacco che fuggiva verso il mercato; non può dirlo senza confessare il contrabbando
+    voce: "«Non so di nessun furto. E nemmeno di nessun carico. E nemmeno di me, se è per questo.»"
+    immagine: assets/png/brando_fosco.webp
+
+  - id: fausto_vetraio
+    nome: Maestro Fausto Vetri
+    ruolo: maestro vetraio
+    luogo: isola_dei_vetrai
+    routine:
+      - {dalle: 7, alle: 18, zona: bottega}
+    aspetto: uomo di sessant'anni, calvo, grembiule di cuoio ustionato, avambracci fortissimi, occhi azzurri vivaci
+    aspetto_en: "a bald sixty-year-old master glassblower in a scorched leather apron, powerful forearms, bright blue lively eyes, holding a long blowpipe with a glowing blob of glass"
+    carattere: orgoglioso, brontolone, sensibile alle lodi sul suo mestiere; parla con le mani
+    scopo: continuare a lavorare in pace e non essere accusato di furto per colpa delle sue copie
+    segreto: "per commissione ha fabbricato una copia perfetta della Lanterna: due, in realtà (una per la Contessa e una per il Prefetto); nessuna è magica"
+    voce: "«Un vetro non mente. Gli uomini sì, e sudano meno.»"
+    immagine: assets/png/fausto_vetraio.webp
+
+  - id: pico_ratto
+    nome: Pico
+    ruolo: monello del mercato
+    luogo: mercato_galleggiante
+    routine:
+      - {dalle: 6, alle: 15, zona: bancarelle}
+      - {dalle: 15, alle: 20, zona: banchina}
+    aspetto: bambino di dieci anni, scalzo, berretto troppo grande, ginocchia sbucciate
+    aspetto_en: "a skinny ten-year-old street urchin fully dressed in a patched oversized shirt and short trousers, barefoot, an oversized cap, scraped knees, mischievous bright eyes, carrying a small canvas sack"
+    carattere: furbo, veloce, leale agli amici; mente senza sembrarlo
+    scopo: proteggere il Lume, che gli ha chiesto di non dirlo a nessuno
+    segreto: ha portato il Lume fuori dal Tempio la notte del furto, nascosto in un sacco, e lo tiene in una cantina allagata sotto il mercato; il Lume è suo amico
+    voce: "«Io? Non ho visto niente. E non ho nemmeno un sacco. Questo è un cuscino.»"
+    immagine: assets/png/pico_ratto.webp
+
+  - id: nino_remo
+    nome: Nino Remo
+    ruolo: barcaiolo
+    luogo: mercato_galleggiante
+    zona: banchina
+    routine:
+      - {dalle: 5, alle: 20, zona: banchina}
+      - {dalle: 20, alle: 3, zona: taverna}
+    aspetto: uomo di cinquant'anni, pelle bruciata dal sole, cappello di paglia, un orecchino d'oro
+    aspetto_en: "a sun-weathered fifty-year-old gondolier-boatman in a straw hat with a gold earring, loose striped shirt, one oar resting on his shoulder, a gossipy grin"
+    carattere: chiacchierone, memoria d'elefante, vende informazioni per un bicchiere
+    scopo: guadagnare passaggi e non farsi dimenticare dalla clientela
+    segreto: all'alba del furto vide un bambino con un sacco che si calava dal retro del Tempio; non l'ha detto a nessuno perché «nessuno me l'ha chiesto»
+    voce: "«Io vedo tutto. È il mestiere. Se me lo chiedi con un bicchiere, lo ricordo meglio.»"
+    immagine: assets/png/nino_remo.webp
+
+  - id: gelsa_taverna
+    nome: Madama Gelsa
+    ruolo: taverniera del Granchio
+    luogo: mercato_galleggiante
+    routine:
+      - {dalle: 11, alle: 3, zona: taverna}
+    aspetto: donna di sessant'anni, formosa, fazzoletto fiorito in testa, mani sempre in movimento
+    aspetto_en: "a plump sixty-year-old tavern keeper woman with a flowered headscarf, rolled sleeves, a dish towel on her shoulder, a knowing amused smile"
+    carattere: materna, curiosa, ricattatrice affettuosa; dà le informazioni in cambio di altre informazioni
+    scopo: sapere tutto di tutti prima di chiunque altro
+    segreto: Pico mangia gratis da lei da una settimana e le ha chiesto di tenere da parte avanzi «per un amico che non mangia»; non ci ha pensato
+    voce: "«Tesoro, qui i segreti si pagano in segreti. Io ho già i tuoi, vediamo i tuoi.»"
+    immagine: assets/png/gelsa_taverna.webp
+
+  - id: il_lume
+    nome: Il Lume
+    ruolo: spirito della Lanterna
+    luogo: mercato_galleggiante
+    zona: cantina_sommersa
+    aspetto: una piccola fiamma dorata che danza a mezz'aria, con occhi di scintille e voce di campanello
+    aspetto_en: "a small golden flame spirit dancing in mid-air, two tiny sparkling eyes in the fire, a halo of warm light, delicate and curious, floating inside a small glass jar"
+    carattere: curioso, gentile, ingenuo dopo quattro secoli di immobilità; ride in modo tintinnante
+    scopo: vedere la città da vicino una volta sola; poi, se capisce, tornare
+    segreto: "non è stato rapito: ha chiesto lui a Pico di portarlo fuori; senza il Tempio si indebolisce, e la nebbia sale giorno dopo giorno; se vede la Notte delle Lanterne dalla laguna tornerà volentieri"
+    voce: "«Quattrocento anni a guardare un soffitto! Dimmi, la città è sempre stata così rumorosa?»"
+    immagine: assets/png/il_lume.webp

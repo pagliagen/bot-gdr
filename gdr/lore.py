@@ -19,10 +19,6 @@ import yaml
 
 from .models import StatoPartita
 
-GIORNI_AVVENTURA = 7
-ORA_FESTA = 20  # la Festa dell'Apertura comincia alle 20 del giorno 7
-FESTA_ORE = (GIORNI_AVVENTURA - 1) * 24 + ORA_FESTA  # ore totali a cui scatta la Festa
-
 _PAROLE_VUOTE = {"di", "del", "dei", "della", "delle", "il", "lo", "la", "le", "i", "gli", "al", "alla", "a", "da", "in", "e"}
 
 
@@ -40,6 +36,8 @@ def _leggi(percorso: Path) -> Any:
 class Mondo:
     def __init__(self, cartella: Path):
         cartella = Path(cartella)
+        self.cartella = cartella
+        self.id = cartella.name  # l'id dell'avventura è il nome della sua cartella
         self.mondo = _leggi(cartella / "mondo.yaml")
         luoghi = _leggi(cartella / "luoghi.yaml")
         png = _leggi(cartella / "png.yaml")
@@ -55,6 +53,21 @@ class Mondo:
         self.finali: list[dict] = self.avventura["finali"]
         self.prove_flag: dict[str, dict] = {p["flag"]: p for p in self.avventura["prove_suggerite"] if "flag" in p}
         self.flag_iniziali: dict[str, bool] = dict(self.avventura["flag_iniziali"])
+        # Scheda e tempo dell'avventura (prima erano costanti nel codice)
+        av = self.avventura
+        self.titolo: str = av["titolo"]
+        self.presentazione: str = av["presentazione"].strip()
+        self.giorni: int = av["giorni"]
+        self.ora_inizio: int = av.get("ora_inizio", 8)
+        self.ora_finale: int = av["ora_finale"]
+        self.momento_finale: str = av["momento_finale"]
+        self.ore_finali: int = (self.giorni - 1) * 24 + self.ora_finale  # ore totali a cui il tempo si ferma
+
+    def url_asset(self, percorso: str | None) -> str | None:
+        """URL di un'immagine statica dell'avventura (percorso relativo alla sua cartella), solo se il file esiste."""
+        if percorso and (self.cartella / percorso).exists():
+            return f"/avventure/{self.id}/{percorso}"
+        return None
 
     # --- Luoghi -------------------------------------------------------------------
     def cerca_luoghi(self, testo: str) -> list[dict]:
@@ -142,7 +155,7 @@ class Mondo:
         stato.luogo_id, stato.luogo_corrente, stato.luoghi_visitati = l["id"], l["nome"], [l["nome"]]
         stato.zona_id = self.ingresso(l["id"])["id"]
         stato.flag = dict(self.flag_iniziali)
-        stato.ore_totali = 8
+        stato.ore_totali = self.ora_inizio
         # Gli eventi del giorno 1 sono già in corso quando il giocatore arriva:
         # li registriamo subito nel diario, così il master li conosce dall'inizio.
         for e in self.eventi_da_scattare(stato):
@@ -270,6 +283,7 @@ class Mondo:
         righe = [
             f"## IL MONDO: {m['nome']}",
             m["sintesi"].strip(),
+            f"Epoca e ambientazione: {m.get('epoca', 'fantasy medievale').strip()}",
             f"Tono: {m['tono'].strip()}",
             "",
             f"Premessa dell'avventura: {av['premessa'].strip()}",
@@ -281,7 +295,7 @@ class Mondo:
             "Per dettagli su un luogo, un PNG o una fazione usa consulta_lore: non inventare.",
             "",
             "## TEMPO",
-            f"È il giorno {stato.giorno} di {GIORNI_AVVENTURA}, ore {stato.ora:02d}:00. La Festa dell'Apertura è la sera del giorno {GIORNI_AVVENTURA} (ore {ORA_FESTA}:00).",
+            f"È il giorno {stato.giorno} di {self.giorni}, ore {stato.ora:02d}:00. Il momento finale ({self.momento_finale}) è al giorno {self.giorni}, ore {self.ora_finale:02d}:00.",
         ]
         luogo = self.luoghi.get(stato.luogo_id)
         if luogo:

@@ -3,29 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>La Valle di Acquaverde</title>
+  <title>Master GDR</title>
   <link rel="stylesheet" href="/web/style.css">
 </head>
 <body>
   <header>
-    <h1>La Valle di Acquaverde</h1>
+    <h1 id="titolo">Master GDR</h1>
     <div id="orologio" hidden>
       <span id="orologio-testo"></span>
       <div class="barra"><div id="barra-giorni"></div></div>
     </div>
     <div class="comandi">
-      <label class="debug" title="Mostra i tool chiamati dal narratore (contiene spoiler: segreti dei PNG e retroscena)">
+      <label class="debug" id="debug-box" hidden title="Mostra i tool chiamati dal narratore (contiene spoiler: segreti dei PNG e retroscena)">
         <input type="checkbox" id="debug"> debug
       </label>
+      <span id="utente" class="piccolo" hidden></span>
       <button id="btn-mappa" type="button" hidden>🗺 Mappa</button>
-      <button id="btn-nuova" type="button" hidden>Nuova partita</button>
+      <button id="btn-menu" type="button" hidden>Avventure</button>
+      <button id="btn-esci" type="button" hidden>Esci</button>
     </div>
   </header>
+
+  <!-- Accesso -->
+  <main id="accesso" hidden>
+    <form id="form-accesso">
+      <h2 id="accesso-titolo">Accedi</h2>
+      <label>Nome utente
+        <input id="acc-nome" maxlength="20" required autocomplete="username" autocapitalize="none" spellcheck="false">
+      </label>
+      <label>Password
+        <input id="acc-password" type="password" maxlength="200" required autocomplete="current-password">
+      </label>
+      <label id="acc-codice-riga" hidden>Codice d'invito
+        <input id="acc-codice" maxlength="100" autocomplete="off">
+      </label>
+      <p id="errore-accesso" class="errore" role="alert"></p>
+      <button type="submit" id="btn-accedi">Accedi</button>
+      <p class="piccolo"><a href="#" id="cambia-modo">Non hai un account? Registrati</a></p>
+    </form>
+  </main>
+
+  <!-- Scelta dell'avventura -->
+  <main id="menu" hidden>
+    <h2>Scegli un'avventura</h2>
+    <div id="avventure"></div>
+  </main>
 
   <!-- Creazione del personaggio -->
   <main id="creazione" hidden>
     <form id="form-creazione">
-      <h2>Crea il tuo eroe</h2>
+      <h2>Crea il tuo eroe <small id="creazione-avventura"></small></h2>
       <label>Nome
         <input id="nome" maxlength="30" required autocomplete="off" placeholder="Come ti chiami, avventuriero?">
       </label>
@@ -89,7 +116,7 @@
     <div class="fine-box">
       <h2 id="fine-titolo"></h2>
       <p id="fine-esito"></p>
-      <button type="button" id="btn-fine-nuova">Nuova partita</button>
+      <button type="button" id="btn-fine-nuova">Torna alle avventure</button>
     </div>
   </div>
 
