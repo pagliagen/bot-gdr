@@ -19,7 +19,6 @@ luoghi:
     dettagli: >-
       Mercato ogni mattina, fontana al centro con una statua di Ilda Guadoforte (le
       manca un braccio), odore di pane e di fiume.
-    luoghi_interni: [Locanda del Pesce Pigro, garitta del pedaggio, mercato, fontana]
     immagine: assets/luoghi/pontevecchio.webp
     prompt_immagine: >-
       wide scene of a small stone village around a mossy arched bridge, a crooked toll booth, a fountain with a one-armed statue of a woman, a warm tavern with a fish-shaped sign, a shallow low river beneath the bridge, morning light
@@ -36,7 +35,6 @@ luoghi:
     dettagli: >-
       Uffici con scrivanie piene di progetti, un grande orologio ad acqua, guardie
       della Gilda in grembiule di cuoio. La ruota gira più lentamente da qualche giorno.
-    luoghi_interni: [officina, ufficio del capo gilda, magazzino delle farine]
     immagine: assets/luoghi/mulino_alto.webp
     prompt_immagine: >-
       a large watermill complex with a big slowly turning wooden wheel, brass and wood gears everywhere, tidy offices, guards in leather aprons, slightly eerie order, golden afternoon light
@@ -53,7 +51,6 @@ luoghi:
     dettagli: >-
       Passerelle di servizio, paratoie con grandi volani, guardie con occhiaie. Si
       sente l'acqua premere dall'altra parte.
-    luoghi_interni: [coronamento, sala delle paratoie, galleria di manutenzione]
     immagine: assets/luoghi/la_diga.webp
     prompt_immagine: >-
       a massive stone and timber dam wedged in a narrow rocky gorge, a calm too-still lake behind it, a keystone glowing faint green, narrow walkways, tense atmosphere, twilight
@@ -70,7 +67,6 @@ luoghi:
     dettagli: >-
       Archivio di pergamene in un armadio umido, candele, un pavimento sempre
       scivoloso. La sorgente gorgoglia più piano ogni giorno.
-    luoghi_interni: [grotta, altare vuoto, archivio]
     immagine: assets/luoghi/santuario_sorgente.webp
     prompt_immagine: >-
       a small cave shrine among ferns and wet rocks where a spring flows from a crack, a simple altar with an empty pedestal, candles, shelves of stamped parchments, soft green light
@@ -87,7 +83,6 @@ luoghi:
     dettagli: >-
       Sala delle udienze con sedie scomode di proposito, cortile con soldati
       annoiati, torre con vista sulla valle e sulla diga lontana.
-    luoghi_interni: [sala delle udienze, cortile, torre, stanza dei registri]
     immagine: assets/luoghi/rocca_mezzaluna.webp
     prompt_immagine: >-
       a small castle on a crescent-shaped hill, small towers with oversized banners, sleepy soldiers in a courtyard, a view over a quiet valley, late afternoon
@@ -104,7 +99,6 @@ luoghi:
     dettagli: >-
       Un molo che finisce sulla terra, un'osteria galleggiante ormai incagliata,
       un tempietto della Setta dell'Anguilla con un'insegna ancora fresca.
-    luoghi_interni: [molo, osteria incagliata, tempietto dell'Anguilla, mulino fermo]
     immagine: assets/luoghi/borgo_basso.webp
     prompt_immagine: >-
       a fishing village on stilts on the banks of a nearly dry riverbed, the river has almost vanished leaving wide cracked mud flats and only a thin trickle and small puddles, wooden boats stranded on dry cracked mud, long wooden piers ending above empty ground, fishing nets hanging everywhere, a small shrine with an eel sign, stunned fish flopping in puddles, grey overcast morning
@@ -121,7 +115,6 @@ luoghi:
     dettagli: >-
       Sentieri che cambiano idea, lucciole di giorno, funghi grandi come sgabelli.
       Un vecchio canale di scolo porta al canale di manutenzione della diga.
-    luoghi_interni: [capanna di Zelinda, radura dei salici, canale di scolo]
     immagine: assets/luoghi/bosco_salici.webp
     prompt_immagine: >-
       a damp ancient willow forest, whispering trees with faces in the bark, daytime fireflies, huge mushrooms like stools, a crooked hut with a garden of giant pumpkins, misty

@@ -36,6 +36,7 @@ class StatoPartita:
     turno: int = 0
     # --- Il mondo che avanza da solo ---
     luogo_id: str = ""  # id del luogo corrente nella lore (luogo_corrente è il nome da mostrare)
+    zona_id: str = ""  # id della zona dentro il luogo (piazza, locanda...); "" = salvataggi vecchi, si corregge al caricamento
     ore_totali: int = 8  # ore trascorse dall'inizio del giorno 1; si parte alle 08:00 del giorno 1
     flag: dict[str, bool] = field(default_factory=dict)  # progressi dell'avventura
     eventi_scattati: list[int] = field(default_factory=list)  # giorni degli eventi già accaduti

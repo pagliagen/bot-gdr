@@ -105,15 +105,29 @@ function render(v) {
     img.alt = l.nome;
     img.hidden = false;
   } else { img.hidden = true; img.removeAttribute("src"); }
-  $("nome-luogo").textContent = l.nome + (v.scena && v.scena.didascalia ? " — " + v.scena.didascalia : "");
+  $("nome-luogo").textContent = (l.zona ? `${l.zona} · ${l.luogo_nome}` : l.nome) + (v.scena && v.scena.didascalia ? " — " + v.scena.didascalia : "");
   $("badge-img").hidden = !(v.immagini && v.immagini.in_corso > 0);
   const nota = $("nota-immagini");
   nota.hidden = !(v.immagini && v.immagini.errore);
   nota.textContent = v.immagini && v.immagini.errore ? "Immagini non disponibili: " + v.immagini.errore : "";
   programmaAggiornamento(v);
 
+  // Zone del luogo (le chiuse sono segnate: provarci è lecito, ma il gioco rifiuta)
+  $("zone-lista").innerHTML = l.zone
+    .map((z) => {
+      const info = z.stato === "chiusa" ? ` 🔒 ${esc(z.orari)}` : z.orari ? ` <small>${esc(z.orari)}</small>` : "";
+      return `<button type="button" class="zona ${z.stato}" data-nome="${esc(z.nome)}" data-stato="${z.stato}" title="${esc(z.motivo || z.nome)}"${z.stato === "corrente" ? " disabled" : ""}>${esc(z.nome)}${info}</button>`;
+    })
+    .join("");
+  document.querySelectorAll(".zona").forEach((b) => {
+    b.addEventListener("click", () => inserisci(b.dataset.stato === "chiusa" ? `Provo a entrare: ${b.dataset.nome}. ` : `Vado: ${b.dataset.nome}. `));
+  });
+
   // PNG presenti
-  $("png-qui").innerHTML = l.png
+  $("png-qui").innerHTML = l.png.length
+    ? ""
+    : '<p class="piccolo">Nessuno di importante è qui, ora.</p>';
+  $("png-qui").innerHTML += l.png
     .map((n) => {
       const volto = n.immagine ? `<img src="${esc(n.immagine)}" alt="${esc(n.nome)}" loading="lazy">` : `<div class="iniziali">${esc(n.nome.trim()[0] || "?")}</div>`;
       return `<div class="png-card" role="button" tabindex="0" data-nome="${esc(n.nome)}" title="${esc(n.ruolo)}">${volto}${esc(n.nome.split(" ")[0])}<small>${esc(n.ruolo)}</small></div>`;

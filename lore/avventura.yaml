@@ -154,7 +154,7 @@ finali:
       sopravvive, ma ricorderà il giorno in cui nessuno ha letto l'avviso.
 
 # Come si cambiano i flag: il master chiama il tool imposta_flag, che controlla
-#  - di essere nel luogo giusto (luogo),
+#  - di essere nel luogo giusto (luogo) e, se indicata, nella zona giusta (zona),
 #  - che i requisiti ci siano (richiede_flag, richiede_oggetto),
 #  - che l'ULTIMA prova di abilità sia riuscita, con la statistica giusta e una CD
 #    almeno pari a quella indicata qui.
@@ -165,16 +165,19 @@ prove_suggerite:
     statistica: intelletto
     cd: 15
     luogo: rocca_mezzaluna
+    zona: cortile
   - flag: fiammetta_alleata
     cosa: convincere Fiammetta a mostrare le sue misure sulla crepa della chiave di volta
     statistica: intelletto
     cd: 12
     luogo: mulino_alto
+    zona: officina
   - flag: contratto_trovato
     cosa: trovare il Contratto originale nell'archivio del Santuario
     statistica: intelletto
     cd: 13
     luogo: santuario_sorgente
+    zona: archivio
   - flag: pietra_recuperata
     cosa: staccare o spostare la Pietra del Patto dalla chiave di volta della diga
     statistica: forza

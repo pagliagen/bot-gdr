@@ -6,6 +6,9 @@ png:
     nome: Tobia Bonvino
     ruolo: oste della Locanda del Pesce Pigro
     luogo: pontevecchio
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 8, alle: 10, zona: piazza}
+      - {dalle: 10, alle: 2, zona: locanda}
     aspetto: uomo rotondo sulla sessantina, baffi enormi e barba grigia, berretto piatto, grembiule macchiato
     carattere: loquace, millantatore, con un cuore grande e la memoria corta
     scopo: tenere la locanda piena e la valle in pace
@@ -18,6 +21,10 @@ png:
     nome: Ormando Ruotanera
     ruolo: capo della Gilda dei Mulini
     luogo: mulino_alto
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 9, alle: 12, zona: ufficio}
+      - {dalle: 12, alle: 14, zona: cortile}
+      - {dalle: 14, alle: 18, zona: ufficio}
     aspetto: uomo alto e magro, mani macchiate d'inchiostro, occhiali tondi
     carattere: carismatico, ottimista a oltranza, convinto di fare il bene di tutti
     scopo: aprire la diga alla Festa con uno spettacolo che faccia ricca la Gilda
@@ -30,6 +37,8 @@ png:
     nome: Fiammetta Spola
     ruolo: apprendista ingegnera della Gilda
     luogo: mulino_alto
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 7, alle: 19, zona: officina}
     aspetto: ragazza di vent'anni, treccia arruffata, mani nere d'olio
     carattere: brillante, onesta, terrorizzata di sbagliare
     scopo: capire perché la diga "canta" di notte
@@ -42,6 +51,9 @@ png:
     nome: Odilia di Mezzaluna
     ruolo: baronessa di Mezzaluna
     luogo: rocca_mezzaluna
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 10, alle: 16, zona: sala_udienze}
+      - {dalle: 16, alle: 20, zona: torre}
     aspetto: donna di cinquant'anni, dritta come un palo, tailleur di velluto verde, occhi stanchi
     carattere: pragmatica, sarcastica, collezionista di teiere, tutt'altro che crudele
     scopo: tenere la valle in ordine senza ispezioni dal regno
@@ -54,6 +66,9 @@ png:
     nome: Capitano Ruggero Duro
     ruolo: capitano della guardia
     luogo: rocca_mezzaluna
+    zona: cortile
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 6, alle: 22, zona: cortile}
     aspetto: uomo robusto sui quarant'anni, armatura ammaccata, sguardo da cane bastonato
     carattere: onesto, stanco, ligio, con pessimo gusto per le battute
     scopo: far rispettare la legge, qualunque cosa significhi oggi
@@ -66,6 +81,10 @@ png:
     nome: Sorella Brina
     ruolo: custode del Santuario della Sorgente
     luogo: santuario_sorgente
+    zona: grotta
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 9, alle: 17, zona: archivio}
+      - {dalle: 17, alle: 9, zona: grotta}
     aspetto: anziana minuta, scialle azzurro, occhiali spessi come fondi di bicchiere
     carattere: pignola, testarda, sente benissimo quando le conviene
     scopo: ritrovare la Pietra e rifare il Patto senza errori di forma
@@ -78,6 +97,10 @@ png:
     nome: Gedeone Squamini, detto Fratello Anguilla
     ruolo: predicatore della Setta dell'Anguilla Argentea
     luogo: borgo_basso
+    zona: molo
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 6, alle: 20, zona: tempietto}
+      - {dalle: 20, alle: 6, zona: molo}
     aspetto: uomo magro con tunica di rete da pesca, barba bagnata, sguardo febbrile
     carattere: drammatico, fervido, molto convinto, poco concludente
     scopo: portare le anime al fiume prima che sia tardi
@@ -90,6 +113,10 @@ png:
     nome: Nonna Zelinda
     ruolo: eremita del Bosco dei Salici
     luogo: bosco_salici
+    zona: radura
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 9, alle: 20, zona: capanna}
+      - {dalle: 20, alle: 9, zona: radura}
     aspetto: vecchina con cappello di paglia a falde larghe, bastone nodoso, gonna di mille toppe
     carattere: ironica, imprevedibile, scambia i favori solo con altri favori
     scopo: farsi lasciare in pace l'orto
@@ -102,6 +129,9 @@ png:
     nome: Pina detta la Rana
     ruolo: contrabbandiera e barcaiola
     luogo: borgo_basso
+    routine:  # [dalle, alle) -> zona; fuori dagli orari (e senza 'zona') il PNG non è reperibile
+      - {dalle: 6, alle: 11, zona: molo}
+      - {dalle: 11, alle: 1, zona: osteria}
     aspetto: donna tarchiata di trent'anni, cappello a tesa, sorriso da furfante
     carattere: furba, venale, con un codice d'onore tutto suo
     scopo: guadagnare passaggi in barca (e ora che il fiume è secco, trovare altro)
@@ -114,6 +144,7 @@ png:
     nome: Madre Corrente
     ruolo: spirito del Fiume Verde
     luogo: la_diga
+    zona: coronamento
     aspetto: figura d'acqua trasparente dalle forme di una matrona, capelli di correnti, occhi di ciottoli
     carattere: severa, formale, ironica, meticolosa; ferita dal mancato rispetto
     scopo: ottenere il rispetto del Patto (formaggio, racconto, firma)
@@ -121,3 +152,45 @@ png:
     voce: "«Ho aspettato mille anni per un grazie. Posso aspettare sette giorni per una scusa.»"
     immagine: assets/png/madre_corrente.webp
     aspetto_en: "a river spirit, a stern matronly figure made of translucent flowing water, hair of swirling currents, eyes like river pebbles, faint stamp-shaped seal glowing on her chest, dignified and slightly annoyed expression"
+
+  - id: gelsomina_cardo
+    nome: Gelsomina Cardo
+    ruolo: emporiera di Pontevecchio
+    luogo: pontevecchio
+    routine:
+      - {dalle: 8, alle: 13, zona: emporio}
+    aspetto: donna di mezza età, minuta e sbrigativa, grembiule pieno di tasche, matita dietro l'orecchio
+    carattere: pratica, contabile fino al midollo, sospettosa dei forestieri, generosa solo con chi la fa ridere
+    scopo: vendere tutto e non regalare niente
+    segreto: conserva una forma di formaggio stagionato "del vecchio rito" che nessuno compra più da trent'anni, proprio quello che serve a Madre Corrente
+    voce: "«Il credito? Lo fa mia cugina. Io faccio contanti e battute.»"
+    immagine: assets/png/gelsomina_cardo.webp
+    aspetto_en: "a small brisk middle-aged shopkeeper woman, apron with many pockets, a pencil behind her ear, sharp friendly eyes, holding a wheel of aged cheese"
+
+  - id: ampelio_spigolo
+    nome: Ampelio Spigolo
+    ruolo: sagrestano della Cappella di Madre Corrente
+    luogo: pontevecchio
+    routine:
+      - {dalle: 7, alle: 19, zona: cappella}
+    aspetto: vecchietto allampanato, tonaca blu scolorita, occhiali sul naso, mani sempre umide
+    carattere: devoto, timido, parla piano e si scusa di tutto
+    scopo: tenere vivo un culto che ormai frequentano solo le zie
+    segreto: il registro delle offerte dice che l'ultima fu fatta trent'anni fa da un ragazzo, tale Tobia Bonvino
+    voce: "«Scusate... il modulo era giusto, ma il timbro era girato. Temo sia da rifare.»"
+    immagine: assets/png/ampelio_spigolo.webp
+    aspetto_en: "a tall gaunt old sacristan, faded blue robe, small round glasses on his nose, damp pale hands, timid kind face, holding a ring of keys and a stamp"
+
+  - id: bertoldo_tassa
+    nome: Bertoldo Tassa
+    ruolo: daziere del ponte
+    luogo: pontevecchio
+    routine:
+      - {dalle: 6, alle: 20, zona: garitta}
+    aspetto: omone panciuto con cappello a punta, mantello logoro, registro sempre sottobraccio
+    carattere: burocrate pigro, abitudinario, mai cattivo ma vorrebbe esserlo di più
+    scopo: incassare il pedaggio e andare a casa prima del tramonto
+    segreto: i carri della Gilda passano di notte verso la diga senza pagare, per ordine di Odilia, e lui tace in cambio di una mancia
+    voce: "«Il pedaggio è raddoppiato. Non lo dico io, lo dice il registro. Io leggo e basta.»"
+    immagine: assets/png/bertoldo_tassa.webp
+    aspetto_en: "a stout heavy-set toll collector, pointed hat, worn cloak, a ledger under his arm, bored sleepy eyes, a small bell hanging from his belt"

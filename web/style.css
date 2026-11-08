@@ -144,6 +144,17 @@ legend small { color: var(--testo-tenue); }
   color: #fff;
 }
 
+.zone-lista { display: flex; gap: 6px; flex-wrap: wrap; }
+.zona {
+  font: inherit; font-size: 0.82rem; cursor: pointer;
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--pannello); color: var(--testo); border: 1px solid var(--bordo);
+}
+.zona:hover:not(:disabled) { border-color: var(--accento); }
+.zona.corrente { border-color: var(--accento); color: var(--accento); cursor: default; }
+.zona.chiusa { color: var(--testo-tenue); border-style: dashed; }
+.zona small { color: var(--testo-tenue); }
+
 .png-lista { display: flex; gap: 10px; flex-wrap: wrap; }
 .png-card {
   width: 92px;

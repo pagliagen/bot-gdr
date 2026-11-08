@@ -50,7 +50,7 @@ class Sessione:
         # Immagini generate a runtime: coda in background (None se disattivate)
         generatore = generatore or crea_generatore(cfg)
         self.coda: CodaImmagini | None = CodaImmagini(generatore) if generatore else None
-        self._luogo_visto = ""
+        self._posto_visto: tuple[str, str] = ("", "")  # (luogo, zona) dell'ultimo turno: per accorgersi che il giocatore si è mosso
 
     # --- Ciclo di vita ----------------------------------------------------------
     def carica(self) -> bool:
@@ -69,6 +69,7 @@ class Sessione:
         salvataggi.salva(stato, self.cfg.percorso_salvataggio)
 
     def _usa(self, stato: StatoPartita) -> None:
+        self.mondo.assicura_zona(stato)  # salvataggi vecchi senza zona
         self.stato = stato
         self.agente = Agente(
             provider=self.provider,
@@ -82,7 +83,7 @@ class Sessione:
         )
         # Il tool illustra_scena esiste solo se le immagini sono attive
         self.agente.strumenti.su_scena = self._richiedi_scena if self.coda else None
-        self._luogo_visto = stato.luogo_id
+        self._posto_visto = (stato.luogo_id, stato.zona_id)
         self._richiedi_luogo()
 
     def _salva(self) -> None:
@@ -93,15 +94,20 @@ class Sessione:
     def _stile(self) -> str:
         return self.mondo.mondo["stile_immagini"].strip()
 
+    def _percorso_zona(self, luogo_id: str, zona_id: str) -> Path:
+        """Immagine statica della zona (assets/zone/), se esiste; altrimenti il percorso della copia generata."""
+        statica = RADICE / "assets" / "zone" / f"{luogo_id}_{zona_id}.webp"
+        return statica if statica.exists() else self.cfg.percorso_generate / "zone" / f"{luogo_id}_{zona_id}.webp"
+
     def _richiedi_luogo(self) -> None:
-        """Se il luogo corrente non ha un'immagine statica, la genera (una volta sola: poi è in cache)."""
+        """Se la zona corrente non ha un'immagine (né statica né già generata), la genera: una volta sola, poi è in cache."""
         if not self.coda or not self.stato:
             return
-        l = self.mondo.luoghi.get(self.stato.luogo_id)
-        if not l or self._url(l.get("immagine")) or not l.get("prompt_immagine"):
+        z = self.mondo.zona(self.stato.luogo_id, self.stato.zona_id)
+        if not z or not z.get("prompt_immagine"):
             return
-        percorso = self.cfg.percorso_generate / "luoghi" / f"{l['id']}.webp"
-        self.coda.accoda(f"{l['prompt_immagine'].strip()}, {self._stile()}", percorso)
+        percorso = self._percorso_zona(self.stato.luogo_id, z["id"])
+        self.coda.accoda(f"{z['prompt_immagine'].strip()}, {self._stile()}", percorso)  # False (nulla da fare) se esiste già
 
     def _richiedi_scena(self, descrizione: str, didascalia: str) -> None:
         """Chiamata dal tool illustra_scena: mette in coda l'illustrazione e la mostrerà quando è pronta."""
@@ -139,9 +145,9 @@ class Sessione:
         try:
             self._eventi = []
             narrazione = self.agente.turno(testo)  # in caso di errore annulla il turno e rilancia
-            if self.stato.luogo_id != self._luogo_visto:  # il giocatore si è spostato
-                self._luogo_visto = self.stato.luogo_id
-                self.stato.scena = None  # l'illustrazione di scena valeva per il luogo di prima
+            if (self.stato.luogo_id, self.stato.zona_id) != self._posto_visto:  # il giocatore si è spostato
+                self._posto_visto = (self.stato.luogo_id, self.stato.zona_id)
+                self.stato.scena = None  # l'illustrazione di scena valeva per il posto di prima
                 self._richiedi_luogo()
             self._salva()
             eventi, self._eventi = self._eventi, []
@@ -168,6 +174,7 @@ class Sessione:
         assert s is not None
         p = s.personaggio
         luogo = m.luoghi.get(s.luogo_id, {})
+        zona = m.zona(s.luogo_id, s.zona_id) or {}
         visitati = {l["id"] for l in m.luoghi.values() if l["nome"] in s.luoghi_visitati}
         vicini = m.raggiungibili(s.luogo_id)
 
@@ -203,10 +210,14 @@ class Sessione:
             "luogo": {
                 "id": s.luogo_id,
                 "nome": s.luogo_corrente,
-                "immagine": self._url(luogo.get("immagine")) or self._url_file(self.cfg.percorso_generate / "luoghi" / f"{s.luogo_id}.webp"),
+                "luogo_nome": luogo.get("nome", s.luogo_corrente),
+                "zona": zona.get("nome", ""),
+                # l'immagine della zona, altrimenti quella del luogo finché la zona non è pronta
+                "immagine": self._url_file(self._percorso_zona(s.luogo_id, s.zona_id)) or self._url(luogo.get("immagine")),
+                "zone": self._zone_vista(),
                 "png": [
                     {"id": n["id"], "nome": n["nome"], "ruolo": n["ruolo"], "immagine": self._url(n.get("immagine"))}
-                    for n in m.png_presenti(s.luogo_id)
+                    for n in m.png_presenti(s.luogo_id, s.zona_id, s.ora)
                 ],
                 "collegamenti": [
                     {"nome": m.nome_luogo(k) if k in visitati else "?", "ore": v} for k, v in vicini.items()
@@ -223,6 +234,17 @@ class Sessione:
             "cronologia": self._cronologia(),
             "fine": fine,
         }
+
+    def _zone_vista(self) -> list[dict[str, Any]]:
+        """Le zone del luogo con lo stato (corrente / aperta / chiusa) e l'orario."""
+        s, m = self.stato, self.mondo
+        out = []
+        for z in m.zone(s.luogo_id):  # type: ignore[union-attr]
+            aperta, motivo = m.apertura(z, s)  # type: ignore[arg-type]
+            stato_z = "corrente" if z["id"] == s.zona_id else ("aperta" if aperta else "chiusa")  # type: ignore[union-attr]
+            orari = m.orari_testo(z)
+            out.append({"id": z["id"], "nome": z["nome"], "stato": stato_z, "orari": orari if z.get("orari") else "", "motivo": motivo})
+        return out
 
     def _scena_valida(self) -> dict[str, str] | None:
         """L'ultima illustrazione di scena, solo se riguarda il luogo attuale e il file esiste."""

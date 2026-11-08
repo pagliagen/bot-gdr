@@ -43,10 +43,13 @@ class Mondo:
         self.mondo = _leggi(cartella / "mondo.yaml")
         luoghi = _leggi(cartella / "luoghi.yaml")
         png = _leggi(cartella / "png.yaml")
+        zone = _leggi(cartella / "zone.yaml")["zone"]
         self.avventura = _leggi(cartella / "avventura.yaml")
 
         self.iniziale: str = luoghi["iniziale"]
         self.luoghi: dict[str, dict] = {l["id"]: l for l in luoghi["luoghi"]}
+        for lid, elenco in zone.items():
+            self.luoghi[lid]["zone"] = elenco  # ogni luogo ha le sue zone (la prima "ingresso" è dove si arriva)
         self.png: dict[str, dict] = {p["id"]: p for p in png["png"]}
         self.eventi: list[dict] = sorted(self.avventura["cronologia"], key=lambda e: e["giorno"])
         self.finali: list[dict] = self.avventura["finali"]
@@ -64,8 +67,71 @@ class Mondo:
     def nome_luogo(self, luogo_id: str) -> str:
         return self.luoghi[luogo_id]["nome"] if luogo_id in self.luoghi else luogo_id
 
-    def png_presenti(self, luogo_id: str) -> list[dict]:
-        return [p for p in self.png.values() if p["luogo"] == luogo_id]
+    # --- Zone ---------------------------------------------------------------------
+    def zone(self, luogo_id: str) -> list[dict]:
+        return self.luoghi.get(luogo_id, {}).get("zone", [])
+
+    def zona(self, luogo_id: str, zona_id: str) -> dict | None:
+        return next((z for z in self.zone(luogo_id) if z["id"] == zona_id), None)
+
+    def ingresso(self, luogo_id: str) -> dict:
+        zone = self.zone(luogo_id)
+        return next((z for z in zone if z.get("ingresso")), zone[0])
+
+    def cerca_zone(self, luogo_id: str, testo: str) -> list[dict]:
+        """Zone del luogo il cui id o nome contiene tutte le parole cercate."""
+        q = _parole(testo)
+        if not q:
+            return []
+        return [z for z in self.zone(luogo_id) if q <= (_parole(z["nome"]) | _parole(z["id"]))]
+
+    def zona_altrove(self, luogo_id: str, testo: str) -> tuple[dict, dict] | None:
+        """(luogo, zona) se il testo indica una zona di un ALTRO luogo: serve per dare un errore utile."""
+        for l in self.luoghi.values():
+            if l["id"] != luogo_id:
+                trovate = self.cerca_zone(l["id"], testo)
+                if len(trovate) == 1:
+                    return l, trovate[0]
+        return None
+
+    @staticmethod
+    def _in_fascia(ora: int, dalle: int, alle: int) -> bool:
+        """True se l'ora cade in [dalle, alle). Se alle <= dalle la fascia passa la mezzanotte ([10, 2] = 10-24 e 0-2)."""
+        return dalle <= ora < alle if dalle < alle else (ora >= dalle or ora < alle)
+
+    def apertura(self, zona: dict, stato: StatoPartita) -> tuple[bool, str]:
+        """(aperta, motivo se chiusa). Gli orari e i flag richiesti li decide il codice, non il narratore."""
+        if zona.get("orari") and not self._in_fascia(stato.ora, *zona["orari"]):
+            d, a = zona["orari"]
+            motivo = f"{zona['nome']}: chiuso in questo orario, apre dalle {d:02d}:00 alle {a:02d}:00 (ora sono le {stato.ora:02d}:00)."
+        elif any(not stato.flag.get(f) for f in zona.get("richiede_flag", [])):
+            motivo = f"{zona['nome']} non è accessibile per ora."
+        else:
+            return True, ""
+        return False, f"{motivo} {zona.get('chiusa_perche', '')}".strip()
+
+    def orari_testo(self, zona: dict) -> str:
+        return "sempre aperto" if not zona.get("orari") else "{:02d}:00-{:02d}:00".format(*zona["orari"])
+
+    def zona_png(self, png: dict, ora: int) -> str | None:
+        """Dove si trova il PNG a quest'ora (None = non reperibile: a casa, a dormire...)."""
+        for r in png.get("routine", []):
+            if self._in_fascia(ora, r["dalle"], r["alle"]):
+                return r["zona"]
+        return png.get("zona")
+
+    def png_presenti(self, luogo_id: str, zona_id: str | None = None, ora: int | None = None) -> list[dict]:
+        """PNG del luogo. Con ora: solo quelli che a quell'ora sono da qualche parte; con zona_id: solo quelli in quella zona."""
+        out = []
+        for p in self.png.values():
+            if p["luogo"] != luogo_id:
+                continue
+            if ora is not None:
+                z = self.zona_png(p, ora)
+                if z is None or (zona_id is not None and z != zona_id):
+                    continue
+            out.append(p)
+        return out
 
     def raggiungibili(self, luogo_id: str) -> dict[str, int]:
         return dict(self.luoghi.get(luogo_id, {}).get("collegamenti", {}))
@@ -74,6 +140,7 @@ class Mondo:
         """Imposta luogo, flag e orologio di una partita nuova."""
         l = self.luoghi[self.iniziale]
         stato.luogo_id, stato.luogo_corrente, stato.luoghi_visitati = l["id"], l["nome"], [l["nome"]]
+        stato.zona_id = self.ingresso(l["id"])["id"]
         stato.flag = dict(self.flag_iniziali)
         stato.ore_totali = 8
         # Gli eventi del giorno 1 sono già in corso quando il giocatore arriva:
@@ -81,6 +148,11 @@ class Mondo:
         for e in self.eventi_da_scattare(stato):
             stato.eventi_scattati.append(e["giorno"])
             stato.diario.append(f"[giorno {e['giorno']}] EVENTO DEL MONDO - {e['titolo']}: {self.testo_evento(e, stato.flag)}")
+
+    def assicura_zona(self, stato: StatoPartita) -> None:
+        """Salvataggi vecchi (senza zona) o zona sparita dalla lore: si riparte dall'ingresso del luogo."""
+        if stato.luogo_id in self.luoghi and not self.zona(stato.luogo_id, stato.zona_id):
+            stato.zona_id = self.ingresso(stato.luogo_id)["id"]
 
     def aspetti_in_scena(self, descrizione: str) -> list[str]:
         """Per ogni PNG nominato nella descrizione, il suo aspetto (in inglese) da dare al generatore di immagini.
@@ -162,7 +234,7 @@ class Mondo:
             "nome": l["nome"],
             "descrizione": l["descrizione"].strip(),
             "dettagli": l["dettagli"].strip(),
-            "luoghi_interni": l["luoghi_interni"],
+            "zone": [f"{z['nome']} ({self.orari_testo(z)})" for z in self.zone(l["id"])],
             "collegamenti": {self.nome_luogo(k): f"{v} ore" for k, v in l["collegamenti"].items()},
             "png_presenti": [p["nome"] for p in self.png_presenti(l["id"])],
         }
@@ -173,12 +245,20 @@ class Mondo:
             "nome": p["nome"],
             "ruolo": p["ruolo"],
             "luogo": self.nome_luogo(p["luogo"]),
+            "dove_si_trova_di_solito": self._routine_testo(p),
             "aspetto": p["aspetto"],
             "carattere": p["carattere"],
             "scopo": p["scopo"],
             "frase_tipica": p["voce"],
             "segreto_riservato_al_master": p["segreto"],
         }
+
+    def _routine_testo(self, p: dict) -> str:
+        nome = lambda zid: (self.zona(p["luogo"], zid) or {"nome": zid})["nome"]
+        parti = [f"{r['dalle']:02d}:00-{r['alle']:02d}:00 {nome(r['zona'])}" for r in p.get("routine", [])]
+        if p.get("zona"):
+            parti.append(f"altrimenti {nome(p['zona'])}")
+        return "; ".join(parti) + ("; negli altri orari non è reperibile" if p.get("routine") and not p.get("zona") else "") or "sempre qui"
 
     @staticmethod
     def _fazione(f: dict) -> dict:
@@ -205,17 +285,30 @@ class Mondo:
         ]
         luogo = self.luoghi.get(stato.luogo_id)
         if luogo:
+            zona = self.zona(luogo["id"], stato.zona_id) or self.ingresso(luogo["id"])
             righe += [
                 "",
-                f"## DOVE SI TROVA IL GIOCATORE: {luogo['nome']}",
+                f"## DOVE SI TROVA IL GIOCATORE: {zona['nome']}, a {luogo['nome']}",
                 luogo["descrizione"].strip(),
                 luogo["dettagli"].strip(),
-                "Da qui si raggiunge (viaggio a piedi): "
-                + ", ".join(f"{self.nome_luogo(k)} ({v} ore)" for k, v in luogo["collegamenti"].items()),
+                f"Il giocatore è qui: {zona['nome']}. {zona['descrizione'].strip()}",
+                "Zone di " + luogo["nome"] + " (ci si va con sposta_in, senza perdere tempo; se chiuse, il codice rifiuta):",
             ]
-            qui = self.png_presenti(luogo["id"])
-            if qui:
-                righe.append("PNG che si trovano qui: " + "; ".join(f"{p['nome']} ({p['ruolo']}; {p['aspetto']}; {p['carattere']})" for p in qui))
+            for z in self.zone(luogo["id"]):
+                ok, _ = self.apertura(z, stato)
+                righe.append(f"- {z['nome']} [{self.orari_testo(z)}]: {'APERTA' if ok else 'CHIUSA ora'}")
+            righe.append(
+                "Da qui si raggiunge (viaggio a piedi): "
+                + ", ".join(f"{self.nome_luogo(k)} ({v} ore)" for k, v in luogo["collegamenti"].items())
+            )
+            qui = self.png_presenti(luogo["id"], zona["id"], stato.ora)
+            righe.append(
+                "PNG presenti in questa zona ORA (nessun altro c'è: non inventare altri PNG qui): "
+                + ("; ".join(f"{p['nome']} ({p['ruolo']}; {p['aspetto']}; {p['carattere']})" for p in qui) or "nessuno")
+            )
+            altrove = [p for p in self.png_presenti(luogo["id"], None, stato.ora) if p not in qui]
+            if altrove:
+                righe.append("PNG che in questo momento sono altrove nel luogo: " + "; ".join(f"{p['nome']} ({(self.zona(luogo['id'], self.zona_png(p, stato.ora)) or {'nome': '?'})['nome']})" for p in altrove))
         attivi = [k for k, v in stato.flag.items() if v]
         righe += ["", "## PROGRESSI DEL GIOCATORE (flag attivi)", ", ".join(attivi) or "nessuno"]
         return "\n".join(righe)

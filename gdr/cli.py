@@ -65,6 +65,12 @@ def orologio(stato: StatoPartita) -> str:
     return f"Giorno {stato.giorno}/{GIORNI_AVVENTURA}, {stato.ora:02d}:00"
 
 
+def posizione(stato: StatoPartita, mondo) -> str:
+    """'Locanda del Pesce Pigro, Pontevecchio' (solo il luogo se la zona non c'è)."""
+    z = mondo.zona(stato.luogo_id, stato.zona_id) if mondo else None
+    return f"{z['nome']}, {stato.luogo_corrente}" if z else stato.luogo_corrente
+
+
 def mostra_scheda(stato: StatoPartita) -> None:
     p = stato.personaggio
     print(f"\n{p.nome} — {p.classe} — PF {p.pf}/{p.pf_max}")
@@ -85,6 +91,7 @@ def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
         print("L'avventura salvata è già conclusa. Si ricomincia da capo!")
         stato = None
     if stato:
+        mondo.assicura_zona(stato)  # salvataggi vecchi senza zona
         print(f"Bentornato, {stato.personaggio.nome}! (partita ripresa, turno {stato.turno})")
     else:
         stato = creazione_guidata(mondo)
@@ -136,7 +143,7 @@ def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
 
     while True:
         try:
-            comando = _chiedi(f"[{orologio(stato)} · {stato.luogo_corrente}] > ")
+            comando = _chiedi(f"[{orologio(stato)} · {posizione(stato, mondo)}] > ")
         except (EOFError, KeyboardInterrupt):
             comando = "/esci"
         if not comando:
@@ -148,7 +155,7 @@ def avvia(cfg: Config, nuova: bool, debug: bool) -> None:
         if comando == "/scheda":
             mostra_scheda(stato)
         elif comando == "/mappa":
-            print(f"Sei in: {stato.luogo_corrente} ({orologio(stato)}). Visitati: {', '.join(stato.luoghi_visitati)}")
+            print(f"Sei in: {posizione(stato, mondo)} ({orologio(stato)}). Visitati: {', '.join(stato.luoghi_visitati)}")
         elif comando == "/diario":
             print("\n".join(stato.diario) or "(diario vuoto)")
         elif comando == "/debug":

@@ -68,7 +68,8 @@ La lore è in `lore/` (file YAML modificabili a mano):
 |---|---|
 | `mondo.yaml` | sintesi, storia, religioni, fazioni, regole del mondo, stile delle immagini |
 | `luoghi.yaml` | 7 luoghi, coordinate sulla mappa, collegamenti con le ore di viaggio |
-| `png.yaml` | 10 PNG con aspetto, scopo e segreto |
+| `zone.yaml` | le zone dentro ogni luogo (piazza, locanda, emporio, archivio...), con orari di apertura e requisiti |
+| `png.yaml` | 13 PNG con aspetto, scopo, segreto e routine giornaliera |
 | `avventura.yaml` | cronologia di 7 giorni, flag, finali, prove suggerite |
 | `immagini_statiche.md` | prompt per generare mappa, ritratti e luoghi |
 
@@ -76,12 +77,14 @@ La lore è in `lore/` (file YAML modificabili a mano):
 
 **Il master non può "regalare" i progressi.** `imposta_flag` controlla in codice luogo, requisiti, oggetti e che l'ultima prova di abilità sia riuscita con statistica e CD giuste. **La geografia è vincolata**: si va solo tra luoghi collegati.
 
+**Luoghi e zone.** Ogni luogo della mappa contiene delle zone: muoversi tra zone non costa tempo (`sposta_in`), cambiare luogo sì, e si arriva sempre nella zona d'ingresso. Una zona può avere **orari** (l'emporio apre solo la mattina) o **flag richiesti** (la stanza dei registri si apre solo con il capitano come alleato): se è chiusa, il codice rifiuta l'ingresso e dice quando riapre; per aspettare il giocatore usa `avanza_tempo`. Se il tempo passa mentre si è dentro e la zona chiude, il personaggio viene accompagnato fuori. Anche i **PNG** hanno una routine oraria: se non sono nella zona a quell'ora, non si incontrano. Alcuni flag richiedono una zona precisa (il Contratto si cerca solo nell'archivio).
+
 **La lore non sta tutta nel prompt.** Nel system prompt ci sono un riassunto, il luogo attuale con i PNG presenti, l'orologio e i flag. Per il resto il master usa `consulta_lore`. I segreti sono marcati come riservati.
 
 ## Immagini
 
-- **Statiche** (le fai tu, prompt in `lore/immagini_statiche.md`): `assets/mappa.webp`, `assets/png/*.webp`, `assets/luoghi/*.webp`.
-- **Generate in locale** con un modello di immagini di Ollama (`ollama pull x/z-image-turbo`, circa 12 GB; richiede macOS con Apple Silicon): quando arrivi in un luogo senza immagine statica, il codice genera l'illustrazione, la salva in `assets/generate/` e la riusa. Il master può inoltre chiamare `illustra_scena` per i momenti chiave (limite: una ogni 3 turni); se nomina un PNG, il codice aggiunge in automatico il suo aspetto per mantenerlo coerente con il ritratto.
+- **Statiche** (le fai tu, prompt in `lore/immagini_statiche.md`): `assets/mappa.webp`, `assets/png/*.webp`, `assets/luoghi/*.webp`, `assets/zone/<luogo>_<zona>.webp`. Quelle che mancano si generano in locale con `python scripts/genera_immagini.py` (salta i file già presenti).
+- **Generate in locale** con un modello di immagini di Ollama (`ollama pull x/z-image-turbo`, circa 12 GB; richiede macOS con Apple Silicon): quando arrivi in una zona senza immagine statica, il codice genera l'illustrazione, la salva in `assets/generate/` e la riusa. Il master può inoltre chiamare `illustra_scena` per i momenti chiave (limite: una ogni 3 turni); se nomina un PNG, il codice aggiunge in automatico il suo aspetto per mantenerlo coerente con il ritratto.
 - La generazione avviene **in background** (circa 30 secondi) e la pagina mostra l'immagine appena è pronta. Mentre un'immagine si genera, il modello di testo rallenta (usano la stessa GPU e memoria): se il PC fatica, metti `IMMAGINI=off` nel `.env`.
 - Vanno solo nell'interfaccia web, non nel terminale.
 

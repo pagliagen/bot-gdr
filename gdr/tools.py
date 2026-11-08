@@ -79,10 +79,10 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "sposta_in",
-        "description": "Sposta il personaggio in un luogo (nuovo o già visitato) e lo registra sulla mappa.",
+        "description": "Sposta il personaggio: in una ZONA del luogo in cui si trova (la locanda, l'emporio, la piazza... nessun tempo perso) oppure in un altro LUOGO collegato (viaggio, fa passare ore). Il gioco rifiuta le zone chiuse e dice quando aprono.",
         "input_schema": {
             "type": "object",
-            "properties": {"luogo": {"type": "string", "description": "Nome del luogo."}},
+            "properties": {"luogo": {"type": "string", "description": "Nome della zona o del luogo, es. 'Emporio', 'Locanda del Pesce Pigro', 'Mulino Alto'."}},
             "required": ["luogo"],
         },
     },
@@ -300,24 +300,57 @@ class Strumenti:
             s.luogo_corrente = nome
             return {"ok": True, "luogo_corrente": nome, "luogo_nuovo": gia_noto is None}
 
-        trovati = self.mondo.cerca_luoghi(nome)
+        m = self.mondo
+        # 1) una zona del luogo in cui si trova? (nessun tempo perso)
+        zone = m.cerca_zone(s.luogo_id, nome)
+        if len(zone) == 1:
+            return self._entra_in_zona(zone[0])
+        trovati = m.cerca_luoghi(nome)
         if len(trovati) != 1:
-            elenco = ", ".join(l["nome"] for l in self.mondo.luoghi.values())
-            raise rules.ErroreRegole(f"'{nome}' non è un luogo valido della valle (o è ambiguo). Luoghi esistenti: {elenco}.")
+            altrove = m.zona_altrove(s.luogo_id, nome)
+            if altrove:
+                l, z = altrove
+                raise rules.ErroreRegole(f"{z['nome']} si trova a {l['nome']}, non qui. Prima serve arrivare a {l['nome']}.")
+            qui = ", ".join(z["nome"] for z in m.zone(s.luogo_id))
+            elenco = ", ".join(l["nome"] for l in m.luoghi.values())
+            raise rules.ErroreRegole(f"'{nome}' non è valido (o è ambiguo). Zone di {s.luogo_corrente}: {qui}. Luoghi della valle: {elenco}.")
         dest = trovati[0]
         if dest["id"] == s.luogo_id:
-            return {"ok": True, "luogo_corrente": dest["nome"], "nota": "Il personaggio è già qui.", "ore_viaggio": 0}
-        ore = self.mondo.raggiungibili(s.luogo_id).get(dest["id"])
+            return {"ok": True, "luogo_corrente": dest["nome"], "nota": "Il personaggio è già in questo luogo: per muoversi dentro, indica una zona.", "ore_viaggio": 0}
+        ore = m.raggiungibili(s.luogo_id).get(dest["id"])
         if ore is None:
-            vicini = ", ".join(f"{self.mondo.nome_luogo(k)} ({v} ore)" for k, v in self.mondo.raggiungibili(s.luogo_id).items())
+            vicini = ", ".join(f"{m.nome_luogo(k)} ({v} ore)" for k, v in m.raggiungibili(s.luogo_id).items())
             raise rules.ErroreRegole(f"Da {s.luogo_corrente} non si arriva direttamente a {dest['nome']}. Da qui si raggiunge: {vicini}.")
         nuovo = dest["nome"] not in s.luoghi_visitati
         if nuovo:
             s.luoghi_visitati.append(dest["nome"])
         s.luogo_id, s.luogo_corrente = dest["id"], dest["nome"]
+        s.zona_id = m.ingresso(dest["id"])["id"]  # si arriva sempre nella zona d'ingresso (sempre aperta)
         esito = {"ok": True, "luogo_corrente": dest["nome"], "luogo_nuovo": nuovo, "ore_viaggio": ore}
         esito.update(self._fai_passare_ore(ore))
+        esito.update(self._situazione_zona())
         return esito
+
+    def _entra_in_zona(self, zona: dict) -> dict:
+        s = self.stato
+        if zona["id"] == s.zona_id:
+            return {"ok": True, "luogo_corrente": s.luogo_corrente, "nota": f"Il personaggio è già in: {zona['nome']}.", **self._situazione_zona()}
+        aperta, motivo = self.mondo.apertura(zona, s)
+        if not aperta:
+            suggerimento = " Il personaggio può aspettare con avanza_tempo." if zona.get("orari") else ""
+            raise rules.ErroreRegole(motivo + suggerimento)
+        s.zona_id = zona["id"]
+        return {"ok": True, "luogo_corrente": s.luogo_corrente, "ore_viaggio": 0, **self._situazione_zona()}
+
+    def _situazione_zona(self) -> dict:
+        """Dove si trova il personaggio e chi c'è ora: il master non deve inventare altri presenti."""
+        s, m = self.stato, self.mondo
+        z = m.zona(s.luogo_id, s.zona_id) or m.ingresso(s.luogo_id)
+        return {
+            "zona": z["nome"],
+            "descrizione_zona": z["descrizione"].strip(),
+            "png_presenti_ora": [f"{p['nome']} ({p['ruolo']})" for p in m.png_presenti(s.luogo_id, z["id"], s.ora)],
+        }
 
     def descrivi_mappa(self) -> dict:
         s = self.stato
@@ -325,6 +358,10 @@ class Strumenti:
         if self.mondo:
             out["da_qui_si_raggiunge"] = {self.mondo.nome_luogo(k): f"{v} ore" for k, v in self.mondo.raggiungibili(s.luogo_id).items()}
             out["giorno"], out["ora"] = s.giorno, f"{s.ora:02d}:00"
+            out.update(self._situazione_zona())
+            out["zone_del_luogo"] = {
+                z["nome"]: ("aperta" if self.mondo.apertura(z, s)[0] else "chiusa") + f" ({self.mondo.orari_testo(z)})" for z in self.mondo.zone(s.luogo_id)
+            }
         return out
 
     def avanza_tempo(self, ore: Any, motivo: str = "") -> dict:
@@ -347,6 +384,11 @@ class Strumenti:
             eventi = self._fai_scattare_eventi()
             if eventi:
                 info["eventi_mondo"] = eventi
+            z = self.mondo.zona(s.luogo_id, s.zona_id)
+            if z and not self.mondo.apertura(z, s)[0]:  # nel frattempo la zona ha chiuso: si esce
+                ingresso = self.mondo.ingresso(s.luogo_id)
+                s.zona_id = ingresso["id"]
+                info["zona_chiusa"] = f"{z['nome']} ha chiuso: il personaggio viene accompagnato fuori, in {ingresso['nome']}."
         info["ore_trascorse"] = s.ore_totali - prima
         info["giorno"], info["ora"] = s.giorno, f"{s.ora:02d}:00"
         return info
@@ -398,6 +440,9 @@ class Strumenti:
         # 1) luogo giusto
         if regola.get("luogo") and s.luogo_id != regola["luogo"]:
             raise rules.ErroreRegole(f"Per '{flag}' il personaggio deve trovarsi a {self.mondo.nome_luogo(regola['luogo'])}, non qui.")
+        if regola.get("zona") and s.zona_id != regola["zona"]:
+            z = self.mondo.zona(regola["luogo"], regola["zona"]) if regola.get("luogo") else None
+            raise rules.ErroreRegole(f"Per '{flag}' il personaggio deve trovarsi in: {z['nome'] if z else regola['zona']}.")
         # 2) requisiti
         for req in regola.get("richiede_flag", []):
             if not s.flag.get(req):

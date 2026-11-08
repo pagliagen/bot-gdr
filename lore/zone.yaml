@@ -1,0 +1,245 @@
+# Zone: i posti dentro ogni luogo (la locanda a Pontevecchio, l'archivio al Santuario...).
+# Muoversi tra zone dello stesso luogo non costa tempo; per andare in un altro
+# luogo si passa dai collegamenti di luoghi.yaml e si arriva sempre nella zona d'ingresso.
+#
+# Campi di una zona:
+#   id, nome, descrizione        = come la vede il master
+#   ingresso: true               = dove si arriva dall'esterno (sempre aperta, una per luogo)
+#   orari: [dalle, alle]         = ore di apertura (alle < dalle = oltre mezzanotte: [10, 2] = dalle 10 alle 2).
+#                                  Senza "orari" è sempre aperta.
+#   richiede_flag: [...]         = flag che devono essere attivi per entrare
+#   chiusa_perche                = come il master racconta la porta chiusa (opzionale)
+#   prompt_immagine              = per l'immagine (in inglese); il file va in assets/zone/<luogo>_<zona>.webp
+
+zone:
+  pontevecchio:
+    - id: piazza
+      nome: Piazza della Fontana
+      ingresso: true
+      descrizione: >-
+        Piazzetta lastricata con la fontana e la statua di Ilda Guadoforte (senza un
+        braccio). Ogni mattina c'è il mercato; di sera si siedono i vecchi a commentare.
+      prompt_immagine: >-
+        a small cobbled village square with a stone fountain and a statue of a woman missing one arm, market stalls with baskets of vegetables and bread, grey stone houses around, a mossy arched bridge in the background, morning light
+    - id: locanda
+      nome: Locanda del Pesce Pigro
+      orari: [10, 2]
+      chiusa_perche: "La porta è sprangata e dentro si sente solo russare."
+      descrizione: >-
+        La locanda dove tutti sanno tutto e metà è inventato. Camino, tavoli unti,
+        un grosso pesce di legno sull'insegna. Tobia serve e chiacchiera.
+      prompt_immagine: >-
+        inside a cozy medieval tavern, a big stone fireplace, rough wooden tables, a huge wooden fish carved above the bar, tankards and candles, warm candlelight
+    - id: emporio
+      nome: Emporio di Gelsomina
+      orari: [8, 13]
+      chiusa_perche: "La serranda di legno è abbassata e c'è un cartello scritto a mano."
+      descrizione: >-
+        Bottega piena di corde, lanterne, spezie e forme di formaggio stagionato appese
+        al soffitto. Apre solo la mattina: nel pomeriggio Gelsomina va a fare i conti.
+      prompt_immagine: >-
+        inside a cluttered medieval general store, ropes and lanterns hanging from the ceiling, shelves of jars and spices, wheels of aged cheese on a wooden counter, sacks of flour, warm morning light through a small window
+    - id: cappella
+      nome: Cappella di Madre Corrente
+      orari: [7, 19]
+      chiusa_perche: "Il portone è chiuso a chiave; il sagrestano è andato a cena."
+      descrizione: >-
+        Una cappella piccola e umida con una vasca d'acqua sull'altare e moduli di
+        preghiera in cassette di legno. Odore di cera e di muschio.
+      prompt_immagine: >-
+        a small humid stone chapel with a basin of clear water on the altar, wooden boxes of prayer slips, candles, a carved drop-shaped symbol with a round stamp, soft green light from a narrow window
+    - id: garitta
+      nome: Garitta del pedaggio
+      orari: [6, 20]
+      chiusa_perche: "La garitta è chiusa e la sbarra è alzata, con un sasso sopra per sicurezza."
+      descrizione: >-
+        Una garitta storta all'imbocco del ponte, con registro dei pedaggi e una
+        campanella. Da qualche giorno il pedaggio è raddoppiato.
+      prompt_immagine: >-
+        a crooked wooden toll booth at the foot of a mossy stone bridge, a lowered barrier, a small bell, a ledger on a shelf, morning light
+
+  mulino_alto:
+    - id: cortile
+      nome: Cortile della Ruota
+      ingresso: true
+      descrizione: >-
+        Cortile ordinato davanti alla grande ruota che gira lenta; guardie in grembiule
+        di cuoio, carri di farina, un orologio ad acqua.
+      prompt_immagine: >-
+        a tidy stone courtyard in front of a huge slowly turning wooden waterwheel, guards in leather aprons, flour carts, a large water clock, golden afternoon light
+    - id: ufficio
+      nome: Ufficio del capo gilda
+      orari: [9, 18]
+      chiusa_perche: "L'ufficio è chiuso a chiave e le guardie scuotono la testa."
+      descrizione: >-
+        Scrivanie coperte di progetti, mappe della diga, un grande orologio ad acqua
+        e un plastico della valle. Qui lavora Ormando.
+      prompt_immagine: >-
+        a neat engineer's office, desks covered with blueprints, a scale model of a valley with a dam, brass instruments, a large water clock on the wall, warm lamp light
+    - id: officina
+      nome: Officina degli ingranaggi
+      orari: [7, 19]
+      chiusa_perche: "L'officina è buia e le macchine sono ferme."
+      descrizione: >-
+        Ingranaggi di legno e bronzo, banchi da lavoro, olio dappertutto. Fiammetta
+        passa qui quasi tutto il giorno.
+      prompt_immagine: >-
+        a busy workshop full of wooden and bronze gears, workbenches, oil cans, half-built machines, tools hanging on the wall, dusty sunbeams
+    - id: magazzino
+      nome: Magazzino delle farine
+      orari: [8, 16]
+      chiusa_perche: "Il magazzino è chiuso con un grosso catenaccio fino a domani."
+      descrizione: >-
+        Sacchi di farina fino al soffitto, topi ben pasciuti e una botola che le guardie
+        sorvegliano con un'aria troppo innocente.
+      prompt_immagine: >-
+        a dim warehouse stacked to the ceiling with sacks of flour, white dust floating in a shaft of light, a wooden hatch in the floor, well-fed mice
+
+  la_diga:
+    - id: coronamento
+      nome: Coronamento della diga
+      ingresso: true
+      descrizione: >-
+        La passerella in cima alla diga, con il lago troppo calmo da un lato e il
+        vuoto dall'altro. Qui compare Madre Corrente.
+      prompt_immagine: >-
+        a narrow walkway on top of a massive stone dam, a calm too-still lake on one side and a deep gorge on the other, a faint green glow from a keystone, twilight
+    - id: paratoie
+      nome: Sala delle paratoie
+      orari: [6, 22]
+      chiusa_perche: "Le guardie sono di turno di notte e non lasciano passare nessuno."
+      descrizione: >-
+        Sala con grandi volani e paratoie di legno rinforzato. Si sente l'acqua
+        premere da dietro le pareti.
+      prompt_immagine: >-
+        a hall inside a dam with huge iron flywheels and reinforced wooden sluice gates, water seeping, tense atmosphere, lantern light
+    - id: galleria
+      nome: Galleria di manutenzione
+      descrizione: >-
+        Cunicolo umido sotto la diga, con passerelle scivolose e vecchie lanterne
+        spente. Porta vicino alla chiave di volta.
+      prompt_immagine: >-
+        a narrow wet maintenance tunnel beneath a dam, slippery wooden walkways, old unlit lanterns, a faint green glow at the end, dripping water
+
+  santuario_sorgente:
+    - id: grotta
+      nome: Grotta della Sorgente
+      ingresso: true
+      descrizione: >-
+        La grotta tra felci e rocce bagnate dove il fiume nasce da una fessura. La
+        sorgente gorgoglia sempre più piano.
+      prompt_immagine: >-
+        a cave among ferns and wet rocks where a spring flows from a crack, soft green light, slippery floor, small candles
+    - id: altare
+      nome: Tempietto dell'altare vuoto
+      descrizione: >-
+        Un tempietto semplice con un piedistallo vuoto dove un tempo c'era la Pietra
+        del Patto.
+      prompt_immagine: >-
+        a simple small temple in a cave with an empty stone pedestal, candles on the floor, soft green light
+    - id: archivio
+      nome: Archivio delle sorelle
+      orari: [9, 17]
+      chiusa_perche: "Sorella Brina ha chiuso l'archivio con tre timbri e un cartello: «Orario d'ufficio»."
+      descrizione: >-
+        Armadi umidi pieni di pergamene timbrate, moduli in triplice copia e vasi di
+        formaggio. Il Contratto originale è da qualche parte qui dentro.
+      prompt_immagine: >-
+        a damp archive in a cave, shelves of stamped parchments and forms, jars of cheese, a small lamp on a desk, soft green light
+
+  rocca_mezzaluna:
+    - id: cortile
+      nome: Cortile della Rocca
+      ingresso: true
+      descrizione: >-
+        Cortile con soldati annoiati, bandiere molto grandi e una fontanella
+        asciutta. Il capitano Ruggero fa il giro di controllo.
+      prompt_immagine: >-
+        a small castle courtyard with sleepy soldiers, oversized banners, a dry little fountain, late afternoon light
+    - id: sala_udienze
+      nome: Sala delle udienze
+      orari: [10, 16]
+      chiusa_perche: "Le porte della sala sono chiuse: la baronessa riceve solo dalle dieci alle quattro."
+      descrizione: >-
+        Sala con sedie scomode di proposito e una collezione di teiere sugli scaffali.
+        Odilia riceve qui.
+      prompt_immagine: >-
+        a stately audience hall with deliberately uncomfortable chairs, shelves full of teapots, a green velvet carpet, afternoon light
+    - id: torre
+      nome: Torre di guardia
+      orari: [8, 20]
+      chiusa_perche: "La scala della torre è chiusa da una catena: di notte si sale solo di ronda."
+      descrizione: >-
+        In cima c'è la vista su tutta la valle, fino alla diga lontana.
+      prompt_immagine: >-
+        the top of a small castle tower with a wide view over a quiet valley and a distant dam, banners flapping, late afternoon
+    - id: registri
+      nome: Stanza dei registri
+      richiede_flag: [ruggero_alleato]
+      chiusa_perche: "La stanza è sorvegliata e il capitano non ti lascia entrare finché non si fida di te."
+      descrizione: >-
+        Piccola stanza con i registri dei pedaggi e dei pagamenti dalla diga, in ordine
+        perfetto.
+      prompt_immagine: >-
+        a small stone room lined with ledgers and account books, a desk with a candle, quiet atmosphere
+
+  borgo_basso:
+    - id: molo
+      nome: Molo sul greto
+      ingresso: true
+      descrizione: >-
+        Un molo che finisce sul fango secco, con barche arenate e reti stese. Il fiume
+        è un rigagnolo.
+      prompt_immagine: >-
+        a wooden pier ending above dry cracked mud, stranded boats, fishing nets hanging, a thin trickle of water, grey overcast morning
+    - id: osteria
+      nome: Osteria incagliata
+      orari: [11, 1]
+      chiusa_perche: "L'osteria è chiusa a quest'ora, con le sedie sui tavoli."
+      descrizione: >-
+        Un'osteria galleggiante rimasta a secco, ora storta di dodici gradi. Si mangia
+        in discesa. Pina passa qui le ore morte.
+      prompt_immagine: >-
+        the inside of a tilted stranded floating tavern, tables and benches slanted, hanging lanterns, fishing nets on the walls, warm lantern light
+    - id: tempietto
+      nome: Tempietto dell'Anguilla
+      orari: [6, 20]
+      chiusa_perche: "Il tempietto è chiuso e sulla porta c'è un'anguilla di latta inchiodata."
+      descrizione: >-
+        Un tempietto di legno con un'anguilla argentata sull'altare e l'insegna
+        ancora fresca di vernice. Gedeone predica qui.
+      prompt_immagine: >-
+        a small wooden shrine with a silver eel on the altar, a freshly painted sign with an eel, nets hanging as decoration, grey morning light
+    - id: mulino_fermo
+      nome: Mulino fermo
+      descrizione: >-
+        Il piccolo mulino ad acqua del borgo, fermo da quando il fiume è sceso. Ruota
+        ferma, macina ferma, silenzio.
+      prompt_immagine: >-
+        a small abandoned watermill with a still wooden wheel above dry mud, a silent grinding stone, cobwebs, grey light
+
+  bosco_salici:
+    - id: radura
+      nome: Radura dei salici
+      ingresso: true
+      descrizione: >-
+        Una radura tra salici antichi che sussurrano, lucciole di giorno e funghi come
+        sgabelli.
+      prompt_immagine: >-
+        a clearing among ancient whispering willow trees with faces in the bark, daytime fireflies, huge mushrooms like stools, misty
+    - id: capanna
+      nome: Capanna di Zelinda
+      orari: [9, 20]
+      chiusa_perche: "La porta della capanna è chiusa e dalla finestra qualcuno ti guarda male."
+      descrizione: >-
+        Una capanna storta con un orto di zucche enormi. Dentro: erbe appese, un
+        paiolo e un gatto sospettoso.
+      prompt_immagine: >-
+        a crooked witch's hut with a garden of giant pumpkins, herbs hanging from the ceiling, a bubbling cauldron, a suspicious cat, warm lantern light
+    - id: canale
+      nome: Canale di scolo
+      descrizione: >-
+        Il vecchio canale di scolo che scende verso la diga: fango, radici, un
+        odore di muffa. Porta al canale di manutenzione.
+      prompt_immagine: >-
+        an old stone drainage channel in a damp forest, roots hanging, mud, a dark tunnel opening leading downhill, misty light
